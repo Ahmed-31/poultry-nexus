@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Product extends Model
+{
+    protected $fillable = [
+        'name',
+        'description',
+        'price',
+        'stock_quantity',
+        'sku',
+        'category_id',
+    ];
+
+    // A Product belongs to a Category
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    // A Product can be part of multiple Order Items
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+    public function inventory()
+    {
+        return $this->hasOne(Inventory::class);
+    }
+}
