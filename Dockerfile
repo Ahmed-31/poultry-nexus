@@ -15,6 +15,10 @@ RUN apt-get update && apt-get install -y \
     htop \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Install Node.js 20.x and npm
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
+
 # Enable Apache modules
 RUN a2enmod rewrite env
 

@@ -35,6 +35,9 @@ echo "✅ Database is available!"
 echo "🔄 Running migrations if necessary..."
 php artisan migrate --force || echo "⚠️ Migrations failed or already applied."
 
+echo "🔄 Install Node dependencies & build frontend..."
+npm install && npm run build
+
 # Clear and optimize Laravel cache
 php artisan optimize:clear
 php artisan optimize

@@ -8,12 +8,16 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
+      - "5173:5173"
     volumes:
       - .:/var/www
+      - ./public:/var/www/public
     env_file:
       - .env
     depends_on:
       - db
+    networks:
+        - laravel
 
   db:
     image: mysql:5.7
@@ -28,6 +32,11 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+        - laravel
+
+networks:
+  laravel:
 
 volumes:
   mysql_data:
