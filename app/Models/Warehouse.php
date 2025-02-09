@@ -12,12 +12,9 @@ class Warehouse extends Model
         'description',
     ];
 
-    /**
-     * Relationship: A warehouse has many stock items.
-     */
-    public function stockItems()
+    public function inventories()
     {
-        return $this->hasMany(StockItem::class);
+        return $this->hasMany(Inventory::class);
     }
 
     public function inventoryTransactions() {

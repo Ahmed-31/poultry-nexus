@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('inventory', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->onDelete('cascade'); // Foreign Key to Products
-            $table->integer('quantity_available')->default(0); // Available stock
-            $table->integer('reserved_quantity')->default(0); // Reserved stock for pending orders
-            $table->integer('minimum_stock_level')->default(10); // Minimum threshold before restocking
+            $table->foreignId('warehouse_id')->constrained()->onDelete('cascade'); // Foreign Key to Products
+            $table->integer('quantity')->default(0);
+            $table->integer('minimum_stock_level')->default(0);
+            $table->integer('maximum_capacity')->nullable();
             $table->timestamps();
         });
     }
