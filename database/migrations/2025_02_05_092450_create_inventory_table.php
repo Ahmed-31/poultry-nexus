@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('quantity')->default(0);
             $table->integer('minimum_stock_level')->default(0);
             $table->integer('maximum_capacity')->nullable();
+            $table->integer('reserved_quantity')->nullable();
             $table->timestamps();
         });
     }

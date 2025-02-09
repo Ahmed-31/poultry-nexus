@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Carbon\Carbon;
+
 //use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -234,6 +235,7 @@ class MockDataDBSeeder extends Seeder
                 'quantity'            => 28,
                 'minimum_stock_level' => 5,
                 'maximum_capacity'    => 5000,
+                'reserved_quantity'   => 4000,
                 'created_at'          => Carbon::now(),
                 'updated_at'          => Carbon::now(),
             ],
@@ -243,6 +245,7 @@ class MockDataDBSeeder extends Seeder
                 'quantity'            => 97,
                 'minimum_stock_level' => 20,
                 'maximum_capacity'    => 2000,
+                'reserved_quantity'   => 243,
                 'created_at'          => Carbon::now(),
                 'updated_at'          => Carbon::now(),
             ],
@@ -252,6 +255,7 @@ class MockDataDBSeeder extends Seeder
                 'quantity'            => 18,
                 'minimum_stock_level' => 10,
                 'maximum_capacity'    => 1400,
+                'reserved_quantity'   => 500,
                 'created_at'          => Carbon::now(),
                 'updated_at'          => Carbon::now(),
             ],

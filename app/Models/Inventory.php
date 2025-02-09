@@ -13,6 +13,7 @@ class Inventory extends Model
         'quantity',
         'minimum_stock_level',
         'maximum_capacity',
+        'reserved_quantity',
     ];
 
     // Inventory belongs to a Product
