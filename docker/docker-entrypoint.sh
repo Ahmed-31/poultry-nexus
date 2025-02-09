@@ -35,6 +35,9 @@ echo "✅ Database is available!"
 echo "🔄 Running migrations if necessary..."
 php artisan migrate --force || echo "⚠️ Migrations failed or already applied."
 
+echo "🔄 Running seeders..."
+php artisan db:seed
+
 echo "🔄 Install Node dependencies & build frontend..."
 npm install && npm run build
 
