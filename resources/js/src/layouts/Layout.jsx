@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar.jsx";
 import Sidebar from "../components/Sidebar.jsx";
 
 const Layout = () => {
-    const [isSidebarOpen, setSidebarOpen] = useState(true);
+    const [isSidebarOpen, setSidebarOpen] = useState(false);
 
     const toggleSidebar = () => {
         setSidebarOpen(!isSidebarOpen);
@@ -15,7 +15,7 @@ const Layout = () => {
             <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}/>
             <div className={`flex flex-col flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
                 <Navbar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}/>
-                <main className="flex-1 p-6 bg-gray-50 shadow-inner overflow-auto">
+                <main className="flex-1  bg-gray-50 shadow-inner overflow-auto">
                     <Outlet/>
                 </main>
                 <footer className="bg-gray-200 text-gray-700 p-4 text-center shadow-inner">
