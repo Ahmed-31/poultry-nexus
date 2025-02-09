@@ -9,9 +9,15 @@ const Sidebar = ({isSidebarOpen}) => {
             <nav className="mt-16">
                 <ul className="space-y-2 px-4">
                     <li>
-                        <Link to="/dashboard"
+                        <Link to="/"
                               className="flex items-center p-3 hover:bg-gray-200 transition duration-300">
-                            <Home className="mr-3" size={20}/> Dashboard
+                            <Home className="mr-3" size={20}/> Home
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/inventory"
+                              className="flex items-center p-3 hover:bg-gray-200 transition duration-300">
+                            <Box className="mr-3" size={20}/> Inventory
                         </Link>
                     </li>
                     <li>
