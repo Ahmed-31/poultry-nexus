@@ -1,10 +1,10 @@
 // resources/js/src/services/orderService.js
-import axios from 'axios';
+import api from './axios';
 
 // Get all orders
 export const getOrders = async () => {
     try {
-        const response = await axios.get('/api/orders');
+        const response = await api.get('/api/orders');
         return response.data;
     } catch (error) {
         console.error('Error fetching orders:', error);
@@ -15,7 +15,7 @@ export const getOrders = async () => {
 // Add a new order
 export const addOrder = async (orderData) => {
     try {
-        const response = await axios.post('/api/orders', orderData);
+        const response = await api.post('/api/orders', orderData);
         return response.data;
     } catch (error) {
         console.error('Error adding order:', error);
@@ -26,7 +26,7 @@ export const addOrder = async (orderData) => {
 // Update an existing order
 export const updateOrder = async (id, orderData) => {
     try {
-        const response = await axios.put(`/api/orders/${id}`, orderData);
+        const response = await api.put(`/api/orders/${id}`, orderData);
         return response.data;
     } catch (error) {
         console.error('Error updating order:', error);
@@ -37,7 +37,7 @@ export const updateOrder = async (id, orderData) => {
 // Delete an order
 export const deleteOrder = async (id) => {
     try {
-        const response = await axios.delete(`/api/orders/${id}`);
+        const response = await api.delete(`/api/orders/${id}`);
         return response.data;
     } catch (error) {
         console.error('Error deleting order:', error);

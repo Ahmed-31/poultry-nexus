@@ -5,8 +5,20 @@ import procurementImage from '../../../images/Procurement & Inventory Control.we
 import packagingImage from '../../../images/Packaging & Dispatch Management.webp';
 import productionImage from '../../../images/a factory that manufactures poultry equipment.webp';
 import deliveryImage from '../../../images/Delivery & Internal Support.webp';
+import {useAuth} from '../context/AuthContext';
+import Loader from '../components/common/Loader';
 
 const HomePage = () => {
+    const {user, loading} = useAuth();
+
+    if (loading) {
+        return (<Loader/>);
+    }
+
+    if (!user) {
+        return <p className="text-center mt-10 text-xl">You are not logged in.</p>;
+    }
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-100 to-pink-200 p-10">
             <header className="text-center mb-16">
@@ -120,8 +132,8 @@ const ZigZagSection = ({title, steps, reverse, image, imageAlt}) => (
                         src={image}
                         alt={imageAlt}
                         className="w-full h-full object-cover"
-                        whileHover={{ scale: 1.03 }}
-                        transition={{ duration: 0.3 }}
+                        whileHover={{scale: 1.03}}
+                        transition={{duration: 0.3}}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent rounded-xl"></div>
                 </div>
