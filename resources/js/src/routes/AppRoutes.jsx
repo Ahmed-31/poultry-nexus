@@ -9,6 +9,7 @@ import OrderPage from "../pages/OrderPage.jsx";
 import Login from '../pages/Login.jsx';
 import Logout from '../components/Auth/Logout.jsx';
 import PrivateRoutes from './PrivateRoutes.jsx';
+import PublicRoute from './PublicRoutes.jsx';
 import {AuthProvider} from "../context/AuthContext.jsx";
 import AuthenticatedProviders from '../context/AuthenticatedProviders.jsx';
 
@@ -17,7 +18,14 @@ const AppRoutes = () => (
         <AuthProvider>
             <AuthenticatedProviders>
                 <Routes>
-                    <Route path="/login" element={<Login/>}/>
+                    <Route
+                        path="/login"
+                        element={
+                            <PublicRoute>
+                                <Login/>
+                            </PublicRoute>
+                        }
+                    />
 
                     <Route element={<PrivateRoutes/>}>
                         <Route path="/" element={<Layout/>}>
@@ -28,7 +36,6 @@ const AppRoutes = () => (
                         </Route>
                     </Route>
 
-                    {/* 404 Page */}
                     <Route path="*" element={<NotFoundPage/>}/>
                 </Routes>
             </AuthenticatedProviders>
