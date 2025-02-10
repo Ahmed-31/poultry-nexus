@@ -60,6 +60,16 @@ export const getProducts = async () => {
     }
 };
 
+export const getProductBundles = async () => {
+    try {
+        const response = await axios.get('/api/products/bundles');
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching product bundles:', error);
+        return [];
+    }
+}
+
 export const getWarehouses = async () => {
     try {
         const response = await axios.get('/api/warehouses');

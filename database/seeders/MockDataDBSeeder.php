@@ -148,7 +148,6 @@ class MockDataDBSeeder extends Seeder
                 'order_number' => 'ORD-1001',
                 'status'       => 'pending',
                 'notes'        => 'Urgent delivery requested.',
-                'total_amount' => 1150.00,
                 'ordered_at'   => Carbon::now()->subDays(2),
                 'created_at'   => Carbon::now(),
                 'updated_at'   => Carbon::now(),
@@ -159,7 +158,6 @@ class MockDataDBSeeder extends Seeder
                 'order_number' => 'ORD-1002',
                 'status'       => 'processing',
                 'notes'        => 'Include detailed invoice.',
-                'total_amount' => 1500.00,
                 'ordered_at'   => Carbon::now()->subDay(),
                 'created_at'   => Carbon::now(),
                 'updated_at'   => Carbon::now(),
@@ -170,7 +168,6 @@ class MockDataDBSeeder extends Seeder
                 'order_number' => 'ORD-1003',
                 'status'       => 'shipped',
                 'notes'        => 'Deliver to the back entrance.',
-                'total_amount' => 850.00,
                 'ordered_at'   => Carbon::now()->subDays(3),
                 'created_at'   => Carbon::now(),
                 'updated_at'   => Carbon::now(),
@@ -181,7 +178,6 @@ class MockDataDBSeeder extends Seeder
                 'order_id'    => DB::table('orders')->where('order_number', 'ORD-1001')->first()->id,
                 'product_id'  => DB::table('products')->where('name', 'Automatic Feed Dispenser')->first()->id,
                 'quantity'    => 2,
-                'unit_price'  => 500.00,
                 'total_price' => 1000.00,
                 'created_at'  => Carbon::now(),
                 'updated_at'  => Carbon::now(),
@@ -190,7 +186,6 @@ class MockDataDBSeeder extends Seeder
                 'order_id'    => DB::table('orders')->where('order_number', 'ORD-1002')->first()->id,
                 'product_id'  => DB::table('products')->where('name', 'Nipple Drinker System')->first()->id,
                 'quantity'    => 3,
-                'unit_price'  => 150.00,
                 'total_price' => 450.00,
                 'created_at'  => Carbon::now(),
                 'updated_at'  => Carbon::now(),
@@ -199,7 +194,6 @@ class MockDataDBSeeder extends Seeder
                 'order_id'    => DB::table('orders')->where('order_number', 'ORD-1003')->first()->id,
                 'product_id'  => DB::table('products')->where('name', 'Ventilation Fan')->first()->id,
                 'quantity'    => 2,
-                'unit_price'  => 300.00,
                 'total_price' => 600.00,
                 'created_at'  => Carbon::now(),
                 'updated_at'  => Carbon::now(),
@@ -775,6 +769,68 @@ class MockDataDBSeeder extends Seeder
                 'total_inventory_value' => 30000.00,
                 'created_at'            => Carbon::now(),
                 'updated_at'            => Carbon::now(),
+            ],
+        ]);
+        DB::table('product_bundles')->insert([
+            [
+                'name'        => 'Complete Poultry Feeding Kit',
+                'description' => 'Includes Automatic Feed Dispenser and Nipple Drinker System.',
+                'created_at'  => Carbon::now(),
+                'updated_at'  => Carbon::now(),
+            ],
+            [
+                'name'        => 'Poultry Climate & Feeding Solution',
+                'description' => 'Combines Ventilation Fan and Automatic Feed Dispenser for optimal environment.',
+                'created_at'  => Carbon::now(),
+                'updated_at'  => Carbon::now(),
+            ],
+        ]);
+        DB::table('product_bundle_items')->insert([
+            // Bundle 1: Complete Poultry Feeding Kit
+            [
+                'product_bundle_id' => DB::table('product_bundles')->where('name', 'Complete Poultry Feeding Kit')->first()->id,
+                'product_id'        => DB::table('products')->where('name', 'Automatic Feed Dispenser')->first()->id,
+                'quantity'          => 1,
+                'created_at'        => Carbon::now(),
+                'updated_at'        => Carbon::now(),
+            ],
+            [
+                'product_bundle_id' => DB::table('product_bundles')->where('name', 'Complete Poultry Feeding Kit')->first()->id,
+                'product_id'        => DB::table('products')->where('name', 'Nipple Drinker System')->first()->id,
+                'quantity'          => 2,
+                'created_at'        => Carbon::now(),
+                'updated_at'        => Carbon::now(),
+            ],
+            // Bundle 2: Poultry Climate & Feeding Solution
+            [
+                'product_bundle_id' => DB::table('product_bundles')->where('name', 'Poultry Climate & Feeding Solution')->first()->id,
+                'product_id'        => DB::table('products')->where('name', 'Ventilation Fan')->first()->id,
+                'quantity'          => 1,
+                'created_at'        => Carbon::now(),
+                'updated_at'        => Carbon::now(),
+            ],
+            [
+                'product_bundle_id' => DB::table('product_bundles')->where('name', 'Poultry Climate & Feeding Solution')->first()->id,
+                'product_id'        => DB::table('products')->where('name', 'Automatic Feed Dispenser')->first()->id,
+                'quantity'          => 1,
+                'created_at'        => Carbon::now(),
+                'updated_at'        => Carbon::now(),
+            ],
+        ]);
+        DB::table('order_bundles')->insert([
+            [
+                'order_id'          => DB::table('orders')->where('order_number', 'ORD-1001')->first()->id,
+                'product_bundle_id' => DB::table('product_bundles')->where('name', 'Complete Poultry Feeding Kit')->first()->id,
+                'quantity'          => 1,
+                'created_at'        => Carbon::now(),
+                'updated_at'        => Carbon::now(),
+            ],
+            [
+                'order_id'          => DB::table('orders')->where('order_number', 'ORD-1002')->first()->id,
+                'product_bundle_id' => DB::table('product_bundles')->where('name', 'Poultry Climate & Feeding Solution')->first()->id,
+                'quantity'          => 2,
+                'created_at'        => Carbon::now(),
+                'updated_at'        => Carbon::now(),
             ],
         ]);
     }

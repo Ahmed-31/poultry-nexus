@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductBundle;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -14,6 +15,12 @@ class ProductController extends Controller
     {
         $products = Product::all();
         return response()->json($products);
+    }
+
+    public function bundles()
+    {
+        $productBundles = ProductBundle::all();
+        return response()->json($productBundles);
     }
 
     /**

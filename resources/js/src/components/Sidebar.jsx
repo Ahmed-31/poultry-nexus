@@ -27,6 +27,12 @@ const Sidebar = ({isSidebarOpen}) => {
                         </Link>
                     </li>
                     <li>
+                        <Link to="/orders"
+                              className="flex items-center p-3 hover:bg-gray-200 transition duration-300">
+                            <Box className="mr-3" size={20}/> Orders
+                        </Link>
+                    </li>
+                    <li>
                         <Link to="/reports" className="flex items-center p-3 hover:bg-gray-200 transition duration-300">
                             <BarChart className="mr-3" size={20}/> Reports
                         </Link>

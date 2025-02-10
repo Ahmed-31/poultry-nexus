@@ -12,7 +12,6 @@ class Order extends Model
         'order_number',
         'status',
         'notes',
-        'total_amount',
         'ordered_at',
     ];
 
@@ -42,5 +41,10 @@ class Order extends Model
     public function shipments()
     {
         return $this->hasMany(Shipment::class);
+    }
+
+    public function bundles()
+    {
+        return $this->hasMany(OrderBundle::class, 'order_id');
     }
 }

@@ -10,7 +10,6 @@ class OrderItem extends Model
         'order_id',
         'product_id',
         'quantity',
-        'unit_price',
         'total_price',
     ];
 
@@ -29,11 +28,17 @@ class OrderItem extends Model
     public static function boot()
     {
         parent::boot();
+        static::saving(function ($orderItem) {
+            $product = Product::find($orderItem->product_id);
+            if ($product) {
+                $orderItem->total_price = $product->price * $orderItem->quantity;
+            }
+        });
         static::created(function ($orderItem) {
             $inventory = Inventory::where('product_id', $orderItem->product_id)->first();
             if ($inventory) {
                 $inventory->reserved_quantity += $orderItem->quantity;
-                $inventory->quantity_available -= $orderItem->quantity;
+                $inventory->quantity -= $orderItem->quantity;
                 $inventory->save();
             }
         });
@@ -41,7 +46,7 @@ class OrderItem extends Model
             $inventory = Inventory::where('product_id', $orderItem->product_id)->first();
             if ($inventory) {
                 $inventory->reserved_quantity -= $orderItem->quantity;
-                $inventory->quantity_available += $orderItem->quantity;
+                $inventory->quantity += $orderItem->quantity;
                 $inventory->save();
             }
         });
