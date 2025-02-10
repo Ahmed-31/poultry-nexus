@@ -17,7 +17,7 @@ const OrderForm = ({onClose, initialData}) => {
             setFormData({
                 customer_id: initialData.customer_id || '',
                 order_items: initialData.order_items || [],
-                order_bundles: initialData.order_bundles || [],
+                order_bundles: initialData.bundles || [],
                 notes: initialData.notes || '',
             });
         }
