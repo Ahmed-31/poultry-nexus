@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class OrderController extends Controller
 {
@@ -12,8 +13,12 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::with(['orderItems.product', 'user', 'customer', 'payments', 'shipments', 'bundles.bundle'])->get();
-        return response()->json($orders);
+        $query = Order::with(['orderItems.product', 'user', 'customer', 'payments', 'shipments', 'bundles.bundle']);
+        return DataTables::of($query)
+            ->addColumn('order_number', fn($order) => $order->order_number)
+            ->addColumn('status', fn($order) => $order->status)
+            ->addColumn('actions', fn($order) => '')
+            ->tojson();
     }
 
     /**

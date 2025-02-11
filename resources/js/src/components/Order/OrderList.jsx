@@ -1,14 +1,16 @@
 // resources/js/src/components/Orders/OrderList.jsx
-import React, {useState} from 'react';
+import React, {useState, useMemo} from 'react';
 import Button from '../Common/Button.jsx';
 import {useOrders} from '../../context/OrderContext';
-import Loader from '../Common/Loader.jsx';
 import OrderForm from './OrderForm.jsx';
+import DataTable from 'react-data-table-component';
+
 
 const OrderList = () => {
     const {orders, loading, error, deleteOrderItem} = useOrders();
     const [showForm, setShowForm] = useState(false);
     const [editOrder, setEditOrder] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const handleEdit = (order) => {
         setEditOrder(order);
@@ -26,46 +28,70 @@ const OrderList = () => {
         setEditOrder(null);
     };
 
+    const filteredOrders = useMemo(() => {
+        return orders.filter(order =>
+            order.order_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            order.customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            order.status.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }, [orders, searchTerm]);
+
+    const columns = useMemo(() => [
+        {name: 'Order Number', selector: row => row.order_number, sortable: true},
+        {name: 'Customer', selector: row => row.customer.name, sortable: true},
+        {name: 'Status', selector: row => row.status, sortable: true},
+        {
+            name: 'Actions',
+            cell: row => (
+                <div className="flex justify-center space-x-2">
+                    <Button variant="warning" onClick={() => handleEdit(row)}>Edit</Button>
+                    <Button variant="danger" onClick={() => handleDelete(row.id)}>Delete</Button>
+                </div>
+            ),
+        },
+    ], []);
+
     return (
-        <div>
+        <div className="p-4 bg-white rounded shadow-md">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-semibold">Orders List</h2>
                 <Button onClick={() => setShowForm(true)} variant="primary">Create New Order</Button>
             </div>
 
-            {showForm && (
-                <OrderForm onClose={handleCloseForm} initialData={editOrder}/>
-            )}
+            <div className="mb-4">
+                <input
+                    type="text"
+                    placeholder="Search orders..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full p-2 border rounded shadow-sm"
+                />
+            </div>
 
-            {loading ? (
-                <Loader/>
-            ) : error ? (
-                <p className="text-red-500 text-center">{error}</p>
-            ) : (
-                <table className="w-full bg-white shadow rounded-lg">
-                    <thead>
-                        <tr className="bg-gray-200">
-                            <th className="p-4">Order Number</th>
-                            <th className="p-4">Customer</th>
-                            <th className="p-4">Status</th>
-                            <th className="p-4">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {orders.map(order => (
-                            <tr key={order.id} className="text-center border-b">
-                                <td className="p-4">{order.order_number}</td>
-                                <td className="p-4">{order.customer.name}</td>
-                                <td className="p-4">{order.status}</td>
-                                <td className="p-4 flex justify-center space-x-2">
-                                    <Button variant="warning" onClick={() => handleEdit(order)}>Edit</Button>
-                                    <Button variant="danger" onClick={() => handleDelete(order.id)}>Delete</Button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
+            {error && <p className="text-red-500 text-center">{error}</p>}
+
+            <div className={`transition-all duration-300 ${showForm ? 'grid grid-cols-1 md:grid-cols-2 gap-4' : ''}`}>
+                <div className={`${showForm ? 'md:col-span-1' : ''}`}>
+                    <DataTable
+                        columns={columns}
+                        data={filteredOrders}
+                        progressPending={loading}
+                        noDataComponent={<p className="text-center text-gray-500">No orders available</p>}
+                        pagination
+                        highlightOnHover
+                        striped
+                        responsive
+                        persistTableHead
+                        className="border rounded shadow-sm"
+                    />
+                </div>
+
+                {showForm && (
+                    <div className="md:col-span-1 bg-gray-50 p-4 border rounded shadow-sm">
+                        <OrderForm onClose={handleCloseForm} initialData={editOrder}/>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
