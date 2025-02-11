@@ -9,7 +9,7 @@ const InventoryForm = ({onClose, initialData}) => {
     // Initialize form state with either initialData (for editing) or empty fields (for adding)
     const [formData, setFormData] = useState({
         product: '',
-        total_stock: '',
+        quantity: '',
         warehouse: ''
     });
 
@@ -17,7 +17,7 @@ const InventoryForm = ({onClose, initialData}) => {
         if (initialData) {
             setFormData({
                 product: initialData.product || '',
-                total_stock: initialData.total_stock || '',
+                quantity: initialData.quantity || '',
                 warehouse: initialData.warehouse || ''
             });
         }
@@ -72,8 +72,8 @@ const InventoryForm = ({onClose, initialData}) => {
                         <label className="block text-sm font-semibold text-gray-700 mb-2">Quantity</label>
                         <input
                             type="number"
-                            name="total_stock"
-                            value={formData.total_stock}
+                            name="quantity"
+                            value={formData.quantity}
                             onChange={handleChange}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             required

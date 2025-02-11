@@ -4,7 +4,7 @@ import api from './axios';
 export const getInventory = async () => {
     try {
         const response = await api.get('/api/inventory');
-        return response.data;
+        return response.data.data;
     } catch (error) {
         console.error('Error fetching inventory:', error);
         return [];

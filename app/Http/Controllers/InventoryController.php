@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Inventory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Yajra\DataTables\DataTables;
 
 class InventoryController extends Controller
 {
@@ -13,17 +14,11 @@ class InventoryController extends Controller
      */
     public function index()
     {
-        $inventory = Inventory::with(['warehouse', 'product'])
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'id'          => $item->id,
-                    'product'     => $item->product,
-                    'warehouse'   => $item->warehouse,
-                    'total_stock' => $item->quantity
-                ];
-            });
-        return response()->json($inventory);
+        $query = Inventory::with(['warehouse', 'product']);
+        return DataTables::of($query)
+            ->addColumn('id', fn($item) => $item->id)
+            ->addColumn('action', fn($item) => '')
+            ->toJson();
     }
 
     /**
