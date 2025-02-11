@@ -7,6 +7,7 @@ const OrderForm = ({onClose, initialData}) => {
 
     const [formData, setFormData] = useState({
         customer_id: '',
+        order_number: '',
         order_items: [],
         order_bundles: [],
         notes: '',
@@ -17,6 +18,7 @@ const OrderForm = ({onClose, initialData}) => {
         if (initialData) {
             setFormData({
                 customer_id: initialData.customer_id || '',
+                order_number: initialData.order_number || '',
                 order_items: initialData.order_items || [],
                 order_bundles: initialData.bundles || [],
                 notes: initialData.notes || '',
@@ -107,6 +109,18 @@ const OrderForm = ({onClose, initialData}) => {
                             type="date"
                             name="ordered_at"
                             value={formData.ordered_at}
+                            onChange={handleChange}
+                            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Order Number</label>
+                        <input
+                            type="text"
+                            name="order_number"
+                            value={formData.order_number}
                             onChange={handleChange}
                             className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
                             required

@@ -82,6 +82,7 @@ class OrderController extends Controller
         $request->validate([
             'customer_id'                       => 'required|integer|exists:customers,id',
             'ordered_at'                        => 'required|date',
+            'order_number'                      => 'required|string|unique:orders,order_number',
             'notes'                             => 'nullable|string',
             'order_bundles'                     => 'nullable|array',
             'order_bundles.*.product_bundle_id' => 'required|integer|exists:product_bundles,id',
@@ -93,11 +94,12 @@ class OrderController extends Controller
         // Find the order
         $order = Order::with(['orderItems', 'bundles'])->findOrFail($id);
         // Check if basic order details have changed
-        $orderChanged = $order->customer_id != $request->customer_id || $order->notes != $request->notes || $order->ordered_at != $request->ordered_at;
+        $orderChanged = $order->customer_id != $request->customer_id || $order->notes != $request->notes || $order->ordered_at != $request->ordered_at || $order->order_number != $request->order_number;
         if ($orderChanged) {
             $order->customer_id = $request->customer_id;
             $order->notes = $request->notes;
             $order->ordered_at = $request->ordered_at;
+            $order->order_number = $request->order_number;
             $order->save();
         }
         // Compare and update order bundles if needed
