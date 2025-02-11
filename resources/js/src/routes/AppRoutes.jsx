@@ -11,34 +11,47 @@ import Logout from '../components/Auth/Logout.jsx';
 import PrivateRoutes from './PrivateRoutes.jsx';
 import PublicRoute from './PublicRoutes.jsx';
 import {AuthProvider} from "../context/AuthContext.jsx";
-import AuthenticatedProviders from '../context/AuthenticatedProviders.jsx';
+import {OrderProvider} from "../context/OrderContext.jsx";
+import {InventoryProvider} from "../context/InventoryContext.jsx";
 
 const AppRoutes = () => (
     <Router>
         <AuthProvider>
-            <AuthenticatedProviders>
-                <Routes>
-                    <Route
-                        path="/login"
-                        element={
-                            <PublicRoute>
-                                <Login/>
-                            </PublicRoute>
-                        }
-                    />
+            <Routes>
+                <Route
+                    path="/login"
+                    element={
+                        <PublicRoute>
+                            <Login/>
+                        </PublicRoute>
+                    }
+                />
 
-                    <Route element={<PrivateRoutes/>}>
-                        <Route path="/" element={<Layout/>}>
-                            <Route path="/logout" element={<Logout/>}/>
-                            <Route index element={<HomePage/>}/>
-                            <Route path="orders" element={<OrderPage/>}/>
-                            <Route path="inventory" element={<InventoryPage/>}/>
-                        </Route>
+                <Route element={<PrivateRoutes/>}>
+                    <Route path="/" element={<Layout/>}>
+                        <Route path="/logout" element={<Logout/>}/>
+                        <Route index element={<HomePage/>}/>
+                        <Route
+                            path="orders"
+                            element={
+                                <OrderProvider>
+                                    <OrderPage/>
+                                </OrderProvider>
+                            }
+                        />
+                        <Route
+                            path="inventory"
+                            element={
+                                <InventoryProvider>
+                                    <InventoryPage/>
+                                </InventoryProvider>
+                            }
+                        />
                     </Route>
+                </Route>
 
-                    <Route path="*" element={<NotFoundPage/>}/>
-                </Routes>
-            </AuthenticatedProviders>
+                <Route path="*" element={<NotFoundPage/>}/>
+            </Routes>
         </AuthProvider>
     </Router>
 );
