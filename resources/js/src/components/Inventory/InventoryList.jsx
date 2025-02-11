@@ -27,19 +27,19 @@ const InventoryList = () => {
         setEditItem(null);
     };
 
-    const filteredOrders = useMemo(() => {
+    const filteredProducts = useMemo(() => {
         return inventory.filter(item =>
             item.product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.quantity.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.quantity.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.warehouse.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
     }, [inventory, searchTerm]);
 
     const columns = useMemo(() => [
-        {name: 'Id', selector: row => row.id},
-        {name: 'Product', selector: row => row.product.name},
-        {name: 'Quantity', selector: row => row.quantity},
-        {name: 'Warehouse', selector: row => row.warehouse.name},
+        {name: 'Id', selector: row => row.id, sortable: true},
+        {name: 'Product', selector: row => row.product.name, sortable: true},
+        {name: 'Quantity', selector: row => row.quantity, sortable: true},
+        {name: 'Warehouse', selector: row => row.warehouse.name, sortable: true},
         {
             name: 'Actions',
             cell: row => (
@@ -89,9 +89,9 @@ const InventoryList = () => {
                 <div className={`${showForm ? 'md:col-span-1' : ''}`}>
                     <DataTable
                         columns={columns}
-                        data={filteredOrders}
+                        data={filteredProducts}
                         progressPending={loading}
-                        noDataComponent={<p className="text-center text-gray-500">No orders available</p>}
+                        noDataComponent={<p className="text-center text-gray-500">No products available</p>}
                         pagination
                         highlightOnHover
                         striped
