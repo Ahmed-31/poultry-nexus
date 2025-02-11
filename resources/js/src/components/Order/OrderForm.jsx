@@ -10,6 +10,7 @@ const OrderForm = ({onClose, initialData}) => {
         order_items: [],
         order_bundles: [],
         notes: '',
+        ordered_at: new Date().toISOString().split('T')[0],
     });
 
     useEffect(() => {
@@ -19,6 +20,9 @@ const OrderForm = ({onClose, initialData}) => {
                 order_items: initialData.order_items || [],
                 order_bundles: initialData.bundles || [],
                 notes: initialData.notes || '',
+                ordered_at: initialData.ordered_at
+                    ? new Date(initialData.ordered_at).toISOString().split('T')[0]
+                    : new Date().toISOString().split('T')[0],
             });
         }
     }, [initialData]);
@@ -95,6 +99,18 @@ const OrderForm = ({onClose, initialData}) => {
                                 <option key={customer.id} value={customer.id}>{customer.name}</option>
                             ))}
                         </select>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Order Date</label>
+                        <input
+                            type="date"
+                            name="ordered_at"
+                            value={formData.ordered_at}
+                            onChange={handleChange}
+                            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                            required
+                        />
                     </div>
 
                     <div>

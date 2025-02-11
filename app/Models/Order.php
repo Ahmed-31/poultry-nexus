@@ -47,4 +47,15 @@ class Order extends Model
     {
         return $this->hasMany(OrderBundle::class, 'order_id');
     }
+
+    public static function boot()
+    {
+        parent::boot();
+        static::created(function ($order) {
+            if (!isset($order->ordered_at)) {
+                $order->ordered_at = $order->created_at;
+                $order->save();
+            }
+        });
+    }
 }

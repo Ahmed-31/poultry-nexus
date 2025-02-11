@@ -23,6 +23,7 @@ class OrderController extends Controller
     {
         $request->validate([
             'customer_id'                       => 'required|integer|exists:customers,id',
+            'ordered_at'                        => 'required|date',
             'order_number'                      => 'nullable|string|unique:orders,order_number',
             'notes'                             => 'nullable|string',
             'order_bundles'                     => 'nullable|array',
@@ -42,6 +43,7 @@ class OrderController extends Controller
             'order_number' => $request->input('order_number'),
             'notes'        => $request->input('notes') ?? '',
             'user_id'      => auth()->id(),
+            'ordered_at'   => $request->input('ordered_at')
         ]);
         if ($request->has('order_bundles')) {
             foreach ($request->input('order_bundles') as $bundle) {
@@ -79,6 +81,7 @@ class OrderController extends Controller
         // Validate the request
         $request->validate([
             'customer_id'                       => 'required|integer|exists:customers,id',
+            'ordered_at'                        => 'required|date',
             'notes'                             => 'nullable|string',
             'order_bundles'                     => 'nullable|array',
             'order_bundles.*.product_bundle_id' => 'required|integer|exists:product_bundles,id',
@@ -90,10 +93,11 @@ class OrderController extends Controller
         // Find the order
         $order = Order::with(['orderItems', 'bundles'])->findOrFail($id);
         // Check if basic order details have changed
-        $orderChanged = $order->customer_id != $request->customer_id || $order->notes != $request->notes;
+        $orderChanged = $order->customer_id != $request->customer_id || $order->notes != $request->notes || $order->ordered_at != $request->ordered_at;
         if ($orderChanged) {
             $order->customer_id = $request->customer_id;
             $order->notes = $request->notes;
+            $order->ordered_at = $request->ordered_at;
             $order->save();
         }
         // Compare and update order bundles if needed
