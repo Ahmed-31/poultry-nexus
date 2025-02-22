@@ -18,7 +18,7 @@ const InventoryForm = ({onClose, initialData}) => {
             setFormData({
                 product: initialData.product || '',
                 quantity: initialData.quantity || '',
-                warehouse: initialData.warehouse || ''
+                warehouse: initialData.warehouse || []
             });
         }
     }, [initialData]);
@@ -59,7 +59,7 @@ const InventoryForm = ({onClose, initialData}) => {
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             required
                         >
-                            <option value="">Select Product</option>
+                            <option value="" disabled>Select Product</option>
                             {products.map(product => (
                                 <option key={product.id} value={product.id}>
                                     {product.name}
@@ -89,7 +89,7 @@ const InventoryForm = ({onClose, initialData}) => {
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             required
                         >
-                            <option value="">Select Warehouse</option>
+                            <option value="" disabled>Select Warehouse</option>
                             {warehouses.map(warehouse => (
                                 <option key={warehouse.id} value={warehouse.id}>
                                     {warehouse.name}

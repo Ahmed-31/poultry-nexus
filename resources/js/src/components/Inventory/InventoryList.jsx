@@ -39,6 +39,7 @@ const InventoryList = () => {
         {name: 'Id', selector: row => row.id, sortable: true},
         {name: 'Product', selector: row => row.product.name, sortable: true},
         {name: 'Quantity', selector: row => row.quantity, sortable: true},
+        {name: 'Reserved Quantity', selector: row => row.reserved_quantity, sortable: true},
         {name: 'Warehouse', selector: row => row.warehouse.name, sortable: true},
         {
             name: 'Actions',
