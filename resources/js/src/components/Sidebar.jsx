@@ -1,4 +1,4 @@
-import React, {useContext, lazy, Suspense, useMemo} from "react";
+import React, {useContext, lazy, Suspense, useMemo, useEffect} from "react";
 import {NavLink, useLocation} from "react-router-dom";
 import {ChevronDown, ChevronUp, Menu as DefaultIcon} from "lucide-react";
 import {MenuContext} from "../context/MenuContext";
@@ -25,7 +25,27 @@ const DynamicIcon = ({name, size = 20}) => {
 
 const Sidebar = ({isSidebarOpen}) => {
     const location = useLocation();
-    const {menuItems, openMenus, toggleMenu} = useContext(MenuContext);
+    const {menuItems, openMenus, toggleMenu, setOpenMenus} = useContext(MenuContext);
+
+    useEffect(() => {
+        const expandedMenus = {};
+
+        const findActiveParent = (items, parentTitle = null) => {
+            items.forEach((item) => {
+                if (item.children.length > 0) {
+                    findActiveParent(item.children, item.title.toLowerCase());
+                }
+                if (location.pathname.startsWith(item.url)) {
+                    if (parentTitle) {
+                        expandedMenus[parentTitle] = true;
+                    }
+                }
+            });
+        };
+
+        findActiveParent(menuItems);
+        setOpenMenus(expandedMenus);
+    }, [location.pathname, menuItems, setOpenMenus]);
 
     const renderMenu = (items) =>
         items.map((item) => (
@@ -35,7 +55,7 @@ const Sidebar = ({isSidebarOpen}) => {
                         <button
                             className="w-full flex justify-between items-center p-3 hover:bg-gray-200 transition duration-300 rounded-md focus:outline-none"
                             onClick={() => toggleMenu(item.title.toLowerCase())}
-                            aria-expanded={openMenus[item.title.toLowerCase()]}
+                            aria-expanded={openMenus[item.title.toLowerCase()] || false}
                         >
               <span className="flex items-center">
                 <DynamicIcon name={item.icon}/>

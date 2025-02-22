@@ -21,7 +21,7 @@ export const MenuProvider = ({children}) => {
     };
 
     return (
-        <MenuContext.Provider value={{menuItems, openMenus, toggleMenu}}>
+        <MenuContext.Provider value={{menuItems, openMenus, setOpenMenus, toggleMenu}}>
             {children}
         </MenuContext.Provider>
     );
