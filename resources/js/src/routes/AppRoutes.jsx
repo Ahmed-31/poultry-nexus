@@ -14,6 +14,7 @@ import {AuthProvider} from "../context/AuthContext.jsx";
 import {OrderProvider} from "../context/OrderContext.jsx";
 import {InventoryProvider} from "../context/InventoryContext.jsx";
 import OrderDetails from '../components/Order/OrderDetails.jsx';
+import {MenuProvider} from '../context/MenuContext.jsx';
 
 const AppRoutes = () => (
     <Router>
@@ -29,7 +30,7 @@ const AppRoutes = () => (
                 />
 
                 <Route element={<PrivateRoutes/>}>
-                    <Route path="/" element={<Layout/>}>
+                    <Route path="/" element={<MenuProvider> <Layout/> </MenuProvider>}>
                         <Route path="/logout" element={<Logout/>}/>
                         <Route index element={<HomePage/>}/>
 

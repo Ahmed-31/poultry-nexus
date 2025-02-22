@@ -4,7 +4,7 @@ import {UserCircle, Menu, X} from 'lucide-react';
 
 const Navbar = ({toggleSidebar, isSidebarOpen}) => {
     return (
-        <nav className="bg-gray-100 text-gray-800 p-4 shadow-inner flex justify-between items-center">
+        <nav className="bg-gray-100 text-gray-800 p-4 shadow-md flex justify-between items-center">
             <div className="flex items-center">
                 <button onClick={toggleSidebar}
                         className="text-gray-800 p-2 mr-4 hover:bg-gray-200 transition duration-300">
@@ -19,7 +19,7 @@ const Navbar = ({toggleSidebar, isSidebarOpen}) => {
                 <Link to="/logout" className="hover:text-gray-600 transition duration-300">Logout</Link>
             </div>
         </nav>
-    )
+    );
 };
 
 export default Navbar;

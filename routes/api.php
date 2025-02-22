@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,9 @@ Route::post('/logout', [AuthController::class, 'logout']);
     });
     Route::prefix('customers')->group(function () {
         Route::get('/', [CustomerController::class, 'index']);
+    });
+    Route::prefix('menus')->group(function () {
+        Route::get('/', [MenuController::class, 'index']);
     });
 });
 

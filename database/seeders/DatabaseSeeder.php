@@ -3,9 +3,6 @@
 namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,5 +13,6 @@ class DatabaseSeeder extends Seeder
     : void
     {
         $this->call(RolesAndPermissionsSeeder::class);
+        $this->call(MenusTableSeeder::class);
     }
 }

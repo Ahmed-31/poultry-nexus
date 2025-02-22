@@ -11,11 +11,14 @@ const Layout = () => {
     };
 
     return (
-        <div className="min-h-screen flex bg-white">
-            <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}/>
-            <div className={`flex flex-col flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
+        <div className="flex min-h-screen">
+            <div className={`transition-all duration-300 ${isSidebarOpen ? "inline-flex w-auto" : "hidden"}`}>
+                <Sidebar isSidebarOpen={isSidebarOpen}/>
+            </div>
+
+            <div className="flex-1 flex flex-col min-h-screen">
                 <Navbar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}/>
-                <main className="flex-1  bg-gray-50 shadow-inner overflow-auto">
+                <main className="flex-1 bg-gray-50 shadow-inner overflow-auto p-4">
                     <Outlet/>
                 </main>
                 <footer className="bg-gray-200 text-gray-700 p-4 text-center shadow-inner">

@@ -1,44 +1,79 @@
-import React from 'react';
-import {Link} from 'react-router-dom';
-import {Home, Box, BarChart} from 'lucide-react';
+import React, {useContext, lazy, Suspense, useMemo} from "react";
+import {NavLink, useLocation} from "react-router-dom";
+import {ChevronDown, ChevronUp, Menu as DefaultIcon} from "lucide-react";
+import {MenuContext} from "../context/MenuContext";
+
+const DynamicIcon = ({name, size = 20}) => {
+    const IconComponent = useMemo(() => {
+        try {
+            return lazy(() =>
+                import("lucide-react").then((module) => ({
+                    default: module[name] || DefaultIcon,
+                }))
+            );
+        } catch (error) {
+            return DefaultIcon;
+        }
+    }, [name]);
+
+    return (
+        <Suspense fallback={<DefaultIcon size={size} className="mr-3 text-gray-400"/>}>
+            <IconComponent size={size} className="mr-3"/>
+        </Suspense>
+    );
+};
 
 const Sidebar = ({isSidebarOpen}) => {
+    const location = useLocation();
+    const {menuItems, openMenus, toggleMenu} = useContext(MenuContext);
+
+    const renderMenu = (items) =>
+        items.map((item) => (
+            <li key={item.id} className="w-full">
+                {item.children.length > 0 ? (
+                    <>
+                        <button
+                            className="w-full flex justify-between items-center p-3 hover:bg-gray-200 transition duration-300 rounded-md focus:outline-none"
+                            onClick={() => toggleMenu(item.title.toLowerCase())}
+                            aria-expanded={openMenus[item.title.toLowerCase()]}
+                        >
+              <span className="flex items-center">
+                <DynamicIcon name={item.icon}/>
+                <span className="whitespace-nowrap">{item.title}</span>
+              </span>
+                            {openMenus[item.title.toLowerCase()] ? <ChevronUp size={18}/> : <ChevronDown size={18}/>}
+                        </button>
+                        {openMenus[item.title.toLowerCase()] && (
+                            <ul className="pl-8 space-y-2">{renderMenu(item.children)}</ul>
+                        )}
+                    </>
+                ) : (
+                    <NavLink
+                        to={item.url}
+                        className={({isActive}) =>
+                            `flex items-center p-3 transition duration-300 rounded-md whitespace-nowrap ${
+                                isActive ? "bg-gray-300" : "hover:bg-gray-200"
+                            }`
+                        }
+                    >
+                        <DynamicIcon name={item.icon}/>
+                        <span className="whitespace-nowrap">{item.title}</span>
+                    </NavLink>
+                )}
+            </li>
+        ));
+
     return (
         <aside
-            className={`w-64 bg-gray-100 text-gray-800 h-full fixed top-0 left-0 z-40 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} border-r border-gray-300`}>
-            <nav className="mt-16">
-                <ul className="space-y-2 px-4">
-                    <li>
-                        <Link to="/"
-                              className="flex items-center p-3 hover:bg-gray-200 transition duration-300">
-                            <Home className="mr-3" size={20}/> Home
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/inventory"
-                              className="flex items-center p-3 hover:bg-gray-200 transition duration-300">
-                            <Box className="mr-3" size={20}/> Inventory
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/products"
-                              className="flex items-center p-3 hover:bg-gray-200 transition duration-300">
-                            <Box className="mr-3" size={20}/> Products
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/orders"
-                              className="flex items-center p-3 hover:bg-gray-200 transition duration-300">
-                            <Box className="mr-3" size={20}/> Orders
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/reports" className="flex items-center p-3 hover:bg-gray-200 transition duration-300">
-                            <BarChart className="mr-3" size={20}/> Reports
-                        </Link>
-                    </li>
-                </ul>
-            </nav>
+            className={`min-h-screen bg-white shadow-md border-r border-gray-300 transition-all duration-300 ${
+                isSidebarOpen ? "inline-flex flex-col w-auto" : "hidden"
+            }`}
+        >
+            <div className="flex-1 p-4">
+                <nav>
+                    <ul className="space-y-2">{renderMenu(menuItems)}</ul>
+                </nav>
+            </div>
         </aside>
     );
 };
