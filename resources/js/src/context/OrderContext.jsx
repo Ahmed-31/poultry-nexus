@@ -2,6 +2,7 @@
 import React, {createContext, useContext, useState, useEffect} from 'react';
 import {
     getOrders,
+    getOrder,
     addOrder,
     updateOrder,
     deleteOrder
@@ -18,6 +19,7 @@ export const useOrders = () => useContext(OrderContext);
 // Provider Component
 export const OrderProvider = ({children}) => {
     const [orders, setOrders] = useState([]);
+    const [currentOrder, setCurrentOrder] = useState(null);
     const [products, setProducts] = useState([]);
     const [productBundles, setProductBundles] = useState([]);
     const [customers, setCustomers] = useState([]);
@@ -40,6 +42,27 @@ export const OrderProvider = ({children}) => {
             setOrders(data);
         } catch (err) {
             setError('Failed to load orders.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Fetch Single Order by ID
+    const fetchOrderById = async (orderId) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await getOrder(orderId);
+
+            if (response && response.id) {
+                setCurrentOrder(response);
+            } else {
+                console.error("Invalid order data received:", response);
+                setCurrentOrder(null);
+            }
+        } catch (err) {
+            console.error("Error fetching order:", err);
+            setError("Failed to load order details.");
         } finally {
             setLoading(false);
         }
@@ -77,7 +100,7 @@ export const OrderProvider = ({children}) => {
         setLoading(true);
         try {
             await addOrder(newOrder);
-            await fetchOrders();  // Refresh after adding
+            await fetchOrders();
         } catch (err) {
             setError('Failed to add order');
         } finally {
@@ -90,7 +113,7 @@ export const OrderProvider = ({children}) => {
         setLoading(true);
         try {
             await updateOrder(id, updatedOrder);
-            await fetchOrders();  // Refresh after updating
+            await fetchOrders();
         } catch (err) {
             setError('Failed to update order');
         } finally {
@@ -113,11 +136,14 @@ export const OrderProvider = ({children}) => {
 
     const value = {
         orders,
+        currentOrder,
         loading,
         products,
         productBundles,
         customers,
         error,
+        fetchOrders,
+        fetchOrderById,
         addOrderItem,
         updateOrderItem,
         deleteOrderItem,

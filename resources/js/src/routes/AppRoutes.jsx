@@ -13,6 +13,7 @@ import PublicRoute from './PublicRoutes.jsx';
 import {AuthProvider} from "../context/AuthContext.jsx";
 import {OrderProvider} from "../context/OrderContext.jsx";
 import {InventoryProvider} from "../context/InventoryContext.jsx";
+import OrderDetails from '../components/Order/OrderDetails.jsx';
 
 const AppRoutes = () => (
     <Router>
@@ -31,14 +32,10 @@ const AppRoutes = () => (
                     <Route path="/" element={<Layout/>}>
                         <Route path="/logout" element={<Logout/>}/>
                         <Route index element={<HomePage/>}/>
-                        <Route
-                            path="orders"
-                            element={
-                                <OrderProvider>
-                                    <OrderPage/>
-                                </OrderProvider>
-                            }
-                        />
+
+                        <Route path="orders" element={<OrderProvider> <OrderPage/> </OrderProvider>}/>
+                        <Route path="orders/:orderId" element={<OrderProvider> <OrderDetails/> </OrderProvider>}/>
+
                         <Route
                             path="inventory"
                             element={

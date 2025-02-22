@@ -1,9 +1,11 @@
 // resources/js/src/components/Orders/OrderList.jsx
 import React, {useState, useMemo} from 'react';
+import {Link} from "react-router-dom";
 import Button from '../Common/Button.jsx';
 import {useOrders} from '../../context/OrderContext';
 import OrderForm from './OrderForm.jsx';
 import DataTable from 'react-data-table-component';
+import ExpandedOrderDetails from './ExpandedOrderDetails.jsx';
 
 
 const OrderList = () => {
@@ -31,19 +33,25 @@ const OrderList = () => {
     const filteredOrders = useMemo(() => {
         return orders.filter(order =>
             order.order_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            order.customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (order.customer?.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
             order.status.toLowerCase().includes(searchTerm.toLowerCase())
         );
     }, [orders, searchTerm]);
 
     const columns = useMemo(() => [
         {name: 'Order Number', selector: row => row.order_number, sortable: true},
-        {name: 'Customer', selector: row => row.customer.name, sortable: true},
+        {name: 'Customer', selector: row => row.customer?.name || 'N/A', sortable: true},
         {name: 'Status', selector: row => row.status, sortable: true},
         {
             name: 'Actions',
             cell: row => (
                 <div className="flex justify-center space-x-2">
+                    <Link
+                        to={`/orders/${row.id}`}
+                        className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-md transition duration-200"
+                    >
+                        View Details
+                    </Link>
                     <Button variant="warning" onClick={() => handleEdit(row)}>Edit</Button>
                     <Button variant="danger" onClick={() => handleDelete(row.id)}>Delete</Button>
                 </div>
@@ -82,6 +90,8 @@ const OrderList = () => {
                         striped
                         responsive
                         persistTableHead
+                        expandableRows
+                        expandableRowsComponent={ExpandedOrderDetails}
                         className="border rounded shadow-sm"
                     />
                 </div>

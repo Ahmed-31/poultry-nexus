@@ -27,16 +27,21 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'customer_id'                       => 'required|integer|exists:customers,id',
-            'ordered_at'                        => 'required|date',
-            'order_number'                      => 'nullable|string|unique:orders,order_number',
-            'notes'                             => 'nullable|string',
-            'order_bundles'                     => 'nullable|array',
-            'order_bundles.*.product_bundle_id' => 'required|integer|exists:product_bundles,id',
-            'order_bundles.*.quantity'          => 'required|integer|min:1',
-            'order_items'                       => 'nullable|array',
-            'order_items.*.product_id'          => 'required|integer|exists:products,id',
-            'order_items.*.quantity'            => 'required|integer|min:1'
+            'customer_id'                         => 'required|integer|exists:customers,id',
+            'ordered_at'                          => 'required|date',
+            'order_number'                        => 'nullable|string|unique:orders,order_number',
+            'notes'                               => 'nullable|string',
+            'order_bundles'                       => 'nullable|array',
+            'order_bundles.*.product_bundle_id'   => 'required|integer|exists:product_bundles,id',
+            'order_bundles.*.height'              => 'required|integer|min:1',
+            'order_bundles.*.poultry_house_count' => 'required|integer|min:1',
+            'order_bundles.*.belt_width'          => 'required|integer|min:1',
+            'order_bundles.*.lines_number'        => 'required|integer|min:1',
+            'order_bundles.*.units_per_line'      => 'required|integer|min:1',
+            'order_bundles.*.levels'              => 'required|integer|min:1',
+            'order_items'                         => 'nullable|array',
+            'order_items.*.product_id'            => 'required|integer|exists:products,id',
+            'order_items.*.quantity'              => 'required|integer|min:1'
         ]);
         if ($request->isNotFilled('order_number')) {
             $orderNumber = strtoupper(uniqid('ORD-')) . '-' . now()->format('YmdHis');
@@ -53,8 +58,13 @@ class OrderController extends Controller
         if ($request->has('order_bundles')) {
             foreach ($request->input('order_bundles') as $bundle) {
                 $order->bundles()->create([
-                    'product_bundle_id' => $bundle['product_bundle_id'],
-                    'quantity'          => $bundle['quantity']
+                    'product_bundle_id'   => $bundle['product_bundle_id'],
+                    'poultry_house_count' => $bundle['poultry_house_count'],
+                    'height'              => $bundle['height'],
+                    'belt_width'          => $bundle['belt_width'],
+                    'lines_number'        => $bundle['lines_number'],
+                    'units_per_line'      => $bundle['units_per_line'],
+                    'levels'              => $bundle['levels'],
                 ]);
             }
         }
@@ -85,21 +95,29 @@ class OrderController extends Controller
     {
         // Validate the request
         $request->validate([
-            'customer_id'                       => 'required|integer|exists:customers,id',
-            'ordered_at'                        => 'required|date',
-            'order_number'                      => 'required|string|unique:orders,order_number',
-            'notes'                             => 'nullable|string',
-            'order_bundles'                     => 'nullable|array',
-            'order_bundles.*.product_bundle_id' => 'required|integer|exists:product_bundles,id',
-            'order_bundles.*.quantity'          => 'required|integer|min:1',
-            'order_items'                       => 'nullable|array',
-            'order_items.*.product_id'          => 'required|integer|exists:products,id',
-            'order_items.*.quantity'            => 'required|integer|min:1'
+            'customer_id'                         => 'required|integer|exists:customers,id',
+            'ordered_at'                          => 'required|date',
+            'order_number'                        => 'required|string|unique:orders,order_number',
+            'notes'                               => 'nullable|string',
+            'order_bundles'                       => 'nullable|array',
+            'order_bundles.*.product_bundle_id'   => 'required|integer|exists:product_bundles,id',
+            'order_bundles.*.poultry_house_count' => 'required|integer|min:1',
+            'order_bundles.*.height'              => 'required|integer|min:1',
+            'order_bundles.*.belt_width'          => 'required|integer|min:1',
+            'order_bundles.*.lines_number'        => 'required|integer|min:1',
+            'order_bundles.*.units_per_line'      => 'required|integer|min:1',
+            'order_bundles.*.levels'              => 'required|integer|min:1',
+            'order_items'                         => 'nullable|array',
+            'order_items.*.product_id'            => 'required|integer|exists:products,id',
+            'order_items.*.quantity'              => 'required|integer|min:1'
         ]);
         // Find the order
         $order = Order::with(['orderItems', 'bundles'])->findOrFail($id);
         // Check if basic order details have changed
-        $orderChanged = $order->customer_id != $request->customer_id || $order->notes != $request->notes || $order->ordered_at != $request->ordered_at || $order->order_number != $request->order_number;
+        $orderChanged = $order->customer_id != $request->customer_id ||
+            $order->notes != $request->notes ||
+            $order->ordered_at != $request->ordered_at ||
+            $order->order_number != $request->order_number;
         if ($orderChanged) {
             $order->customer_id = $request->customer_id;
             $order->notes = $request->notes;
@@ -110,8 +128,13 @@ class OrderController extends Controller
         // Compare and update order bundles if needed
         $existingBundles = $order->bundles->map(function ($bundle) {
             return [
-                'product_bundle_id' => $bundle->product_bundle_id,
-                'quantity'          => $bundle->quantity
+                'product_bundle_id'   => $bundle->product_bundle_id,
+                'poultry_house_count' => $bundle->poultry_house_count,
+                'height'              => $bundle->height,
+                'belt_width'          => $bundle->belt_width,
+                'lines_number'        => $bundle->lines_number,
+                'units_per_line'      => $bundle->units_per_line,
+                'levels'              => $bundle->levels,
             ];
         })->toArray();
         $newBundles = $request->order_bundles ?? [];
@@ -128,8 +151,13 @@ class OrderController extends Controller
             // Add new bundles
             foreach ($newBundles as $bundle) {
                 $order->bundles()->create([
-                    'product_bundle_id' => $bundle['product_bundle_id'],
-                    'quantity'          => $bundle['quantity']
+                    'product_bundle_id'   => $bundle['product_bundle_id'],
+                    'poultry_house_count' => $bundle['poultry_house_count'],
+                    'height'              => $bundle['height'],
+                    'belt_width'          => $bundle['belt_width'],
+                    'lines_number'        => $bundle['lines_number'],
+                    'units_per_line'      => $bundle['units_per_line'],
+                    'levels'              => $bundle['levels'],
                 ]);
             }
         }

@@ -11,6 +11,16 @@ export const getOrders = async () => {
         throw error;
     }
 };
+export const getOrder = async (id) => {
+    try {
+        const response = await api.get(`/api/orders/${id}`);
+        console.log("API Response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching order:', error);
+        throw error;
+    }
+};
 
 // Add a new order
 export const addOrder = async (orderData) => {
