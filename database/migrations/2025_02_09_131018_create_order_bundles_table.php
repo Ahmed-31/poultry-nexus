@@ -15,7 +15,13 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('order_id')->constrained('orders', 'id')->onDelete('cascade');
             $table->foreignId('product_bundle_id')->constrained('product_bundles', 'id')->onDelete('cascade');
-            $table->integer('quantity');
+            $table->integer('height');
+            $table->integer('belt_width');
+            $table->integer('lines_number');
+            $table->integer('units_per_line');
+            $table->integer('levels');
+            $table->integer('poultry_house_count');
+            $table->integer('total_units');
             $table->timestamps();
         });
     }
