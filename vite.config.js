@@ -18,11 +18,28 @@ export default defineConfig({
     plugins: [
         laravel({
             input: ['resources/js/src/main.jsx', 'resources/js/src/styles/app.css'],
+            buildDirectory: 'build',
             refresh: true,
         }),
         react(),
     ],
     build: {
         outDir: 'public/build',
+        manifest: true,
+        emptyOutDir: true,
+        rollupOptions: {
+            input: {
+                main: 'resources/js/src/main.jsx',
+                styles: 'resources/js/src/styles/app.css',
+            },
+            output: {
+                manualChunks: undefined,
+            },
+        },
+    },
+    resolve: {
+        alias: {
+            '@': '/resources/js/src',
+        },
     },
 });
