@@ -16,11 +16,17 @@
         "vite": "^6.1.0"
     },
     "dependencies": {
+        "@radix-ui/react-slot": "^1.1.2",
+        "class-variance-authority": "^0.7.1",
+        "clsx": "^2.1.1",
         "framer-motion": "^12.4.1",
         "lucide-react": "^0.475.0",
         "react": "^19.0.0",
         "react-data-table-component": "^7.6.2",
         "react-dom": "^19.0.0",
-        "react-router-dom": "^7.1.5"
+        "react-router-dom": "^7.1.5",
+        "styled-components": "^6.1.15",
+        "tailwind-merge": "^3.0.2",
+        "tailwindcss-animate": "^1.0.7"
     }
 }
