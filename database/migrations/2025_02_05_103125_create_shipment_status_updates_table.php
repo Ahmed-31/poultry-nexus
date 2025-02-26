@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('shipment_status_updates', function (Blueprint $table) {
             $table->id();
             $table->foreignId('shipment_id')->constrained()->cascadeOnDelete();
-            $table->string('status'); // Example: 'In Transit', 'Delivered', 'Pending'
-            $table->text('remarks')->nullable(); // Optional comments on status
+            $table->string('status');
+            $table->text('remarks')->nullable();
             $table->timestamp('updated_at')->useCurrent();
         });
     }

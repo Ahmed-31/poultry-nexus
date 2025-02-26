@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('expected_delivery_date')->nullable();
             $table->decimal('total_cost', 10, 2);
             $table->decimal('total_amount', 10, 2);
-            $table->string('status')->default('pending'); // pending, approved, received, canceled
+            $table->string('status')->default('pending');
             $table->text('notes')->nullable();
             $table->timestamps();
         });

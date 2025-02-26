@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('shipments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained()->onDelete('cascade'); // Links to orders
+            $table->foreignId('order_id')->constrained()->onDelete('cascade');
             $table->foreignId('supplier_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('customer_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->string('tracking_number')->unique()->nullable(); // Optional tracking ID
-            $table->string('carrier')->nullable(); // Shipping provider (e.g., DHL, FedEx)
-            $table->string('status')->default('pending'); // Shipment status: pending, shipped, delivered
-            $table->text('notes')->nullable(); // Additional shipment notes
-            $table->dateTime('shipped_at')->nullable(); // When shipment was dispatched
-            $table->dateTime('delivered_at')->nullable(); // When shipment was completed
+            $table->string('tracking_number')->unique()->nullable();
+            $table->string('carrier')->nullable();
+            $table->string('status')->default('pending');
+            $table->text('notes')->nullable();
+            $table->dateTime('shipped_at')->nullable();
+            $table->dateTime('delivered_at')->nullable();
             $table->timestamps();
         });
     }

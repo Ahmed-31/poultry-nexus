@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('supplier_id')->constrained()->cascadeOnDelete();
             $table->foreignId('purchase_order_id')->nullable()->constrained()->nullOnDelete();
             $table->decimal('amount', 10, 2);
-            $table->string('payment_method'); // e.g., bank transfer, cash, credit card
+            $table->string('payment_method');
             $table->string('transaction_reference')->nullable();
             $table->date('payment_date');
             $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');

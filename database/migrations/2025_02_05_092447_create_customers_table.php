@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Customer's full name or business name
-            $table->string('email')->unique()->nullable(); // Unique email (if available)
-            $table->string('phone')->nullable(); // Contact number
-            $table->string('address')->nullable(); // Customer address
-            $table->enum('type', ['domestic', 'international'])->default('domestic'); // Customer type (domestic/import/export)
+            $table->string('name');
+            $table->string('email')->unique()->nullable();
+            $table->string('phone')->nullable();
+            $table->string('address')->nullable();
+            $table->enum('type', ['domestic', 'international'])->default('domestic');
             $table->timestamps();
         });
     }
