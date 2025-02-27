@@ -10,8 +10,10 @@ class Product extends Model
         'name',
         'description',
         'price',
-        'stock_quantity',
+        'min_stock',
         'sku',
+        'type',
+        'unit',
         'category_id',
     ];
 
@@ -30,5 +32,10 @@ class Product extends Model
     public function inventory()
     {
         return $this->hasOne(Inventory::class);
+    }
+
+    public function stockMovements()
+    {
+        return $this->hasMany(StockMovement::class);
     }
 }

@@ -27,11 +27,12 @@ class InventoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'product_id'      => 'required|exists:products,id',
-            'warehouse_id'    => 'required|exists:warehouses,id',
-            'quantity'        => 'required|integer|min:0',
-            'batch_number'    => 'nullable|string|max:255',
-            'expiration_date' => 'nullable|date',
+            'product_id'          => 'required|exists:products,id',
+            'warehouse_id'        => 'required|exists:warehouses,id',
+            'quantity'            => 'required|integer|min:0',
+            'minimum_stock_level' => 'nullable|integer|min:0',
+            'maximum_capacity'    => 'nullable|integer',
+            'reserved_quantity'   => 'nullable|integer',
         ]);
         $inventoryItem = Inventory::create($request->all());
         return response()->json($inventoryItem->load('product', 'warehouse'), Response::HTTP_CREATED);
@@ -51,11 +52,12 @@ class InventoryController extends Controller
     public function update(Request $request, Inventory $inventory)
     {
         $request->validate([
-            'product_id'      => 'required|exists:products,id',
-            'warehouse_id'    => 'required|exists:warehouses,id',
-            'quantity'        => 'required|integer|min:0',
-            'batch_number'    => 'nullable|string|max:255',
-            'expiration_date' => 'nullable|date',
+            'product_id'          => 'required|exists:products,id',
+            'warehouse_id'        => 'required|exists:warehouses,id',
+            'quantity'            => 'required|integer|min:0',
+            'minimum_stock_level' => 'nullable|integer|min:0',
+            'maximum_capacity'    => 'nullable|integer',
+            'reserved_quantity'   => 'nullable|integer',
         ]);
         $inventory->update($request->all());
         return response()->json($inventory->load('product', 'warehouse'), Response::HTTP_OK);

@@ -7,7 +7,8 @@ import {
     updateOrder,
     deleteOrder
 } from '../services/orderService';
-import {getProducts, getProductBundles} from '../services/inventoryService';
+import {getProducts} from '../services/productService.jsx';
+import {getProductBundles} from '../services/productBundleService.jsx';
 import {getCustomers} from '../services/customersService';
 
 // Create Order Context

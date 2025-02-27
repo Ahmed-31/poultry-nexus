@@ -13,7 +13,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::with('category')->get();
         return response()->json($products);
     }
 
@@ -24,19 +24,21 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name'        => 'required|string',
+            'description' => 'nullable|string',
+            'price'       => 'required|numeric|min:0',
+            'min_stock'   => 'required|integer|min:0',
+            'sku'         => 'required|unique:products,sku',
+            'type'        => 'required|in:raw_material,component,finished_product',
+            'unit'        => 'required|string',
+            'category_id' => 'nullable|exists:categories,id'
+        ]);
+        return response()->json(Product::create($validated), 201);
     }
 
     /**
@@ -44,15 +46,7 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        return response()->json(Product::findOrFail($id));
     }
 
     /**
@@ -60,7 +54,9 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $product->update($request->all());
+        return response()->json($product);
     }
 
     /**
@@ -68,6 +64,7 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Product::findOrFail($id)->delete();
+        return response()->json(['message' => 'Deleted successfully']);
     }
 }

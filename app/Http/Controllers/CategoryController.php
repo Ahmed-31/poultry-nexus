@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Warehouse;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
-class WarehouseController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $warehouses = Warehouse::all();
-        return response()->json($warehouses);
+        return Category::all();
     }
 
     /**
@@ -22,10 +21,9 @@ class WarehouseController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'     => 'required|string|unique:warehouses',
-            'location' => 'nullable|string',
+            'name' => 'required|string|unique:categories',
         ]);
-        return Warehouse::create($request->all());
+        return Category::create($request->all());
     }
 
     /**
@@ -33,7 +31,7 @@ class WarehouseController extends Controller
      */
     public function show(string $id)
     {
-        return response()->json(Warehouse::findOrFail($id));
+        return response()->json(Category::findOrFail($id));
     }
 
     /**
@@ -41,9 +39,9 @@ class WarehouseController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $warehouse = Warehouse::findOrFail($id);
-        $warehouse->update($request->all());
-        return response()->json($warehouse);
+        $category = Category::findOrFail($id);
+        $category->update($request->all());
+        return response()->json($category);
     }
 
     /**
@@ -51,7 +49,7 @@ class WarehouseController extends Controller
      */
     public function destroy(string $id)
     {
-        Warehouse::findOrFail($id)->delete();
-        return response()->json(['message' => 'Deleted successfully']);
+        Category::findOrFail($id)->delete();
+        return response()->json(['message' => 'Deleted Successfully']);
     }
 }

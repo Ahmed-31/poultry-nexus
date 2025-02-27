@@ -1,15 +1,25 @@
 // resources/js/src/components/Inventory/InventoryList.jsx
-import React, {useState, useMemo} from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
+import {fetchInventory, removeInventoryItem} from '../../store/inventorySlice';
 import InventoryForm from './InventoryForm.jsx';
 import Button from '../Common/Button.jsx';
-import {useInventory} from '../../context/InventoryContext';
 import DataTable from 'react-data-table-component';
 
 const InventoryList = () => {
-    const {inventory, loading, error, deleteInventoryItem} = useInventory();
+    const dispatch = useDispatch();
+
+    // Get inventory state from Redux store
+    const {items: inventory, loading, error} = useSelector((state) => state.inventory);
+
     const [showForm, setShowForm] = useState(false);
     const [editItem, setEditItem] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+
+    // Fetch inventory data when component mounts
+    useEffect(() => {
+        dispatch(fetchInventory());
+    }, [dispatch]);
 
     const handleEdit = (item) => {
         setEditItem(item);
@@ -18,7 +28,7 @@ const InventoryList = () => {
 
     const handleDelete = (id) => {
         if (window.confirm('Are you sure you want to delete this item?')) {
-            deleteInventoryItem(id);
+            dispatch(removeInventoryItem(id));
         }
     };
 

@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "@radix-ui/react-slot": "^1.1.2",
+        "@reduxjs/toolkit": "^2.6.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "framer-motion": "^12.4.1",
@@ -24,7 +25,11 @@
         "react": "^19.0.0",
         "react-data-table-component": "^7.6.2",
         "react-dom": "^19.0.0",
+        "react-icons": "^5.5.0",
+        "react-redux": "^9.2.0",
         "react-router-dom": "^7.1.5",
+        "recharts": "^2.15.1",
+        "reselect": "^5.1.1",
         "styled-components": "^6.1.15",
         "tailwind-merge": "^3.0.2",
         "tailwindcss-animate": "^1.0.7"

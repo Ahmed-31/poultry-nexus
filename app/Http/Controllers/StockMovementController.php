@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Warehouse;
+use App\Models\StockMovement;
 use Illuminate\Http\Request;
 
-class WarehouseController extends Controller
+class StockMovementController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $warehouses = Warehouse::all();
-        return response()->json($warehouses);
+        return StockMovement::with(['product', 'warehouse'])->get();
     }
 
     /**
@@ -22,10 +21,14 @@ class WarehouseController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'     => 'required|string|unique:warehouses',
-            'location' => 'nullable|string',
+            'product_id'    => 'required|exists:products,id',
+            'warehouse_id'  => 'required|exists:warehouses,id',
+            'quantity'      => 'required|integer',
+            'movement_type' => 'required|in:inbound,outbound,adjustment',
+            'reason'        => 'nullable|string',
+            'movement_date' => 'nullable|date',
         ]);
-        return Warehouse::create($request->all());
+        return StockMovement::create($request->all());
     }
 
     /**
@@ -33,7 +36,7 @@ class WarehouseController extends Controller
      */
     public function show(string $id)
     {
-        return response()->json(Warehouse::findOrFail($id));
+        //
     }
 
     /**
@@ -41,9 +44,7 @@ class WarehouseController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $warehouse = Warehouse::findOrFail($id);
-        $warehouse->update($request->all());
-        return response()->json($warehouse);
+        //
     }
 
     /**
@@ -51,7 +52,6 @@ class WarehouseController extends Controller
      */
     public function destroy(string $id)
     {
-        Warehouse::findOrFail($id)->delete();
-        return response()->json(['message' => 'Deleted successfully']);
+        //
     }
 }

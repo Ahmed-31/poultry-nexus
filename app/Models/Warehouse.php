@@ -17,7 +17,7 @@ class Warehouse extends Model
         return $this->hasMany(Inventory::class);
     }
 
-    public function inventoryTransactions() {
-        return $this->hasMany(InventoryTransaction::class);
+    public function stockMovement() {
+        return $this->hasMany(StockMovement::class);
     }
 }

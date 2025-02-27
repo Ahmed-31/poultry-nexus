@@ -1,27 +1,40 @@
 // resources/js/src/components/Inventory/InventoryForm.jsx
 import React, {useState, useEffect} from 'react';
-import Button from '../Common/Button.jsx';
-import {useInventory} from '../../context/InventoryContext';
+import {useSelector, useDispatch} from 'react-redux';
+import {addInventoryItem, updateInventoryItem} from '../../store/inventorySlice';
+import {fetchProducts} from "@/src/store/productsSlice.jsx";
+import {fetchWarehouses} from "@/src/store/warehouseSlice.jsx";
 
 const InventoryForm = ({onClose, initialData}) => {
-    const {products, warehouses, addInventoryItem, updateInventoryItem} = useInventory();
+    const dispatch = useDispatch();
+
+    // Get products and warehouses from Redux store
+    const products = useSelector((state) => state.products.list || []);
+    const warehouses = useSelector((state) => state.warehouses.items || []);
+
 
     // Initialize form state with either initialData (for editing) or empty fields (for adding)
     const [formData, setFormData] = useState({
-        product: '',
+        product_id: '',
         quantity: '',
-        warehouse: ''
+        warehouse_id: ''
     });
 
     useEffect(() => {
         if (initialData) {
             setFormData({
-                product: initialData.product || '',
-                quantity: initialData.quantity || '',
-                warehouse: initialData.warehouse || []
+                product_id: initialData?.product?.id || '',
+                quantity: initialData?.quantity || '',
+                warehouse_id: initialData?.warehouse?.id || ''
             });
         }
     }, [initialData]);
+
+    // Fetch products & warehouses when component mounts
+    useEffect(() => {
+        dispatch(fetchProducts());
+        dispatch(fetchWarehouses());
+    }, [dispatch]);
 
     const handleChange = (e) => {
         setFormData({
@@ -34,9 +47,9 @@ const InventoryForm = ({onClose, initialData}) => {
         e.preventDefault();
 
         if (initialData) {
-            await updateInventoryItem(initialData.id, formData);
+            dispatch(updateInventoryItem({id: initialData.id, data: formData}));
         } else {
-            await addInventoryItem(formData);
+            dispatch(addInventoryItem(formData));
         }
 
         onClose();
@@ -54,17 +67,21 @@ const InventoryForm = ({onClose, initialData}) => {
                         <label className="block text-sm font-semibold text-gray-700 mb-2">Product</label>
                         <select
                             name="product_id"
-                            value={formData.product.id}
+                            value={formData.product_id}
                             onChange={handleChange}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             required
                         >
                             <option value="" disabled>Select Product</option>
-                            {products.map(product => (
-                                <option key={product.id} value={product.id}>
-                                    {product.name}
-                                </option>
-                            ))}
+                            {products.length > 0 ? (
+                                products.map(product => (
+                                    <option key={product.id} value={product.id}>
+                                        {product.name}
+                                    </option>
+                                ))
+                            ) : (
+                                <option disabled>No products available</option>
+                            )}
                         </select>
                     </div>
 
@@ -84,17 +101,21 @@ const InventoryForm = ({onClose, initialData}) => {
                         <label className="block text-sm font-semibold text-gray-700 mb-2">Warehouse</label>
                         <select
                             name="warehouse_id"
-                            value={formData.warehouse.id}
+                            value={formData.warehouse_id}
                             onChange={handleChange}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             required
                         >
                             <option value="" disabled>Select Warehouse</option>
-                            {warehouses.map(warehouse => (
-                                <option key={warehouse.id} value={warehouse.id}>
-                                    {warehouse.name}
-                                </option>
-                            ))}
+                            {warehouses.length > 0 ? (
+                                warehouses.map(warehouse => (
+                                    <option key={warehouse.id} value={warehouse.id}>
+                                        {warehouse.name}
+                                    </option>
+                                ))
+                            ) : (
+                                <option disabled>No warehouses available</option>
+                            )}
                         </select>
                     </div>
 

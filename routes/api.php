@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InventoryController;
@@ -11,18 +13,15 @@ use App\Http\Controllers\OrderController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
-Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
     Route::prefix('inventory')->group(function () {
-        Route::get('/', [InventoryController::class, 'index']);
-        Route::post('/', [InventoryController::class, 'store']);
-    });
-    Route::prefix('products')->group(function () {
-        Route::get('/', [ProductController::class, 'index']);
-        Route::get('/bundles', [ProductController::class, 'bundles']);
-    });
-    Route::prefix('warehouses')->group(function () {
-        Route::get('/', [WarehouseController::class, 'index']);
+        Route::get('products/bundles', [ProductController::class, 'bundles']);
+        Route::apiResource('products', ProductController::class);
+        Route::apiResource('categories', CategoryController::class);
+        Route::apiResource('items', InventoryController::class);
+        Route::apiResource('warehouses', WarehouseController::class);
+        Route::apiResource('stock-movements', StockMovementController::class);
     });
     Route::prefix('orders')->group(function () {
         Route::get('/', [OrderController::class, 'index']);

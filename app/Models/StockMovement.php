@@ -4,22 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class InventoryTransaction extends Model
+class StockMovement extends Model
 {
     protected $fillable = [
         'product_id',
         'warehouse_id',
-        'transaction_type',
         'quantity',
-        'cost_per_unit',
-        'notes'
+        'movement_type',
+        'reason',
+        'movement_date',
     ];
 
-    public function product() {
+    public function product()
+    {
         return $this->belongsTo(Product::class);
     }
 
-    public function warehouse() {
+    public function warehouse()
+    {
         return $this->belongsTo(Warehouse::class);
     }
 }
