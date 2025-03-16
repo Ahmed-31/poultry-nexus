@@ -16,6 +16,10 @@ import {AuthProvider} from "../context/AuthContext.jsx";
 import {OrderProvider} from "../context/OrderContext.jsx";
 import OrderDetails from '../components/Order/OrderDetails.jsx';
 import {MenuProvider} from '../context/MenuContext.jsx';
+import InventoryList from '../pages/InventoryList.jsx'
+import StockLevelsMovements from "@/src/pages/StockLevelsMovements.jsx";
+import WarehousesPage from "@/src/pages/WarehousesPage.jsx";
+import ProductsPage from "@/src/pages/ProductsPage.jsx";
 
 const AppRoutes = () => (
     <Provider store={store}>
@@ -40,8 +44,24 @@ const AppRoutes = () => (
                             <Route path="orders/:orderId" element={<OrderProvider> <OrderDetails/> </OrderProvider>}/>
 
                             <Route
-                                path="inventory"
+                                path="inventory/dashboard"
                                 element={<InventoryPage/>}
+                            />
+                            <Route
+                                path="inventory/list"
+                                element={<InventoryList/>}
+                            />
+                            <Route
+                                path="inventory/stock-levels"
+                                element={<StockLevelsMovements/>}
+                            />
+                            <Route
+                                path="inventory/warehouses"
+                                element={<WarehousesPage/>}
+                            />
+                            <Route
+                                path="inventory/products"
+                                element={<ProductsPage/>}
                             />
                         </Route>
                     </Route>

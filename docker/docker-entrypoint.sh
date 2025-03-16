@@ -41,6 +41,9 @@ php artisan db:seed
 echo "🔄 Install Node dependencies & build frontend..."
 npm install && npm run build
 
+echo "moving manifest to build root..."
+cp public/build/.vite/manifest.json public/build/manifest.json
+
 # Clear and optimize Laravel cache
 php artisan optimize:clear
 php artisan optimize

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\ProductBundle;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class ProductController extends Controller
 {
@@ -15,6 +16,15 @@ class ProductController extends Controller
     {
         $products = Product::with('category')->get();
         return response()->json($products);
+    }
+
+    public function all()
+    {
+        $query = Product::with('category');
+        return DataTables::of($query)
+            ->addColumn('id', fn($item) => $item->id)
+            ->addColumn('action', fn($item) => '')
+            ->toJson();
     }
 
     public function bundles()

@@ -1,9 +1,13 @@
 import {createAsyncThunk, createSlice, createSelector} from '@reduxjs/toolkit';
-import {addWarehouse, deleteWarehouse, getWarehouses, updateWarehouse} from '../services/warehouseService';
+import {addWarehouse, deleteWarehouse, getWarehouses, getWarehousesTable, updateWarehouse} from '../services/warehouseService';
 
 // Async thunk to fetch warehouse data
 export const fetchWarehouses = createAsyncThunk('warehouse/fetchWarehouses', async () => {
     return await getWarehouses();
+});
+
+export const fetchWarehousesTable = createAsyncThunk('warehouse/fetchWarehousesTable', async () => {
+    return await getWarehousesTable();
 });
 
 // Async thunk to add an warehouse item
@@ -27,6 +31,7 @@ const warehouseSlice = createSlice({
     name: 'warehouse',
     initialState: {
         items: [],
+        dataTable: [],
         loading: false,
         error: null
     },
@@ -36,11 +41,22 @@ const warehouseSlice = createSlice({
             .addCase(fetchWarehouses.pending, (state) => {
                 state.loading = true;
             })
+            .addCase(fetchWarehousesTable.pending, (state) => {
+                state.loading = true;
+            })
             .addCase(fetchWarehouses.fulfilled, (state, action) => {
                 state.loading = false;
                 state.items = action.payload;
             })
+            .addCase(fetchWarehousesTable.fulfilled, (state, action) => {
+                state.loading = false;
+                state.dataTable = action.payload;
+            })
             .addCase(fetchWarehouses.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            })
+            .addCase(fetchWarehousesTable.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
             })

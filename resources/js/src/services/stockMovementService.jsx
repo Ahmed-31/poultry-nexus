@@ -2,7 +2,7 @@ import API from './axios.jsx';
 
 export const getStockMovements = async () => {
     try {
-        const response = await API.get('api/inventory/stock-movements');
+        const response = await API.get('/api/inventory/stock-movements');
         return response.data;
     } catch (e) {
         console.error(e);
@@ -12,7 +12,7 @@ export const getStockMovements = async () => {
 
 export const createStockMovement = async (movementData) => {
     try {
-        const response = await API.post('api/inventory/stock-movements', movementData);
+        const response = await API.post('/api/inventory/stock-movements', movementData);
         return response.data;
     } catch (e) {
         console.error(e);

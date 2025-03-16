@@ -1,9 +1,13 @@
 import {createSlice, createAsyncThunk, createSelector} from '@reduxjs/toolkit';
-import {getProducts, createProduct, updateProduct, deleteProduct} from '../services/productService';
+import {getProducts, createProduct, updateProduct, deleteProduct, getProductsTable} from '../services/productService';
 
 // Async actions
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
     return await getProducts();
+});
+
+export const fetchProductsTable = createAsyncThunk('products/fetchProductsTable', async () => {
+    return await getProductsTable();
 });
 
 export const addProduct = createAsyncThunk('products/addProduct', async (product) => {
@@ -24,6 +28,7 @@ const productsSlice = createSlice({
     name: 'products',
     initialState: {
         list: [],
+        dataTable: [],
         loading: false,
         error: null
     },
@@ -33,11 +38,22 @@ const productsSlice = createSlice({
             .addCase(fetchProducts.pending, (state) => {
                 state.loading = true;
             })
+            .addCase(fetchProductsTable.pending, (state) => {
+                state.loading = true;
+            })
             .addCase(fetchProducts.fulfilled, (state, action) => {
                 state.loading = false;
                 state.list = action.payload;
             })
+            .addCase(fetchProductsTable.fulfilled, (state, action) => {
+                state.loading = false;
+                state.dataTable = action.payload;
+            })
             .addCase(fetchProducts.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            })
+            .addCase(fetchProductsTable.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
             })

@@ -17,6 +17,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::prefix('inventory')->group(function () {
         Route::get('products/bundles', [ProductController::class, 'bundles']);
+        Route::get('products/all', [ProductController::class, 'all']);
+        Route::get('warehouses/all', [WarehouseController::class, 'all']);
         Route::apiResource('products', ProductController::class);
         Route::apiResource('categories', CategoryController::class);
         Route::apiResource('items', InventoryController::class);

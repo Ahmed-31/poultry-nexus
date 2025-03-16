@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class WarehouseController extends Controller
 {
@@ -14,6 +15,15 @@ class WarehouseController extends Controller
     {
         $warehouses = Warehouse::all();
         return response()->json($warehouses);
+    }
+
+    public function all()
+    {
+        $query = Warehouse::query();
+        return DataTables::of($query)
+            ->addColumn('id', fn ($warehouse) => $warehouse->id)
+            ->addColumn('action', fn ($warehouse) => '')
+            ->toJson();
     }
 
     /**
