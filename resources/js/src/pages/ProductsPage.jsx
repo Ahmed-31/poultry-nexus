@@ -3,7 +3,7 @@ import {useSelector, useDispatch} from "react-redux";
 import {fetchProductsTable, removeProduct} from "../store/productsSlice";
 import DataTable from "react-data-table-component";
 import Button from "../components/common/Button";
-import {FaPlus, FaTrash, FaEdit} from "react-icons/fa";
+import {FaPlus} from "react-icons/fa";
 import ProductForm from "@/src/components/Inventory/ProductForm.jsx";
 
 const ProductManagement = () => {
@@ -72,31 +72,34 @@ const ProductManagement = () => {
     ];
 
     return (
-        <div className="p-6 bg-white rounded shadow-md">
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-3xl font-semibold">📦 Product Management</h2>
-                <Button variant="primary" onClick={() => setShowForm(true)}>
+        <div className="bg-white rounded-2xl shadow-lg w-full max-w-none overflow-x-hidden">
+            {/* Header Section */}
+            <div className="flex justify-between items-center px-8 py-6">
+                <h2 className="text-4xl font-bold text-gray-800">📦 Product Management</h2>
+                <Button
+                    onClick={() => setShowForm(true)}
+                    className="px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all bg-blue-600 text-white flex items-center font-medium"
+                >
                     <FaPlus className="mr-2"/> Add Product
                 </Button>
             </div>
 
             {/* Filters Section */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-gray-50 p-4 rounded shadow">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-gray-50 p-5 rounded-xl shadow mx-8">
                 <input
                     type="text"
                     placeholder="🔍 Search product name..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="p-2 border border-gray-300 rounded-lg"
+                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full"
                 />
 
                 <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="p-2 border border-gray-300 rounded-lg"
+                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full"
                 >
                     <option value="">All Categories</option>
-                    {/* Dynamic categories (replace with actual category data) */}
                     <option value="1">Electronics</option>
                     <option value="2">Raw Materials</option>
                 </select>
@@ -104,7 +107,7 @@ const ProductManagement = () => {
                 <select
                     value={selectedType}
                     onChange={(e) => setSelectedType(e.target.value)}
-                    className="p-2 border border-gray-300 rounded-lg"
+                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full"
                 >
                     <option value="">All Types</option>
                     <option value="raw_material">Raw Material</option>
@@ -113,9 +116,9 @@ const ProductManagement = () => {
                 </select>
             </div>
 
-            {/* Product Table */}
-            <div className={`transition-all duration-300 ${showForm ? 'grid grid-cols-1 md:grid-cols-2 gap-4' : ''}`}>
-                <div className={`${showForm ? 'md:col-span-1' : ''}`}>
+            {/* Full-Width DataTable */}
+            <div className="w-full overflow-x-auto">
+                <div className="w-full">
                     <DataTable
                         columns={columns}
                         data={filteredProducts}
@@ -123,15 +126,21 @@ const ProductManagement = () => {
                         pagination
                         highlightOnHover
                         striped
+                        className="border rounded-none shadow-sm w-full"
                     />
                 </div>
+            </div>
 
-                {showForm && (
-                    <div className="md:col-span-1 bg-gray-50 p-4 border rounded shadow-sm">
+            {/* Modal for Product Form */}
+            {showForm && (
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center backdrop-blur-sm transition-opacity duration-300">
+                    <div
+                        className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg border border-gray-200 transform transition-all">
                         <ProductForm onClose={handleCloseForm} initialData={editOrder}/>
                     </div>
-                )}
-            </div>
+                </div>
+            )}
         </div>
     );
 };

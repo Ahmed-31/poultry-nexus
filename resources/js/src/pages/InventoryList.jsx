@@ -6,6 +6,7 @@ import {fetchWarehouses} from "../store/warehouseSlice";
 import DataTable from "react-data-table-component";
 import Button from "../components/common/Button";
 import {FaPlus, FaTrash, FaEdit, FaFilter} from "react-icons/fa";
+import InventoryForm from "@/src/components/Inventory/InventoryForm.jsx";
 
 const InventoryList = () => {
     const dispatch = useDispatch();
@@ -18,6 +19,8 @@ const InventoryList = () => {
 
     // State for filters
     const [searchTerm, setSearchTerm] = useState("");
+    const [showForm, setShowForm] = useState(false);
+    const [editItem, setEditItem] = useState(null);
     const [selectedWarehouse, setSelectedWarehouse] = useState("");
     const [stockFilter, setStockFilter] = useState("");
 
@@ -45,6 +48,16 @@ const InventoryList = () => {
             );
     }, [inventory, searchTerm, selectedWarehouse, stockFilter]);
 
+    const handleEdit = (item) => {
+        setEditItem(item);
+        setShowForm(true);
+    };
+
+    const handleCloseForm = () => {
+        setShowForm(false);
+        setEditItem(null);
+    };
+
     // Define table columns
     const columns = [
         {name: "Product", selector: (row) => row.product.name, sortable: true},
@@ -69,7 +82,7 @@ const InventoryList = () => {
             name: "Actions",
             cell: (row) => (
                 <div className="flex space-x-2">
-                    <Button variant="warning" onClick={() => console.log("Edit", row.id)}>
+                    <Button variant="warning" onClick={() => handleEdit(row)}>
                         <FaEdit className="mr-1"/> Edit
                     </Button>
                 </div>
@@ -78,28 +91,32 @@ const InventoryList = () => {
     ];
 
     return (
-        <div className="p-6 bg-white rounded shadow-md">
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-3xl font-semibold">📦 Inventory Management</h2>
-                <Button variant="primary" onClick={() => console.log("Open Add Inventory Form")}>
+        <div className="bg-white rounded-2xl shadow-lg w-full max-w-none overflow-x-hidden">
+            {/* Header Section */}
+            <div className="flex justify-between items-center px-8 py-6">
+                <h2 className="text-4xl font-bold text-gray-800">📦 Inventory Management</h2>
+                <Button
+                    onClick={() => setShowForm(true)}
+                    className="px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all bg-blue-600 text-white flex items-center font-medium"
+                >
                     <FaPlus className="mr-2"/> Add Inventory Item
                 </Button>
             </div>
 
             {/* Filters Section */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-gray-50 p-4 rounded shadow">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-gray-50 p-5 rounded-xl shadow mx-8">
                 <input
                     type="text"
                     placeholder="🔍 Search product or warehouse..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="p-2 border border-gray-300 rounded-lg"
+                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full"
                 />
 
                 <select
                     value={selectedWarehouse}
                     onChange={(e) => setSelectedWarehouse(e.target.value)}
-                    className="p-2 border border-gray-300 rounded-lg"
+                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full"
                 >
                     <option value="">All Warehouses</option>
                     {warehouses.map((warehouse) => (
@@ -112,7 +129,7 @@ const InventoryList = () => {
                 <select
                     value={stockFilter}
                     onChange={(e) => setStockFilter(e.target.value)}
-                    className="p-2 border border-gray-300 rounded-lg"
+                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full"
                 >
                     <option value="">All Stock Levels</option>
                     <option value="low">Low Stock</option>
@@ -120,15 +137,31 @@ const InventoryList = () => {
                 </select>
             </div>
 
-            {/* Inventory Table */}
-            <DataTable
-                columns={columns}
-                data={filteredInventory}
-                progressPending={loading}
-                pagination
-                highlightOnHover
-                striped
-            />
+            {/* Full-Width Inventory Table */}
+            <div className="w-full overflow-x-auto">
+                <div className="w-full">
+                    <DataTable
+                        columns={columns}
+                        data={filteredInventory}
+                        progressPending={loading}
+                        pagination
+                        highlightOnHover
+                        striped
+                        className="border rounded-lg shadow-sm w-full"
+                    />
+                </div>
+            </div>
+
+            {/* Modal for Adding Inventory Item */}
+            {showForm && (
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center backdrop-blur-sm transition-opacity duration-300">
+                    <div
+                        className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg border border-gray-200 transform transition-all">
+                        <InventoryForm onClose={handleCloseForm} initialData={editItem}/>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
