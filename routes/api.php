@@ -6,6 +6,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockMovementController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InventoryController;
@@ -15,6 +16,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
+    Route::get('/users/all', [UserController::class, 'all']);
+    Route::apiResource('users', UserController::class);
     Route::prefix('inventory')->group(function () {
         Route::get('products/bundles', [ProductController::class, 'bundles']);
         Route::get('products/all', [ProductController::class, 'all']);

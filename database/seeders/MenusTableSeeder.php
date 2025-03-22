@@ -66,6 +66,10 @@ class MenusTableSeeder extends Seeder
             ['title' => 'Inventory Turnover', 'url' => '/reports/inventory-turnover', 'icon' => 'RefreshCw', 'parent_id' => 40, 'order' => 2],
             ['title' => 'Sales & Revenue Reports', 'url' => '/reports/sales-revenue', 'icon' => 'BarChart2', 'parent_id' => 40, 'order' => 3],
             ['title' => 'Quality & Compliance Reports', 'url' => '/reports/quality-compliance', 'icon' => 'CheckCircle', 'parent_id' => 40, 'order' => 4],
+
+            ['title' => 'Users Management', 'url' => '/', 'icon' => 'UsersCog', 'parent_id' => null, 'order' => 12],
+            ['title' => 'Users List', 'url' => '/user-management/dashboard', 'icon' => 'LayoutDashboard', 'parent_id' => 45, 'order' => 1],
+            ['title' => 'Roles & Permissions', 'url' => '/user-management/roles-permissions', 'icon' => 'ShieldCheck', 'parent_id' => 45, 'order' => 2],
         ];
 
         foreach ($menus as $menu) {
