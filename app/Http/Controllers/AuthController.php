@@ -39,4 +39,28 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Logged out']);
     }
+
+    //update function
+    public function update(Request $request)
+{
+    $user = $request->user();
+
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+        'password' => 'nullable|string|min:8|confirmed', // Optional
+    ]);
+
+    $user->name = $validated['name'];
+    $user->email = $validated['email'];
+
+    if (!empty($validated['password'])) {
+        $user->password = bcrypt($validated['password']);
+    }
+
+    $user->save();
+
+    return response()->json($user);
+}
+
 }

@@ -13,7 +13,7 @@
         "laravel/framework": "^11.31",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
-        "spatie/laravel-permission": "^6.13",
+        "spatie/laravel-permission": "^6.16",
         "yajra/laravel-datatables-oracle": "^11.1"
     },
     "require-dev": {

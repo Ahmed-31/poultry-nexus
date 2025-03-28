@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use Spatie\Permission\Models\Permission;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MenuController;
@@ -11,13 +12,39 @@ use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\RoleController;
+
+// Roles & Permissions Management (Accessible to All Authenticated Users)
+Route::prefix('api')->middleware('auth:sanctum')->group(function () {
+    // Roles Management
+    Route::prefix('roles')->group(function () {
+        Route::get('/', [RoleController::class, 'index']); // List all roles
+        Route::post('/', [RoleController::class, 'store']); // Create a new role
+        Route::put('/{id}', [RoleController::class, 'update']); // Update a role
+        Route::delete('/{id}', [RoleController::class, 'destroy']); // Delete a role
+    });
+
+    // Permissions Management
+    Route::get('/permissions', function () {
+        return response()->json(Permission::all(['id', 'name']));
+    });
+});
+Route::get('/test', function () {
+    return response()->json(['status' => 'API is working']);
+});
+
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
     Route::get('/users/all', [UserController::class, 'all']);
+    Route::put('/user', [AuthController::class, 'update']);  // Add this line
     Route::apiResource('users', UserController::class);
+    Route::get('/permissions', function () {
+        return response()->json(Permission::pluck('name'));
+    });
+    
     Route::prefix('inventory')->group(function () {
         Route::get('products/bundles', [ProductController::class, 'bundles']);
         Route::get('products/all', [ProductController::class, 'all']);

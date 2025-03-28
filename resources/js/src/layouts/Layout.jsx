@@ -12,7 +12,7 @@ const Layout = () => {
 
     return (
         <div className="flex min-h-screen">
-            <div className={`transition-all duration-300 ${isSidebarOpen ? "inline-flex w-auto" : "hidden"}`}>
+            <div className={`transition-all  duration-300 ${isSidebarOpen ? "inline-flex w-auto" : "hidden"}`}>
                 <Sidebar isSidebarOpen={isSidebarOpen}/>
             </div>
 

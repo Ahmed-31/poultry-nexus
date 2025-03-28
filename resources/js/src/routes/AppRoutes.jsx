@@ -20,7 +20,9 @@ import InventoryList from '../pages/InventoryList.jsx'
 import StockLevelsMovements from "@/src/pages/StockLevelsMovements.jsx";
 import WarehousesPage from "@/src/pages/WarehousesPage.jsx";
 import ProductsPage from "@/src/pages/ProductsPage.jsx";
-
+import UserManagement from "@/src/pages/UserManagement";
+import UserProfile from "@/src/pages/UserProfile"
+import Roles from '../pages/Roles';
 const AppRoutes = () => (
     <Provider store={store}>
         <Router>
@@ -62,6 +64,18 @@ const AppRoutes = () => (
                             <Route
                                 path="inventory/products"
                                 element={<ProductsPage/>}
+                            />
+                            <Route
+                                path="user-management/roles-permissions"
+                                element={<Roles/>}
+                            />
+                            <Route
+                                path="user-management/dashboard"
+                                element={<UserManagement/>}
+                            />
+                            <Route
+                                path="profile"
+                                element={<UserProfile/>}
                             />
                         </Route>
                     </Route>
