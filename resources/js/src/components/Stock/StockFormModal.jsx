@@ -1,4 +1,3 @@
-// resources/js/src/components/Inventory/InventoryForm.jsx
 import React, {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {addInventoryItem, updateInventoryItem} from '../../store/inventorySlice';
@@ -8,7 +7,6 @@ import {fetchWarehouses} from "@/src/store/warehouseSlice.jsx";
 const InventoryForm = ({onClose, initialData}) => {
     const dispatch = useDispatch();
 
-    // Get products and warehouses from Redux store
     const products = useSelector((state) => state.products.list || []);
     const warehouses = useSelector((state) => state.warehouses.items || []);
 
@@ -30,7 +28,6 @@ const InventoryForm = ({onClose, initialData}) => {
         }
     }, [initialData]);
 
-    // Fetch products & warehouses when component mounts
     useEffect(() => {
         dispatch(fetchProducts());
         dispatch(fetchWarehouses());

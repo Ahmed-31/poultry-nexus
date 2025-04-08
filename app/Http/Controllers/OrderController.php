@@ -93,7 +93,6 @@ class OrderController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // Validate the request
         $request->validate([
             'customer_id'                         => 'required|integer|exists:customers,id',
             'ordered_at'                          => 'required|date',
@@ -111,9 +110,7 @@ class OrderController extends Controller
             'order_items.*.product_id'            => 'required|integer|exists:products,id',
             'order_items.*.quantity'              => 'required|integer|min:1'
         ]);
-        // Find the order
         $order = Order::with(['orderItems', 'bundles'])->findOrFail($id);
-        // Check if basic order details have changed
         $orderChanged = $order->customer_id != $request->customer_id ||
             $order->notes != $request->notes ||
             $order->ordered_at != $request->ordered_at ||
@@ -125,7 +122,6 @@ class OrderController extends Controller
             $order->order_number = $request->order_number;
             $order->save();
         }
-        // Compare and update order bundles if needed
         $existingBundles = $order->bundles->map(function ($bundle) {
             return [
                 'product_bundle_id'   => $bundle->product_bundle_id,
@@ -139,16 +135,13 @@ class OrderController extends Controller
         })->toArray();
         $newBundles = $request->order_bundles ?? [];
         if (empty($newBundles) && !empty($existingBundles)) {
-            // If no new bundles are provided but existing ones exist, delete them
             $order->bundles->each(function ($item) {
                 $item->delete();
             });
         } elseif ($existingBundles !== $newBundles) {
-            // Only update if bundles are different
             $order->bundles->each(function ($item) {
                 $item->delete();
             });
-            // Add new bundles
             foreach ($newBundles as $bundle) {
                 $order->bundles()->create([
                     'product_bundle_id'   => $bundle['product_bundle_id'],
@@ -161,7 +154,6 @@ class OrderController extends Controller
                 ]);
             }
         }
-        // Compare and update order items if needed
         $existingItems = $order->orderItems->map(function ($item) {
             return [
                 'product_id' => $item->product_id,
@@ -170,12 +162,10 @@ class OrderController extends Controller
         })->toArray();
         $newItems = $request->order_items ?? [];
         if (empty($newItems) && !empty($existingItems)) {
-            // If no new items are provided but existing ones exist, delete them
             $order->orderItems->each(function ($item) {
                 $item->delete();
             });
         } elseif ($existingItems !== $newItems) {
-            // Only update if items are different
             $order->orderItems->each(function ($item) {
                 $item->delete();
             });

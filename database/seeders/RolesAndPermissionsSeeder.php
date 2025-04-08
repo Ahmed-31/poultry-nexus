@@ -15,9 +15,7 @@ class RolesAndPermissionsSeeder extends Seeder
     public function run()
     : void
     {
-        // Clear cache
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
-        // Define permissions
         $permissions = [
             'manage_users',
             'create_order',
@@ -84,7 +82,6 @@ class RolesAndPermissionsSeeder extends Seeder
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission]);
         }
-        // Define roles and assign existing permissions
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
         $salesManager = Role::firstOrCreate(['name' => 'sales_manager']);
         $salesRepresentative = Role::firstOrCreate(['name' => 'sales_representative']);
@@ -100,7 +97,6 @@ class RolesAndPermissionsSeeder extends Seeder
         $customerServiceManager = Role::firstOrCreate(['name' => 'customer_service_manager']);
         $customerSupportRepresentative = Role::firstOrCreate(['name' => 'customer_support_representative']);
         $reportingAnalyst = Role::firstOrCreate(['name' => 'reporting_analyst']);
-        // Assign permissions to roles
         $adminRole->givePermissionTo(Permission::all());
         $salesManager->givePermissionTo([
             'create_order',

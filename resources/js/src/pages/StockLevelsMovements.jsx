@@ -10,20 +10,17 @@ import {FaFilter, FaSync, FaChartLine} from "react-icons/fa";
 const StockLevelsMovements = () => {
     const dispatch = useDispatch();
 
-    // Fetch inventory and stock movements from Redux store
     const inventory = useSelector((state) => state.inventory.items || []);
     const stockMovements = useSelector((state) => state.stockMovements.items || []);
     const products = useSelector((state) => state.products.list || []);
     const warehouses = useSelector((state) => state.warehouses.items || []);
     const loading = useSelector((state) => state.inventory.loading || state.stockMovements.loading);
 
-    // State for filters
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedProduct, setSelectedProduct] = useState("");
     const [selectedWarehouse, setSelectedWarehouse] = useState("");
     const [dateRange, setDateRange] = useState({start: "", end: ""});
 
-    // Fetch data when the page loads
     useEffect(() => {
         dispatch(fetchInventory());
         dispatch(fetchStockMovements());
@@ -31,7 +28,6 @@ const StockLevelsMovements = () => {
         dispatch(fetchWarehouses());
     }, [dispatch]);
 
-    // ✅ Memoized filtered stock levels
     const filteredInventory = useMemo(() => {
         return inventory
             .filter((item) =>
@@ -42,7 +38,6 @@ const StockLevelsMovements = () => {
             .filter((item) => (selectedWarehouse ? item.warehouse.id === selectedWarehouse : true));
     }, [inventory, searchTerm, selectedProduct, selectedWarehouse]);
 
-    // ✅ Memoized filtered stock movements
     const filteredStockMovements = useMemo(() => {
         return stockMovements
             .filter((movement) =>
@@ -59,7 +54,6 @@ const StockLevelsMovements = () => {
             );
     }, [stockMovements, searchTerm, selectedProduct, selectedWarehouse, dateRange]);
 
-    // Table columns for stock levels
     const stockColumns = [
         {name: "Product", selector: (row) => row.product.name, sortable: true},
         {name: "Warehouse", selector: (row) => row.warehouse.name, sortable: true},
@@ -81,7 +75,6 @@ const StockLevelsMovements = () => {
         {name: "Reserved", selector: (row) => row.reserved_quantity, sortable: true},
     ];
 
-    // Table columns for stock movements
     const movementColumns = [
         {name: "Date", selector: (row) => new Date(row.movement_date).toLocaleDateString(), sortable: true},
         {name: "Product", selector: (row) => row.product.name, sortable: true},
@@ -109,7 +102,6 @@ const StockLevelsMovements = () => {
         <div className="p-6 bg-white rounded shadow-md">
             <h2 className="text-3xl font-semibold mb-6">📦 Stock Levels & Movements</h2>
 
-            {/* Filters Section */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-gray-50 p-4 rounded shadow">
                 <input type="text" placeholder="🔍 Search by product or warehouse..."
                        value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
@@ -129,11 +121,9 @@ const StockLevelsMovements = () => {
                 </select>
             </div>
 
-            {/* Stock Levels Table */}
             <h3 className="text-2xl font-semibold mb-4">📋 Stock Levels</h3>
             <DataTable columns={stockColumns} data={filteredInventory} pagination highlightOnHover striped/>
 
-            {/* Stock Movements Table */}
             <h3 className="text-2xl font-semibold mt-6 mb-4">🔄 Stock Movements</h3>
             <DataTable columns={movementColumns} data={filteredStockMovements} pagination highlightOnHover striped/>
         </div>

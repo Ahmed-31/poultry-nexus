@@ -15,19 +15,16 @@ class Order extends Model
         'ordered_at',
     ];
 
-    // Order belongs to a Customer
     public function customer()
     {
         return $this->belongsTo(Customer::class);
     }
 
-    // Order belongs to a User (who processed the order)
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // Order has many OrderItems (Products in the order)
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);

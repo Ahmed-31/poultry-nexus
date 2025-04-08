@@ -1,7 +1,6 @@
 import {createSlice, createAsyncThunk, createSelector} from '@reduxjs/toolkit';
 import {getProducts, createProduct, updateProduct, deleteProduct, getProductsTable} from '../services/productService';
 
-// Async actions
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
     return await getProducts();
 });
@@ -23,7 +22,6 @@ export const removeProduct = createAsyncThunk('products/removeProduct', async (i
     return id;
 });
 
-// Slice definition
 const productsSlice = createSlice({
     name: 'products',
     initialState: {

@@ -13,13 +13,11 @@ class OrderItem extends Model
         'total_price',
     ];
 
-    // Order Item belongs to an Order
     public function order()
     {
         return $this->belongsTo(Order::class);
     }
 
-    // Order Item belongs to a Product
     public function product()
     {
         return $this->belongsTo(Product::class);

@@ -17,7 +17,6 @@ class UsersSeeder extends Seeder
     public function run()
     : void
     {
-        // Define users with roles
         $users = [
             [
                 'name'     => 'Admin User 1',
@@ -110,7 +109,6 @@ class UsersSeeder extends Seeder
                 'role'     => 'reporting_analyst',
             ],
         ];
-        // Create users and assign roles
         foreach ($users as $userData) {
             $user = User::firstOrCreate(
                 ['email' => $userData['email']],

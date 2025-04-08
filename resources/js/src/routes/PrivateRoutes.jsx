@@ -8,7 +8,6 @@ const PrivateRoutes = () => {
 
     if (loading) return <Loader/>;
 
-    // Redirect to login if user is not authenticated
     return user ? <Outlet/> : <Navigate to="/login"/>;
 };
 

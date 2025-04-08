@@ -1,4 +1,3 @@
-// resources/js/src/components/Orders/ExpandedOrderDetails.jsx
 import React, {useState} from 'react';
 import DataTable from 'react-data-table-component';
 

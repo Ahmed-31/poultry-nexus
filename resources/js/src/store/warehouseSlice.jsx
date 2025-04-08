@@ -1,7 +1,6 @@
 import {createAsyncThunk, createSlice, createSelector} from '@reduxjs/toolkit';
 import {addWarehouse, deleteWarehouse, getWarehouses, getWarehousesTable, updateWarehouse} from '../services/warehouseService';
 
-// Async thunk to fetch warehouse data
 export const fetchWarehouses = createAsyncThunk('warehouse/fetchWarehouses', async () => {
     return await getWarehouses();
 });
@@ -10,7 +9,6 @@ export const fetchWarehousesTable = createAsyncThunk('warehouse/fetchWarehousesT
     return await getWarehousesTable();
 });
 
-// Async thunk to add an warehouse item
 export const addWarehouseItem = createAsyncThunk('warehouse/addWarehouseItem', async (data) => {
     return await addWarehouse(data);
 });
@@ -26,7 +24,6 @@ export const removeWarehouseItem = createAsyncThunk('warehouse/removeWarehouseIt
     return id; // Return the deleted item's ID
 });
 
-// Slice definition
 const warehouseSlice = createSlice({
     name: 'warehouse',
     initialState: {

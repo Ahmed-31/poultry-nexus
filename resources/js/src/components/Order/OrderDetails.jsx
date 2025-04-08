@@ -18,7 +18,6 @@ const OrderDetails = () => {
     if (error) return <p className="text-red-500 text-center">Error: {error}</p>;
     if (!currentOrder) return <p className="text-gray-500 text-center">Order not found.</p>;
 
-    // Check if the logged-in user is the one who created the order
     const isOrderOwner = user.id === currentOrder.user_id;
     const isManager = user.role === "manager";
 
@@ -32,18 +31,15 @@ const OrderDetails = () => {
                 <p className="text-gray-700"><strong>Ordered At:</strong> {currentOrder.ordered_at}</p>
                 <p className="text-gray-700"><strong>Notes:</strong> {currentOrder.notes || "No notes provided"}</p>
 
-                {/* Show creator info */}
                 <p className="text-gray-700">
                     <strong>Created By:</strong> {currentOrder.user.name} ({currentOrder.user.email})
                 </p>
 
-                {/* Show if the logged-in user is the order owner */}
                 {isOrderOwner && (
                     <p className="text-green-600 font-semibold mt-2">You created this order.</p>
                 )}
             </div>
 
-            {/* Customer Information */}
             <div className="bg-white shadow-md rounded-lg p-6 mb-6">
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">Customer Information</h3>
                 <p className="text-gray-700"><strong>Name:</strong> {currentOrder.customer.name}</p>
@@ -52,7 +48,6 @@ const OrderDetails = () => {
                 <p className="text-gray-700"><strong>Address:</strong> {currentOrder.customer.address}</p>
             </div>
 
-            {/* Order Items */}
             <div className="bg-white shadow-md rounded-lg p-6 mb-6">
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">Order Items</h3>
                 {currentOrder.order_items.length > 0 ? (
@@ -79,7 +74,6 @@ const OrderDetails = () => {
                 )}
             </div>
 
-            {/* Payments */}
             <div className="bg-white shadow-md rounded-lg p-6 mb-6">
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">Payments</h3>
                 {currentOrder.payments.length > 0 ? (
@@ -108,7 +102,6 @@ const OrderDetails = () => {
                 )}
             </div>
 
-            {/* Shipment Details */}
             <div className="bg-white shadow-md rounded-lg p-6 mb-6">
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">Shipment Details</h3>
                 {currentOrder.shipments.length > 0 ? (
@@ -139,7 +132,6 @@ const OrderDetails = () => {
                 )}
             </div>
 
-            {/* Actions for Order Owner & Managers */}
             {(isOrderOwner || isManager) && (
                 <div className="bg-white shadow-md rounded-lg p-6 mb-6">
                     <h3 className="text-xl font-semibold text-gray-800 mb-2">Order Actions</h3>

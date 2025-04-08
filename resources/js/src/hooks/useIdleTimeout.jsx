@@ -11,7 +11,6 @@ const useIdleTimeout = (logout, timeout = 8 * 60 * 60 * 1000) => {
             }, timeout);
         };
 
-        // Events that reset the timer
         const events = ["mousemove", "keydown", "scroll", "click"];
         events.forEach((event) => window.addEventListener(event, resetTimer));
 

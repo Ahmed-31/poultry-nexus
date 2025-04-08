@@ -1,7 +1,5 @@
-// resources/js/src/services/orderService.js
 import api from './axios';
 
-// Get all orders
 export const getOrders = async () => {
     try {
         const response = await api.get('/api/orders');
@@ -22,7 +20,6 @@ export const getOrder = async (id) => {
     }
 };
 
-// Add a new order
 export const addOrder = async (orderData) => {
     try {
         const response = await api.post('/api/orders', orderData);
@@ -33,7 +30,6 @@ export const addOrder = async (orderData) => {
     }
 };
 
-// Update an existing order
 export const updateOrder = async (id, orderData) => {
     try {
         const response = await api.put(`/api/orders/${id}`, orderData);
@@ -44,7 +40,6 @@ export const updateOrder = async (id, orderData) => {
     }
 };
 
-// Delete an order
 export const deleteOrder = async (id) => {
     try {
         const response = await api.delete(`/api/orders/${id}`);

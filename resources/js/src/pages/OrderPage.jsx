@@ -1,4 +1,3 @@
-// resources/js/src/pages/OrderPage.jsx
 import React from 'react';
 import OrderList from '../components/Order/OrderList.jsx';
 

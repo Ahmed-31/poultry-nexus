@@ -1,7 +1,6 @@
 import {createSlice, createAsyncThunk, createSelector} from '@reduxjs/toolkit';
 import {getCategories, createCategory, updateCategory, deleteCategory, getCategoriesTable} from '../services/categoryService.jsx';
 
-// Async actions
 export const fetchCategories = createAsyncThunk('categories/fetchCategories', async () => {
     return await getCategories();
 });

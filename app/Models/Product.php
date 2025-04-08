@@ -17,13 +17,11 @@ class Product extends Model
         'category_id',
     ];
 
-    // A Product belongs to a Category
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
 
-    // A Product can be part of multiple Order Items
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);

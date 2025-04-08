@@ -10,23 +10,19 @@ import WarehouseForm from "@/src/components/Inventory/WarehouseForm.jsx";
 const WarehouseManagement = () => {
     const dispatch = useDispatch();
 
-    // Fetch warehouses and inventory from Redux store
     const warehouses = useSelector((state) => state.warehouses.dataTable || []);
     const inventory = useSelector((state) => state.inventory.items || []);
     const loading = useSelector((state) => state.warehouses.loading);
 
-    // State for filters
     const [searchTerm, setSearchTerm] = useState("");
     const [showForm, setShowForm] = useState(false);
     const [editItem, setEditItem] = useState(null);
 
-    // Fetch data when the page loads
     useEffect(() => {
         dispatch(fetchWarehousesTable());
         dispatch(fetchInventory());
     }, [dispatch]);
 
-    // ✅ Calculate warehouse stock usage
     const warehouseStockUsage = useMemo(() => {
         return warehouses.map((warehouse) => ({
             ...warehouse,
@@ -36,7 +32,6 @@ const WarehouseManagement = () => {
         }));
     }, [warehouses, inventory]);
 
-    // ✅ Filtered warehouse list
     const filteredWarehouses = useMemo(() => {
         return warehouseStockUsage.filter((warehouse) =>
             warehouse.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -54,7 +49,6 @@ const WarehouseManagement = () => {
         setEditItem(null);
     };
 
-    // Define table columns
     const columns = [
         {name: "Warehouse Name", selector: (row) => row.name, sortable: true},
         {name: "Location", selector: (row) => row.location || "N/A", sortable: true},
@@ -95,7 +89,6 @@ const WarehouseManagement = () => {
                 </Button>
             </div>
 
-            {/* Filters Section */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-gray-50 p-5 rounded-xl shadow mx-8">
                 <input
                     type="text"
@@ -121,7 +114,6 @@ const WarehouseManagement = () => {
                 </div>
             </div>
 
-            {/* Modal for Product Form */}
             {showForm && (
                 <div
                     className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center backdrop-blur-sm transition-opacity duration-300">

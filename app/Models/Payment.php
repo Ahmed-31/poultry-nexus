@@ -15,7 +15,6 @@ class Payment extends Model
         'paid_at',
     ];
 
-    // A Payment belongs to an Order
     public function order()
     {
         return $this->belongsTo(Order::class);
