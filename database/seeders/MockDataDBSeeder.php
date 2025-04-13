@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\OrderItem;
+use App\Models\OrderItemDimension;
 use App\Models\Stock;
 use App\Models\StockDimension;
 use App\Models\Product;
@@ -217,6 +219,7 @@ class MockDataDBSeeder extends Seeder
                 'order_number' => 'ORD-1001',
                 'status'       => 'pending',
                 'notes'        => 'Urgent delivery requested.',
+                'priority'     => 0,
                 'ordered_at'   => Carbon::now()->subDays(2),
                 'created_at'   => Carbon::now(),
                 'updated_at'   => Carbon::now(),
@@ -227,6 +230,7 @@ class MockDataDBSeeder extends Seeder
                 'order_number' => 'ORD-1002',
                 'status'       => 'processing',
                 'notes'        => 'Include detailed invoice.',
+                'priority'     => 3,
                 'ordered_at'   => Carbon::now()->subDay(),
                 'created_at'   => Carbon::now(),
                 'updated_at'   => Carbon::now(),
@@ -237,6 +241,7 @@ class MockDataDBSeeder extends Seeder
                 'order_number' => 'ORD-1003',
                 'status'       => 'shipped',
                 'notes'        => 'Deliver to the back entrance.',
+                'priority'     => 5,
                 'ordered_at'   => Carbon::now()->subDays(3),
                 'created_at'   => Carbon::now(),
                 'updated_at'   => Carbon::now(),
@@ -246,26 +251,48 @@ class MockDataDBSeeder extends Seeder
             [
                 'order_id'    => DB::table('orders')->where('order_number', 'ORD-1001')->first()->id,
                 'product_id'  => DB::table('products')->where('name', 'Motorized Fan')->first()->id,
+                'uom_id'      => $kg->id,
                 'quantity'    => 2,
                 'total_price' => 1000.00,
+                'source_type' => null,
+                'source_id'   => null,
                 'created_at'  => Carbon::now(),
                 'updated_at'  => Carbon::now(),
             ],
             [
                 'order_id'    => DB::table('orders')->where('order_number', 'ORD-1002')->first()->id,
                 'product_id'  => DB::table('products')->where('name', 'Industrial Air Purifier')->first()->id,
+                'uom_id'      => $pcs->id,
                 'quantity'    => 3,
                 'total_price' => 450.00,
+                'source_type' => null,
+                'source_id'   => null,
                 'created_at'  => Carbon::now(),
                 'updated_at'  => Carbon::now(),
             ],
             [
                 'order_id'    => DB::table('orders')->where('order_number', 'ORD-1003')->first()->id,
                 'product_id'  => DB::table('products')->where('name', 'Automated Conveyor Belt')->first()->id,
+                'uom_id'      => $m->id,
                 'quantity'    => 2,
                 'total_price' => 600.00,
+                'source_type' => null,
+                'source_id'   => null,
                 'created_at'  => Carbon::now(),
                 'updated_at'  => Carbon::now(),
+            ],
+        ]);
+        $orderItem = OrderItem::find(1);
+        OrderItemDimension::insert([
+            [
+                'order_item_id' => $orderItem->id,
+                'dimension_id'  => $lengthDim->id,
+                'value'         => 10,
+            ],
+            [
+                'order_item_id' => $orderItem->id,
+                'dimension_id'  => $thicknessDim->id,
+                'value'         => 20,
             ],
         ]);
         DB::table('warehouses')->insert([
@@ -369,6 +396,8 @@ class MockDataDBSeeder extends Seeder
             'input_quantity'   => 20,
             'quantity_in_base' => 20,
             'order_id'         => 1,
+            'status'           => 'active',
+            'revoked_reason'   => null,
             'reserved_by'      => 1,
         ]);
         $res->dimensions()->createMany([
@@ -382,6 +411,8 @@ class MockDataDBSeeder extends Seeder
             'input_quantity'   => 50,
             'quantity_in_base' => 50,
             'order_id'         => 1,
+            'status'           => 'revoked',
+            'revoked_reason'   => 'for other order with higher priority.',
             'reserved_by'      => 1,
         ]);
         // 3. Aluminum Frame - 10 meters
@@ -391,6 +422,8 @@ class MockDataDBSeeder extends Seeder
             'input_quantity'   => 10,
             'quantity_in_base' => 10,
             'order_id'         => 1,
+            'status'           => 'active',
+            'revoked_reason'   => null,
             'reserved_by'      => 1,
         ]);
         // 4. Fan - 15 pcs
@@ -400,6 +433,8 @@ class MockDataDBSeeder extends Seeder
             'input_quantity'   => 15,
             'quantity_in_base' => 15,
             'order_id'         => 1,
+            'status'           => 'active',
+            'revoked_reason'   => null,
             'reserved_by'      => 1,
         ]);
         // 5. Air Purifier - 5 pcs
@@ -409,6 +444,8 @@ class MockDataDBSeeder extends Seeder
             'input_quantity'   => 5,
             'quantity_in_base' => 5,
             'order_id'         => 1,
+            'status'           => 'active',
+            'revoked_reason'   => null,
             'reserved_by'      => 1,
         ]);
         // 6. Conveyor Belt - 2 meters
@@ -418,6 +455,8 @@ class MockDataDBSeeder extends Seeder
             'input_quantity'   => 2,
             'quantity_in_base' => 2,
             'order_id'         => 1,
+            'status'           => 'active',
+            'revoked_reason'   => null,
             'reserved_by'      => 1,
         ]);
         DB::table('shipments')->insert([
@@ -969,6 +1008,8 @@ class MockDataDBSeeder extends Seeder
                 'units_per_line'      => 50,
                 'levels'              => 3,
                 'total_units'         => 150,
+                'status'              => 'not_started',
+                'progress'            => 0,
                 'poultry_house_count' => 4,
                 'created_at'          => Carbon::now(),
                 'updated_at'          => Carbon::now(),
@@ -982,6 +1023,8 @@ class MockDataDBSeeder extends Seeder
                 'units_per_line'      => 40,
                 'levels'              => 4,
                 'total_units'         => 160,
+                'status'              => 'in_progress',
+                'progress'            => 20,
                 'poultry_house_count' => 2,
                 'created_at'          => Carbon::now(),
                 'updated_at'          => Carbon::now(),

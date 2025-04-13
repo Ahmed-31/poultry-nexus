@@ -9,7 +9,7 @@ class StockReservation extends Model
     protected $table = 'stock_reservations';
     protected $fillable = [
         'stock_id', 'uom_id', 'input_quantity', 'quantity_in_base',
-        'order_id', 'reserved_by', 'reserved_at'
+        'order_id', 'status', 'revoked_reason', 'reserved_by', 'reserved_at'
     ];
 
     public function stock()

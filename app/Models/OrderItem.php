@@ -9,6 +9,8 @@ class OrderItem extends Model
     protected $fillable = [
         'order_id',
         'product_id',
+        'source',
+        'uom_id',
         'quantity',
         'total_price',
     ];
@@ -21,6 +23,21 @@ class OrderItem extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function source()
+    {
+        return $this->morphTo();
+    }
+
+    public function dimensionValues()
+    {
+        return $this->hasMany(OrderItemDimension::class, 'order_item_id');
+    }
+
+    public function uom()
+    {
+        return $this->belongsTo(Uom::class);
     }
 
     public static function boot()

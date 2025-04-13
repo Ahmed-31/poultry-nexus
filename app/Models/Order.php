@@ -11,6 +11,7 @@ class Order extends Model
         'user_id',
         'order_number',
         'status',
+        'priority',
         'notes',
         'ordered_at',
     ];

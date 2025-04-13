@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderBundle extends Model
 {
-    protected $fillable = ['order_id', 'product_bundle_id', 'height', 'belt_width', 'lines_number', 'units_per_line', 'levels', 'total_units', 'poultry_house_count'];
+    protected $fillable = ['order_id', 'product_bundle_id', 'height', 'belt_width', 'lines_number', 'units_per_line', 'levels', 'total_units', 'status', 'progress', 'poultry_house_count'];
 
     public function order()
     {

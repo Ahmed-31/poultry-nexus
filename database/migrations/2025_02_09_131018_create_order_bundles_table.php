@@ -22,6 +22,8 @@ return new class extends Migration {
             $table->integer('levels');
             $table->integer('poultry_house_count');
             $table->integer('total_units');
+            $table->enum('status', ['not_started', 'in_progress', 'completed'])->default('not_started');
+            $table->float('progress')->default(0);
             $table->timestamps();
         });
     }

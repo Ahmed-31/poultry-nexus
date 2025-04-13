@@ -8,6 +8,7 @@ class StockReservationDimension extends Model
 {
     protected $table = 'reservation_dimensions';
     protected $fillable = ['reservation_id', 'dimension_id', 'value'];
+    public $timestamps = false;
 
     public function reservation()
     {

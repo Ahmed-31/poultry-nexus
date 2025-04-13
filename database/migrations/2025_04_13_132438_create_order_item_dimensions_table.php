@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reservation_dimensions', function (Blueprint $table) {
+        Schema::create('order_item_dimensions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('reservation_id')->constrained('stock_reservations')->onDelete('cascade');
+            $table->foreignId('order_item_id')->constrained('order_items')->onDelete('cascade');
             $table->foreignId('dimension_id')->constrained('uom_dimensions');
             $table->float('value');
         });
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reservation_dimensions');
+        Schema::dropIfExists('order_item_dimensions');
     }
 };

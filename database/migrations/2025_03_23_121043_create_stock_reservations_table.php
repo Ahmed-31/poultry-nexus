@@ -4,12 +4,12 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
+    : void
     {
         Schema::create('stock_reservations', function (Blueprint $table) {
             $table->id();
@@ -18,6 +18,8 @@ return new class extends Migration
             $table->float('input_quantity');
             $table->float('quantity_in_base');
             $table->foreignId('order_id')->nullable();
+            $table->enum('status', ['active', 'revoked'])->default('active');
+            $table->text('revoked_reason')->nullable();
             $table->foreignId('reserved_by')->nullable();
             $table->timestamp('reserved_at')->useCurrent();
             $table->timestamps();
@@ -27,7 +29,8 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+    public function down()
+    : void
     {
         Schema::dropIfExists('stock_reservations');
     }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
             $table->string('order_number')->unique();
             $table->enum('status', ['pending', 'processing', 'shipped', 'delivered', 'cancelled'])->default('pending');
+            $table->tinyInteger('priority')->default(0);
             $table->text('notes')->nullable();
             $table->timestamp('ordered_at')->nullable();
             $table->timestamps();
