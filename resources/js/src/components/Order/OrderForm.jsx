@@ -1,320 +1,305 @@
-import React, {useState, useEffect} from 'react';
-import {Button} from '@/Components/ui/button';
-import {useOrders} from '@/src/context/OrderContext';
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {useForm, useFieldArray, Controller} from 'react-hook-form';
+import {Button} from '@/components/ui/button';
+import {Input} from '@/components/ui/input';
+import {Textarea} from '@/components/ui/textarea';
+import {createOrder, editOrder} from '@/src/store/ordersSlice';
+import {fetchProducts} from '@/src/store/productsSlice';
+import {fetchCustomers} from '@/src/store/customersSlice';
+import {fetchProductBundles} from '@/src/store/productBundlesSlice';
+import {Label} from "@/components/ui/label";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import Modal from "@/src/components/common/Modal.jsx";
 
-const OrderForm = ({onClose, initialData}) => {
-    const {addOrderItem, updateOrderItem, products, customers, productBundles} = useOrders();
+const OrderForm = ({onClose, initialData, showModal}) => {
+    const dispatch = useDispatch();
+    const products = useSelector(state => state.products.list || []);
+    const customers = useSelector(state => state.customers.list || []);
+    const productBundles = useSelector(state => state.productBundles.list || []);
 
-    const [formData, setFormData] = useState({
-        customer_id: '',
-        order_number: '',
-        order_items: [],
-        order_bundles: [],
-        notes: '',
-        ordered_at: new Date().toISOString().split('T')[0],
+    const {
+        register,
+        control,
+        handleSubmit,
+        watch,
+        setValue,
+        reset,
+        formState: {errors},
+    } = useForm({
+        defaultValues: {
+            customer_id: '',
+            order_number: '',
+            ordered_at: new Date().toISOString().split('T')[0],
+            order_items: [],
+            order_bundles: [],
+            notes: '',
+        }
     });
+
+    const {
+        fields: orderItems,
+        append: appendItem,
+        remove: removeItem,
+    } = useFieldArray({control, name: 'order_items'});
+
+    const {
+        fields: orderBundles,
+        append: appendBundle,
+        remove: removeBundle,
+    } = useFieldArray({control, name: 'order_bundles'});
+
+    useEffect(() => {
+        if (!products.length) dispatch(fetchProducts());
+        if (!customers.length) dispatch(fetchCustomers());
+        if (!productBundles.length) dispatch(fetchProductBundles());
+    }, [dispatch]);
 
     useEffect(() => {
         if (initialData) {
-            setFormData({
-                customer_id: initialData.customer_id || '',
+            reset({
+                customer_id: initialData.customer_id?.toString() || '',
                 order_number: initialData.order_number || '',
+                ordered_at: initialData.ordered_at?.split('T')[0] || '',
                 order_items: initialData.order_items || [],
                 order_bundles: initialData.bundles || [],
                 notes: initialData.notes || '',
-                ordered_at: initialData.ordered_at
-                    ? new Date(initialData.ordered_at).toISOString().split('T')[0]
-                    : new Date().toISOString().split('T')[0],
             });
         }
-    }, [initialData]);
+    }, [initialData, reset]);
 
-    const handleItemChange = (e, index) => {
-        const updatedItems = [...formData.order_items];
-        updatedItems[index][e.target.name] = e.target.value;
-        setFormData(prev => ({...prev, order_items: updatedItems}));
-    };
-
-    const handleBundleChange = (e, index) => {
-        const updatedBundles = [...formData.order_bundles];
-        updatedBundles[index][e.target.name] = e.target.value;
-        setFormData(prev => ({...prev, order_bundles: updatedBundles}));
-    };
-
-    const handleChange = (e) => {
-        setFormData(prev => ({...prev, [e.target.name]: e.target.value}));
-    };
-
-    const addProductLine = () => {
-        setFormData(prev => ({
-            ...prev,
-            order_items: [...prev.order_items, {product_id: '', quantity: 1}]
-        }));
-    };
-
-    const addBundleLine = () => {
-        setFormData(prev => ({
-            ...prev,
-            order_bundles: [...prev.order_bundles, {
-                product_bundle_id: '',
-                height: 1,
-                belt_width: 1,
-                lines_number: 1,
-                units_per_line: 1,
-                poultry_house_count: 1,
-                levels: 1
-            }]
-        }));
-    };
-
-    const removeProductLine = (index) => {
-        const updatedItems = formData.order_items.filter((_, i) => i !== index);
-        setFormData(prev => ({...prev, order_items: updatedItems}));
-    };
-
-    const removeBundleLine = (index) => {
-        const updatedBundles = formData.order_bundles.filter((_, i) => i !== index);
-        setFormData(prev => ({...prev, order_bundles: updatedBundles}));
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const onSubmit = async (data) => {
         if (initialData) {
-            await updateOrderItem(initialData.id, formData);
+            await dispatch(editOrder({id: initialData.id, order: data}));
         } else {
-            await addOrderItem(formData);
+            await dispatch(createOrder({order: data}));
         }
         onClose();
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-3xl flex flex-col max-h-[90vh]">
-                <div className="p-6 border-b bg-white sticky top-0 z-10">
-                    <h2 className="text-3xl font-bold text-center text-gray-900">
-                        {initialData ? 'Edit Order' : 'Create New Order'}
-                    </h2>
+        <Modal isOpen={showModal} onClose={onClose}>
+            <h2 className="text-2xl font-extrabold text-gray-800 mb-6">
+                {initialData ? 'Edit Order' : 'Create New Order'}
+            </h2>
+
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 max-h-[70vh] overflow-y-auto pr-1">
+
+                <div>
+                    <Label className="mb-1 block">Customer</Label>
+                    <select {...register("customer_id", {required: true})} className="w-full p-3 border rounded-lg">
+                        <option value="">Select Customer</option>
+                        {customers.map(c => (
+                            <option key={c.id} value={c.id}>{c.name}</option>
+                        ))}
+                    </select>
+                    {errors.customer_id && <p className="text-red-500 text-sm">Customer is required.</p>}
                 </div>
 
-                <div className="overflow-y-auto p-6 space-y-6 flex-1">
-                    <form id="orders-form" onSubmit={handleSubmit} className="space-y-6">
-                        <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">Customer</label>
-                            <select
-                                name="customer_id"
-                                value={formData.customer_id}
-                                onChange={handleChange}
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                required
-                            >
-                                <option value="" disabled>Select Customer</option>
-                                {customers.map((customer) => (
-                                    <option key={customer.id} value={customer.id}>{customer.name}</option>
-                                ))}
-                            </select>
-                        </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <Label>Order Date</Label>
+                        <Input type="date" {...register("ordered_at", {required: true})} />
+                    </div>
+                    <div>
+                        <Label>Order Number</Label>
+                        <Input type="text" {...register("order_number", {required: true})} />
+                    </div>
+                </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Order Date</label>
-                                <input
-                                    type="date"
-                                    name="ordered_at"
-                                    value={formData.ordered_at}
-                                    onChange={handleChange}
-                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                    required
-                                />
-                            </div>
+                {/* Order Items */}
+                <div className="space-y-6">
+                    <h3 className="text-xl font-bold text-gray-800">Order Items</h3>
+                    {orderItems.map((item, index) => {
+                        const productId = watch(`order_items.${index}.product_id`);
+                        const selectedProduct = products.find(p => p.id === parseInt(productId));
+                        const uoms = selectedProduct?.allowed_uoms?.length > 0
+                            ? selectedProduct.allowed_uoms
+                            : selectedProduct?.default_uom ? [selectedProduct.default_uom] : [];
 
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Order Number</label>
-                                <input
-                                    type="text"
-                                    name="order_number"
-                                    value={formData.order_number}
-                                    onChange={handleChange}
-                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                    required
-                                />
-                            </div>
-                        </div>
+                        return (
+                            <div key={item.id} className="border rounded-xl p-5 bg-white space-y-5 shadow-sm">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <Label>Product</Label>
+                                        <Controller
+                                            name={`order_items.${index}.product_id`}
+                                            control={control}
+                                            rules={{required: true}}
+                                            render={({field}) => (
+                                                <Select
+                                                    value={field.value?.toString() || ''}
+                                                    onValueChange={(value) => {
+                                                        field.onChange(value);
+                                                        setValue(`order_items.${index}.uom_id`, '');
+                                                    }}
+                                                >
+                                                    <SelectTrigger className="w-full p-3 border rounded-lg">
+                                                        <SelectValue placeholder="Select Product"/>
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {products.map(p => (
+                                                            <SelectItem key={p.id}
+                                                                        value={p.id.toString()}>{p.name}</SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            )}
+                                        />
+                                        {errors.order_items?.[index]?.product_id && (
+                                            <p className="text-red-500 text-sm mt-1">Product is required.</p>
+                                        )}
+                                    </div>
 
-                        <div className="p-6 bg-gray-50 rounded-lg shadow-sm">
-                            <h3 className="text-lg font-bold text-gray-800 mb-4">Order Items</h3>
-                            {formData.order_items.map((item, index) => (
-                                <div key={index} className="flex items-center space-x-3 mt-2">
-                                    <select
-                                        name="product_id"
-                                        value={item.product_id}
-                                        onChange={(e) => handleItemChange(e, index)}
-                                        className="w-2/3 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                        required
-                                    >
-                                        <option value="" disabled>Select Product</option>
-                                        {products.map((product) => (
-                                            <option key={product.id} value={product.id}>{product.name}</option>
-                                        ))}
-                                    </select>
+                                    <div>
+                                        <Label>Quantity</Label>
+                                        <Input type="number"
+                                               min="1" {...register(`order_items.${index}.quantity`, {required: true})} />
+                                        {errors.order_items?.[index]?.quantity && (
+                                            <p className="text-red-500 text-sm mt-1">Quantity is required.</p>
+                                        )}
+                                    </div>
 
-                                    <input
-                                        type="number"
-                                        name="quantity"
-                                        value={item.quantity}
-                                        onChange={(e) => handleItemChange(e, index)}
-                                        className="w-1/4 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                        min="1"
-                                        required
-                                    />
-
-                                    <Button type="button" variant="destructive" onClick={() => removeProductLine(index)}>
-                                        Remove
-                                    </Button>
+                                    <div>
+                                        <Label>Unit of Measure</Label>
+                                        <Controller
+                                            name={`order_items.${index}.uom_id`}
+                                            control={control}
+                                            rules={{required: true}}
+                                            render={({field}) => (
+                                                <Select
+                                                    disabled={!selectedProduct}
+                                                    value={field.value?.toString() || ''}
+                                                    onValueChange={field.onChange}
+                                                >
+                                                    <SelectTrigger className="w-full p-3 border rounded-lg">
+                                                        <SelectValue placeholder="Select UOM"/>
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {uoms.map(uom => (
+                                                            <SelectItem key={uom.id} value={uom.id.toString()}>
+                                                                {uom.name} ({uom.symbol})
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            )}
+                                        />
+                                        {errors.order_items?.[index]?.uom_id && (
+                                            <p className="text-red-500 text-sm mt-1">UOM is required.</p>
+                                        )}
+                                    </div>
                                 </div>
-                            ))}
-                            <Button type="button" variant="secondary" onClick={addProductLine} className="mt-4">
-                                Add Product
-                            </Button>
-                        </div>
 
-                        <div className="p-6 bg-gray-50 rounded-lg shadow-sm">
-                            <h3 className="text-lg font-bold text-gray-800 mb-4">Order Bundles</h3>
-                            {formData.order_bundles.map((bundle, index) => (
-                                <div key={index}
-                                     className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white p-4 rounded-lg shadow mb-4">
-
-                                    <div className="sm:col-span-2">
-                                        <label className="block text-gray-700 font-semibold mb-1">Product Bundle</label>
-                                        <select
-                                            name="product_bundle_id"
-                                            value={bundle.product_bundle_id}
-                                            onChange={(e) => handleBundleChange(e, index)}
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                            required
-                                        >
-                                            <option value="" disabled>Select Product Bundle</option>
-                                            {productBundles.map((productBundle) => (
-                                                <option key={productBundle.id}
-                                                        value={productBundle.id}>{productBundle.name}</option>
+                                {selectedProduct?.dimensions?.length > 0 && (
+                                    <div>
+                                        <h4 className="text-md font-semibold mb-2">Dimensions</h4>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            {selectedProduct.dimensions.map((dimension) => (
+                                                <div key={dimension.id}>
+                                                    <Label>{dimension.name} <span
+                                                        className="text-sm text-gray-500">({dimension.uom?.symbol})</span></Label>
+                                                    <Input
+                                                        type="number"
+                                                        step="any"
+                                                        placeholder={`Enter ${dimension.name}`}
+                                                        {...register(`order_items.${index}.dimensions.${dimension.id}.value`, {required: true})}
+                                                    />
+                                                    <input
+                                                        type="hidden"
+                                                        {...register(`order_items.${index}.dimensions.${dimension.id}.dimension_id`)}
+                                                        value={dimension.id}
+                                                    />
+                                                    <input
+                                                        type="hidden"
+                                                        {...register(`order_items.${index}.dimensions.${dimension.id}.uom_id`)}
+                                                        value={dimension.uom_id}
+                                                    />
+                                                </div>
                                             ))}
-                                        </select>
+                                        </div>
                                     </div>
+                                )}
 
-                                    <div>
-                                        <label className="block text-gray-700 font-semibold mb-1">Height</label>
-                                        <input
-                                            type="number"
-                                            name="height"
-                                            value={bundle.height}
-                                            min="1"
-                                            onChange={(e) => handleBundleChange(e, index)}
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-gray-700 font-semibold mb-1">Belt Width</label>
-                                        <input
-                                            type="number"
-                                            name="belt_width"
-                                            value={bundle.belt_width}
-                                            min="1"
-                                            onChange={(e) => handleBundleChange(e, index)}
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-gray-700 font-semibold mb-1">Levels</label>
-                                        <input
-                                            type="number"
-                                            name="levels"
-                                            value={bundle.levels}
-                                            min="1"
-                                            onChange={(e) => handleBundleChange(e, index)}
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-gray-700 font-semibold mb-1">Units Per Line</label>
-                                        <input
-                                            type="number"
-                                            name="units_per_line"
-                                            value={bundle.units_per_line}
-                                            min="1"
-                                            onChange={(e) => handleBundleChange(e, index)}
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-gray-700 font-semibold mb-1">Lines Number</label>
-                                        <input
-                                            type="number"
-                                            name="lines_number"
-                                            value={bundle.lines_number}
-                                            min="1"
-                                            onChange={(e) => handleBundleChange(e, index)}
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-gray-700 font-semibold mb-1">Poultry House
-                                            Count</label>
-                                        <input
-                                            type="number"
-                                            name="poultry_house_count"
-                                            value={bundle.poultry_house_count}
-                                            min="1"
-                                            onChange={(e) => handleBundleChange(e, index)}
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="sm:col-span-2 flex justify-end">
-                                        <Button type="button" variant="destructive" onClick={() => removeBundleLine(index)}>
-                                            Remove
-                                        </Button>
-                                    </div>
+                                <div className="flex justify-end">
+                                    <Button type="button" variant="destructive" onClick={() => removeItem(index)}>Remove
+                                        Item</Button>
                                 </div>
-                            ))}
-                            <Button type="button" variant="secondary" onClick={addBundleLine} className="mt-4">
-                                Add Bundle
-                            </Button>
-                        </div>
+                            </div>
+                        );
+                    })}
 
-                        <div>
-                            <label className="block text-sm font-semibold text-gray-700">Notes</label>
-                            <textarea
-                                name="notes"
-                                value={formData.notes}
-                                onChange={handleChange}
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                rows="4"
-                            ></textarea>
-                        </div>
-                    </form>
-                </div>
-
-                <div className="p-6 border-t bg-white sticky bottom-0 z-10 flex justify-end space-x-4">
-                    <Button type="button" onClick={onClose} variant="secondary" className="px-4 py-2 rounded-lg">
-                        Cancel
-                    </Button>
-                    <Button type="submit" form="orders-form" variant="primary" className="px-4 py-2 rounded-lg">
-                        {initialData ? 'Update Order' : 'Create Order'}
+                    <Button
+                        type="button"
+                        variant="secondary"
+                        onClick={() => appendItem({product_id: '', quantity: 1, uom_id: '', dimensions: {}})}
+                    >
+                        + Add Product
                     </Button>
                 </div>
-            </div>
-        </div>
 
+                {/* Order Bundles */}
+                <div className="space-y-6">
+                    <h3 className="text-xl font-bold text-gray-800">Order Bundles</h3>
+                    {orderBundles.map((bundle, index) => (
+                        <div key={bundle.id} className="border rounded-xl p-5 bg-white space-y-5 shadow-sm">
+                            <div>
+                                <Label>Product Bundle</Label>
+                                <select {...register(`order_bundles.${index}.product_bundle_id`, {required: true})}
+                                        className="w-full p-3 border rounded-lg">
+                                    <option value="">Select Bundle</option>
+                                    {productBundles.map(pb => (
+                                        <option key={pb.id} value={pb.id}>{pb.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {['height', 'belt_width', 'levels', 'units_per_line', 'lines_number', 'poultry_house_count'].map((field) => (
+                                    <div key={field}>
+                                        <Label>{field.replace(/_/g, ' ')}</Label>
+                                        <Input type="number"
+                                               min="1" {...register(`order_bundles.${index}.${field}`, {required: true})} />
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="flex justify-end">
+                                <Button type="button" variant="destructive" onClick={() => removeBundle(index)}>Remove
+                                    Bundle</Button>
+                            </div>
+                        </div>
+                    ))}
+
+                    <Button
+                        type="button"
+                        variant="secondary"
+                        onClick={() =>
+                            appendBundle({
+                                product_bundle_id: '',
+                                height: 1,
+                                belt_width: 1,
+                                lines_number: 1,
+                                units_per_line: 1,
+                                poultry_house_count: 1,
+                                levels: 1
+                            })}
+                    >
+                        + Add Bundle
+                    </Button>
+                </div>
+
+                <div>
+                    <Label>Notes</Label>
+                    <Textarea {...register("notes")} rows="4"/>
+                </div>
+
+                <div className="flex justify-end space-x-4 pt-4 border-t mt-8">
+                    <Button type="button" onClick={onClose} variant="outline">Cancel</Button>
+                    <Button type="submit">{initialData ? 'Update Order' : 'Create Order'}</Button>
+                </div>
+            </form>
+        </Modal>
     );
 };
 

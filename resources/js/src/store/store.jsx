@@ -7,6 +7,8 @@ import uomsReducer from './uomSlice';
 import categoryReducer from './categorySlice';
 import uomDimensionsReducer from './uomDimensionsSlice';
 import productBundlesReducer from './productBundlesSlice.jsx';
+import ordersReducer from './ordersSlice';
+import customersReducer from './customersSlice';
 
 const store = configureStore({
     reducer: {
@@ -18,6 +20,8 @@ const store = configureStore({
         categories: categoryReducer,
         uomDimensions: uomDimensionsReducer,
         productBundles: productBundlesReducer,
+        orders: ordersReducer,
+        customers: customersReducer,
     },
 });
 

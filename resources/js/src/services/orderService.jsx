@@ -1,4 +1,5 @@
 import api from './axios';
+import API from "@/src/services/axios.jsx";
 
 export const getOrders = async () => {
     try {
@@ -9,10 +10,20 @@ export const getOrders = async () => {
         throw error;
     }
 };
+
+export const getOrdersTable = async () => {
+    try {
+        const response = await API.get('/api/orders/all');
+        return response.data.data;
+    } catch (e) {
+        console.error(e);
+        throw e;
+    }
+};
+
 export const getOrder = async (id) => {
     try {
         const response = await api.get(`/api/orders/${id}`);
-        console.log("API Response:", response.data);
         return response.data;
     } catch (error) {
         console.error('Error fetching order:', error);

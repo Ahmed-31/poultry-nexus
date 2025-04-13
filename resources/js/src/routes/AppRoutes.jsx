@@ -1,4 +1,3 @@
-// resources/js/src/routes/AppRoutes.jsx
 import React from 'react';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import {Provider} from 'react-redux';
@@ -13,7 +12,6 @@ import Logout from '@/src/components/Auth/Logout.jsx';
 import PrivateRoutes from './PrivateRoutes.jsx';
 import PublicRoute from './PublicRoutes.jsx';
 import {AuthProvider} from "@/src/context/AuthContext.jsx";
-import {OrderProvider} from "@/src/context/OrderContext.jsx";
 import OrderDetails from '@/src/components/Order/OrderDetails.jsx';
 import {MenuProvider} from '@/src/context/MenuContext.jsx';
 import StockList from '@/src/pages/StockList.jsx'
@@ -41,8 +39,8 @@ const AppRoutes = () => (
                             <Route path="/logout" element={<Logout/>}/>
                             <Route index element={<HomePage/>}/>
 
-                            <Route path="orders" element={<OrderProvider> <OrderPage/> </OrderProvider>}/>
-                            <Route path="orders/:orderId" element={<OrderProvider> <OrderDetails/> </OrderProvider>}/>
+                            <Route path="orders" element={<OrderPage/>}/>
+                            <Route path="orders/:orderId" element={<OrderDetails/>}/>
 
                             <Route
                                 path="stock/dashboard"

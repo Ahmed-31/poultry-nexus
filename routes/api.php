@@ -36,13 +36,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('warehouses', WarehouseController::class);
         Route::apiResource('stock-movements', StockMovementController::class);
     });
-    Route::prefix('orders')->group(function () {
-        Route::get('/', [OrderController::class, 'index']);
-        Route::post('/', [OrderController::class, 'store']);
-        Route::get('/{id}', [OrderController::class, 'show']);
-        Route::put('/{id}', [OrderController::class, 'update']);
-        Route::delete('/{id}', [OrderController::class, 'destroy']);
-    });
+    Route::get('orders/all', [OrderController::class, 'all']);
+    Route::apiResource('orders', OrderController::class);
     Route::prefix('customers')->group(function () {
         Route::get('/', [CustomerController::class, 'index']);
     });

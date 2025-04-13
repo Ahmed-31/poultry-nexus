@@ -13,7 +13,13 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $query = Order::with(['orderItems.product', 'user', 'customer', 'payments', 'shipments', 'bundles.bundle']);
+        $orders = Order::with(['orderItems.product', 'orderItems.source', 'orderItems.dimensionValues.dimension.uom', 'orderItems.uom', 'user', 'customer', 'payments', 'shipments', 'bundles.bundle'])->get();
+        return response()->json($orders);
+    }
+
+    public function all()
+    {
+        $query = Order::with(['orderItems.product', 'orderItems.source', 'orderItems.dimensionValues.dimension.uom', 'orderItems.uom', 'user', 'customer', 'payments', 'shipments', 'bundles.bundle']);
         return DataTables::of($query)
             ->addColumn('order_number', fn($order) => $order->order_number)
             ->addColumn('status', fn($order) => $order->status)
@@ -84,7 +90,7 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        $order = Order::with(['orderItems.product', 'user', 'customer', 'payments', 'shipments'])->findOrFail($id);
+        $order = Order::with(['orderItems.product', 'orderItems.source', 'orderItems.dimensionValues.dimension.uom', 'orderItems.uom', 'user', 'customer', 'payments', 'shipments', 'bundles.bundle'])->findOrFail($id);
         return response()->json($order);
     }
 
