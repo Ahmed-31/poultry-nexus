@@ -1,25 +1,51 @@
 import {createSlice, createAsyncThunk, createSelector} from '@reduxjs/toolkit';
-import {getProducts, createProduct, updateProduct, deleteProduct, getProductsTable} from '../services/productService';
+import {
+    getProducts,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+    getProductsTable
+} from '../services/productService';
 
-export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
-    return await getProducts();
+export const fetchProducts = createAsyncThunk('products/fetchProducts', async (_, {rejectWithValue}) => {
+    try {
+        return await getProducts();
+    } catch (e) {
+        return rejectWithValue(e.response?.data || e.message);
+    }
 });
 
-export const fetchProductsTable = createAsyncThunk('products/fetchProductsTable', async () => {
-    return await getProductsTable();
+export const fetchProductsTable = createAsyncThunk('products/fetchProductsTable', async (_, {rejectWithValue}) => {
+    try {
+        return await getProductsTable();
+    } catch (e) {
+        return rejectWithValue(e.response?.data || e.message);
+    }
 });
 
-export const addProduct = createAsyncThunk('products/addProduct', async (product) => {
-    return await createProduct(product);
+export const addProduct = createAsyncThunk('products/addProduct', async ({product}, {rejectWithValue}) => {
+    try {
+        return await createProduct(product);
+    } catch (e) {
+        return rejectWithValue(e.response?.data || e.message);
+    }
 });
 
-export const editProduct = createAsyncThunk('products/editProduct', async ({id, product}) => {
-    return await updateProduct(id, product);
+export const editProduct = createAsyncThunk('products/editProduct', async ({id, product}, {rejectWithValue}) => {
+    try {
+        return await updateProduct(id, product);
+    } catch (e) {
+        return rejectWithValue(e.response?.data || e.message);
+    }
 });
 
-export const removeProduct = createAsyncThunk('products/removeProduct', async (id) => {
-    await deleteProduct(id);
-    return id;
+export const removeProduct = createAsyncThunk('products/removeProduct', async ({id}, {rejectWithValue}) => {
+    try {
+        await deleteProduct(id);
+        return id;
+    } catch (e) {
+        return rejectWithValue(e.response?.data || e.message);
+    }
 });
 
 const productsSlice = createSlice({

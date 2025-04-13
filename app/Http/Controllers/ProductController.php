@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Models\ProductBundle;
+use App\Models\Uom;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -14,23 +14,28 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('category')->get();
+        $products = Product::with(['category', 'allowedUoms', 'defaultUom', 'dimensions'])->get();
         return response()->json($products);
     }
 
     public function all()
     {
-        $query = Product::with('category');
+        $query = Product::with(['category', 'defaultUom', 'allowedUoms', 'defaultUom.group', 'defaultUom.dimensions', 'dimensions', 'stock', 'stockMovements']);
         return DataTables::of($query)
             ->addColumn('id', fn($item) => $item->id)
+            ->addColumn('unit', fn($item) => optional($item->defaultUom)->name ?? '-')
+            ->addColumn('dimensionsString', function ($item) {
+                if ($item->dimensions->isEmpty()) {
+                    return '-';
+                }
+                return $item->dimensions
+                    ->map(function ($dim) {
+                        return "$dim->name";
+                    })
+                    ->implode(' x ');
+            })
             ->addColumn('action', fn($item) => '')
             ->toJson();
-    }
-
-    public function bundles()
-    {
-        $productBundles = ProductBundle::all();
-        return response()->json($productBundles);
     }
 
     /**
@@ -39,16 +44,29 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'        => 'required|string',
-            'description' => 'nullable|string',
-            'price'       => 'required|numeric|min:0',
-            'min_stock'   => 'required|integer|min:0',
-            'sku'         => 'required|unique:products,sku',
-            'type'        => 'required|in:raw_material,component,finished_product',
-            'unit'        => 'required|string',
-            'category_id' => 'nullable|exists:categories,id'
+            'name'           => 'required|string',
+            'description'    => 'nullable|string',
+            'price'          => 'required|numeric|min:0',
+            'min_stock'      => 'nullable|integer|min:0',
+            'sku'            => 'required|unique:products,sku',
+            'type'           => 'required|in:raw_material,component,finished_product',
+            'default_uom_id' => 'required|integer|exists:uoms,id',
+            'category_id'    => 'required|exists:categories,id',
+            'allowed_uoms'   => 'nullable|array',
+            'allowed_uoms.*' => 'integer|exists:uoms,id',
+            'dimensions'     => 'nullable|array',
+            'dimensions.*'   => 'integer|exists:uom_dimensions,id',
         ]);
-        return response()->json(Product::create($validated), 201);
+        $defaultUom = Uom::findOrFail($validated['default_uom_id']);
+        $validated['uom_group_id'] = $defaultUom->group_id;
+        $product = Product::create($validated);
+        if ($request->has('allowed_uoms')) {
+            $product->allowedUoms()->sync($request->allowed_uoms);
+        }
+        if ($request->has('dimensions')) {
+            $product->dimensions()->sync($request->dimensions);
+        }
+        return response()->json($product->load(['allowedUoms', 'dimensions']), 201);
     }
 
     /**
@@ -56,7 +74,7 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        return response()->json(Product::findOrFail($id));
+        return response()->json(Product::with('defaultUom')->findOrFail($id));
     }
 
     /**
@@ -64,8 +82,28 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $product = Product::findOrFail($id);
-        $product->update($request->all());
+        $product = Product::with(['allowedUoms', 'dimensions', 'bundles'])->findOrFail($id);
+        $requestedUoms = $request->input('allowed_uoms', []);
+        $currentUoms = $product->allowedUoms->pluck('id')->toArray();
+        $requestedDims = $request->input('dimensions', []);
+        $currentDims = $product->dimensions->pluck('id')->toArray();
+        $changingCriticalData =
+            $request->input('default_uom_id') != $product->default_uom_id ||
+            !empty(array_diff($requestedUoms, $currentUoms)) || !empty(array_diff($currentUoms, $requestedUoms)) ||
+            !empty(array_diff($requestedDims, $currentDims)) || !empty(array_diff($currentDims, $requestedDims));
+        if ($product->hasStock() && $changingCriticalData) {
+            return response()->json([
+                'message' => 'Cannot change unit or dimensions while stock exists.'
+            ], 422);
+        }
+        if ($product->bundles()->exists() && $changingCriticalData) {
+            return response()->json([
+                'message' => 'Cannot change unit or dimensions while the product is part of a bundle.'
+            ], 422);
+        }
+        $product->update($request->except(['allowed_uoms', 'dimensions']));
+        $product->allowedUoms()->sync($requestedUoms);
+        $product->dimensions()->sync($requestedDims);
         return response()->json($product);
     }
 
@@ -74,7 +112,21 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        Product::findOrFail($id)->delete();
-        return response()->json(['message' => 'Deleted successfully']);
+        $product = Product::with(['stock', 'allowedUoms', 'dimensions', 'bundles'])->findOrFail($id);
+        if ($product->hasStock()) {
+            return response()->json([
+                'message' => 'Cannot delete product with existing stock.'
+            ], 422);
+        }
+        if ($product->bundles()->exists()) {
+            return response()->json([
+                'message' => 'Cannot delete product as it is part of one or more bundles.'
+            ], 422);
+        }
+        $product->allowedUoms()->detach();
+        $product->dimensions()->detach();
+        $product->stock()?->delete();
+        $product->delete();
+        return response()->json(['message' => 'Product deleted successfully.']);
     }
 }

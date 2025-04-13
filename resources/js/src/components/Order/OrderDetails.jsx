@@ -1,7 +1,7 @@
 import {useEffect} from "react";
 import {useParams, Link} from "react-router-dom";
-import {useOrders} from "../../context/OrderContext";
-import {useAuth} from "../../context/AuthContext";
+import {useOrders} from "@/src/context/OrderContext";
+import {useAuth} from "@/src/context/AuthContext";
 
 const OrderDetails = () => {
     const {orderId} = useParams();

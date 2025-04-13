@@ -1,8 +1,8 @@
 // resources/js/src/components/Orders/OrderList.jsx
 import React, {useState, useMemo} from 'react';
 import {Link} from "react-router-dom";
-import Button from '../Common/Button.jsx';
-import {useOrders} from '../../context/OrderContext';
+import {Button} from '@/Components/ui/button';
+import {useOrders} from '@/src/context/OrderContext';
 import OrderForm from './OrderForm.jsx';
 import DataTable from 'react-data-table-component';
 import ExpandedOrderDetails from './ExpandedOrderDetails.jsx';
@@ -53,7 +53,7 @@ const OrderList = () => {
                         View Details
                     </Link>
                     <Button variant="warning" onClick={() => handleEdit(row)}>Edit</Button>
-                    <Button variant="danger" onClick={() => handleDelete(row.id)}>Delete</Button>
+                    <Button variant="destructive" onClick={() => handleDelete(row.id)}>Delete</Button>
                 </div>
             ),
         },

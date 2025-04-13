@@ -11,7 +11,8 @@ class ProductBundle extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, 'product_bundle_items')
-            ->withPivot('quantity')
+            ->withPivot('uom_id', 'quantity', 'dimension_values')
+            ->using(ProductBundleItem::class)
             ->withTimestamps();
     }
 }

@@ -2,6 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\Stock;
+use App\Models\StockDimension;
+use App\Models\Product;
+use App\Models\StockReservation;
+use App\Models\Uom;
+use App\Models\UomDimension;
+use App\Models\UomGroup;
 use Carbon\Carbon;
 
 //use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -17,6 +24,13 @@ class MockDataDBSeeder extends Seeder
     public function run()
     : void
     {
+        $kg = Uom::where('symbol', 'kg')->first();
+        $m = Uom::where('symbol', 'm')->first();
+        $mm = Uom::where('symbol', 'mm')->first();
+        $pcs = Uom::where('symbol', 'pc')->first();
+        $countGroup = UomGroup::where('name', 'Count')->first();
+        $weightGroup = UomGroup::where('name', 'Weight')->first();
+        $lengthGroup = UomGroup::where('name', 'Length')->first();
         DB::table('users')->insert([
             [
                 'name'              => 'Factory Admin',
@@ -50,77 +64,90 @@ class MockDataDBSeeder extends Seeder
         ]);
         DB::table('products')->insert([
             [
-                'name'        => 'Steel Sheet',
-                'description' => 'High-quality steel sheet for manufacturing.',
-                'price'       => 120.50,
-                'min_stock'   => 500,
-                'sku'         => 'RM-STEEL-001',
-                'type'        => 'raw_material',
-                'unit'        => 'kg',
-                'category_id' => 1,
-                'created_at'  => now(),
-                'updated_at'  => now(),
+                'name'           => 'Steel Sheet',
+                'description'    => 'High-quality steel sheet for manufacturing.',
+                'price'          => 120.50,
+                'min_stock'      => 500,
+                'sku'            => 'RM-STEEL-001',
+                'type'           => 'raw_material',
+                'uom_group_id'   => $countGroup->id,
+                'default_uom_id' => $pcs->id,
+                'category_id'    => 1,
+                'created_at'     => now(),
+                'updated_at'     => now(),
             ],
             [
-                'name'        => 'Plastic Granules',
-                'description' => 'Raw plastic material used for molding.',
-                'price'       => 75.00,
-                'min_stock'   => 1000,
-                'sku'         => 'RM-PLASTIC-002',
-                'type'        => 'raw_material',
-                'unit'        => 'kg',
-                'category_id' => 1,
-                'created_at'  => now(),
-                'updated_at'  => now(),
+                'name'           => 'Plastic Granules',
+                'description'    => 'Raw plastic material used for molding.',
+                'price'          => 75.00,
+                'min_stock'      => 1000,
+                'sku'            => 'RM-PLASTIC-002',
+                'type'           => 'raw_material',
+                'uom_group_id'   => $weightGroup->id,
+                'default_uom_id' => $kg->id,
+                'category_id'    => 1,
+                'created_at'     => now(),
+                'updated_at'     => now(),
             ],
             [
-                'name'        => 'Aluminum Frame',
-                'description' => 'Pre-made aluminum frame for assembly.',
-                'price'       => 250.75,
-                'min_stock'   => 200,
-                'sku'         => 'CMP-ALUFRAME-003',
-                'type'        => 'component',
-                'unit'        => 'meter',
-                'category_id' => 2,
-                'created_at'  => now(),
-                'updated_at'  => now(),
+                'name'           => 'Aluminum Frame',
+                'description'    => 'Pre-made aluminum frame for assembly.',
+                'price'          => 250.75,
+                'min_stock'      => 200,
+                'sku'            => 'CMP-ALUFRAME-003',
+                'type'           => 'component',
+                'uom_group_id'   => $lengthGroup->id,
+                'default_uom_id' => $m->id,
+                'category_id'    => 2,
+                'created_at'     => now(),
+                'updated_at'     => now(),
             ],
             [
-                'name'        => 'Motorized Fan',
-                'description' => 'High-speed motorized fan for cooling systems.',
-                'price'       => 560.00,
-                'min_stock'   => 150,
-                'sku'         => 'CMP-FAN-004',
-                'type'        => 'component',
-                'unit'        => 'pcs',
-                'category_id' => 2,
-                'created_at'  => now(),
-                'updated_at'  => now(),
+                'name'           => 'Motorized Fan',
+                'description'    => 'High-speed motorized fan for cooling systems.',
+                'price'          => 560.00,
+                'min_stock'      => 150,
+                'sku'            => 'CMP-FAN-004',
+                'type'           => 'component',
+                'uom_group_id'   => $countGroup->id,
+                'default_uom_id' => $pcs->id,
+                'category_id'    => 2,
+                'created_at'     => now(),
+                'updated_at'     => now(),
             ],
             [
-                'name'        => 'Industrial Air Purifier',
-                'description' => 'Complete air purification unit.',
-                'price'       => 3200.99,
-                'min_stock'   => 50,
-                'sku'         => 'FP-AIRPUR-005',
-                'type'        => 'component',
-                'unit'        => 'pcs',
-                'category_id' => 3,
-                'created_at'  => now(),
-                'updated_at'  => now(),
+                'name'           => 'Industrial Air Purifier',
+                'description'    => 'Complete air purification unit.',
+                'price'          => 3200.99,
+                'min_stock'      => 50,
+                'sku'            => 'FP-AIRPUR-005',
+                'type'           => 'component',
+                'uom_group_id'   => $countGroup->id,
+                'default_uom_id' => $pcs->id,
+                'category_id'    => 3,
+                'created_at'     => now(),
+                'updated_at'     => now(),
             ],
             [
-                'name'        => 'Automated Conveyor Belt',
-                'description' => 'High-efficiency conveyor belt system.',
-                'price'       => 7500.00,
-                'min_stock'   => 20,
-                'sku'         => 'FP-CONVEYOR-006',
-                'type'        => 'consumable',
-                'unit'        => 'meter',
-                'category_id' => 3,
-                'created_at'  => now(),
-                'updated_at'  => now(),
+                'name'           => 'Automated Conveyor Belt',
+                'description'    => 'High-efficiency conveyor belt system.',
+                'price'          => 7500.00,
+                'min_stock'      => 20,
+                'sku'            => 'FP-CONVEYOR-006',
+                'type'           => 'consumable',
+                'uom_group_id'   => $lengthGroup->id,
+                'default_uom_id' => $m->id,
+                'category_id'    => 3,
+                'created_at'     => now(),
+                'updated_at'     => now(),
             ]
+        ]);
+        $steelSheet = Product::where('sku', 'RM-STEEL-001')->first();
+        $lengthDim = UomDimension::where('name', 'Length')->first();
+        $thicknessDim = UomDimension::where('name', 'Thickness')->first();
+        $steelSheet->dimensions()->sync([
+            $lengthDim->id,
+            $thicknessDim->id
         ]);
         DB::table('suppliers')->insert([
             [
@@ -259,72 +286,139 @@ class MockDataDBSeeder extends Seeder
             [
                 'name'        => 'Overflow Storage',
                 'location'    => '789 Storage Lane, FarmCity',
-                'description' => 'Used for excess inventory and seasonal storage.',
+                'description' => 'Used for excess stock and seasonal storage.',
                 'created_at'  => Carbon::now(),
                 'updated_at'  => Carbon::now(),
             ],
         ]);
-        DB::table('inventory')->insert([
+        DB::table('stock')->insert([
             [
-                'product_id'          => 1,
-                'warehouse_id'        => 1,
-                'quantity'            => 300,
-                'minimum_stock_level' => 50,
-                'maximum_capacity'    => 1000,
-                'reserved_quantity'   => 20,
-                'created_at'          => now(),
-                'updated_at'          => now(),
+                'product_id'       => 1,
+                'warehouse_id'     => 1,
+                'quantity_in_base' => 300,
+                'input_uom_id'     => $pcs->id,
+                'input_quantity'   => 300,
+                'created_at'       => now(),
+                'updated_at'       => now(),
             ],
             [
-                'product_id'          => 2,
-                'warehouse_id'        => 1,
-                'quantity'            => 800,
-                'minimum_stock_level' => 100,
-                'maximum_capacity'    => 1500,
-                'reserved_quantity'   => 50,
-                'created_at'          => now(),
-                'updated_at'          => now(),
+                'product_id'       => 2,
+                'warehouse_id'     => 1,
+                'quantity_in_base' => 800,
+                'input_uom_id'     => $kg->id,
+                'input_quantity'   => 800,
+                'created_at'       => now(),
+                'updated_at'       => now(),
             ],
             [
-                'product_id'          => 3,
-                'warehouse_id'        => 2,
-                'quantity'            => 150,
-                'minimum_stock_level' => 30,
-                'maximum_capacity'    => 500,
-                'reserved_quantity'   => 10,
-                'created_at'          => now(),
-                'updated_at'          => now(),
+                'product_id'       => 3,
+                'warehouse_id'     => 2,
+                'quantity_in_base' => 150,
+                'input_uom_id'     => $m->id,
+                'input_quantity'   => 150,
+                'created_at'       => now(),
+                'updated_at'       => now(),
             ],
             [
-                'product_id'          => 4,
-                'warehouse_id'        => 2,
-                'quantity'            => 120,
-                'minimum_stock_level' => 20,
-                'maximum_capacity'    => 400,
-                'reserved_quantity'   => 15,
-                'created_at'          => now(),
-                'updated_at'          => now(),
+                'product_id'       => 4,
+                'warehouse_id'     => 2,
+                'quantity_in_base' => 120,
+                'input_uom_id'     => $pcs->id,
+                'input_quantity'   => 120,
+                'created_at'       => now(),
+                'updated_at'       => now(),
             ],
             [
-                'product_id'          => 5,
-                'warehouse_id'        => 3,
-                'quantity'            => 40,
-                'minimum_stock_level' => 10,
-                'maximum_capacity'    => 200,
-                'reserved_quantity'   => 5,
-                'created_at'          => now(),
-                'updated_at'          => now(),
+                'product_id'       => 5,
+                'warehouse_id'     => 3,
+                'quantity_in_base' => 40,
+                'input_uom_id'     => $pcs->id,
+                'input_quantity'   => 40,
+                'created_at'       => now(),
+                'updated_at'       => now(),
             ],
             [
-                'product_id'          => 6,
-                'warehouse_id'        => 3,
-                'quantity'            => 15,
-                'minimum_stock_level' => 5,
-                'maximum_capacity'    => 50,
-                'reserved_quantity'   => 2,
-                'created_at'          => now(),
-                'updated_at'          => now(),
+                'product_id'       => 6,
+                'warehouse_id'     => 3,
+                'quantity_in_base' => 15,
+                'input_uom_id'     => $m->id,
+                'input_quantity'   => 15,
+                'created_at'       => now(),
+                'updated_at'       => now(),
             ]
+        ]);
+        $stock = Stock::where('product_id', 1)->first();
+        StockDimension::insert([
+            [
+                'stock_id'     => $stock->id,
+                'dimension_id' => $lengthDim->id,
+                'value'        => 2.5,
+                'uom_id'       => $m->id,
+            ],
+            [
+                'stock_id'     => $stock->id,
+                'dimension_id' => $thicknessDim->id,
+                'value'        => 0.6,
+                'uom_id'       => $mm->id,
+            ]
+        ]);
+        // 1. Steel Sheet - 20 pcs
+        $res = StockReservation::create([
+            'stock_id'         => $stock->id,
+            'uom_id'           => $pcs->id,
+            'input_quantity'   => 20,
+            'quantity_in_base' => 20,
+            'order_id'         => 1,
+            'reserved_by'      => 1,
+        ]);
+        $res->dimensions()->createMany([
+            ['dimension_id' => $lengthDim->id, 'value' => 2.5],
+            ['dimension_id' => $thicknessDim->id, 'value' => 0.6],
+        ]);
+        // 2. Plastic Granules - 50 kg
+        $res = StockReservation::create([
+            'stock_id'         => Stock::where('product_id', 2)->first()->id,
+            'uom_id'           => $kg->id,
+            'input_quantity'   => 50,
+            'quantity_in_base' => 50,
+            'order_id'         => 1,
+            'reserved_by'      => 1,
+        ]);
+        // 3. Aluminum Frame - 10 meters
+        $res = StockReservation::create([
+            'stock_id'         => Stock::where('product_id', 3)->first()->id,
+            'uom_id'           => $m->id,
+            'input_quantity'   => 10,
+            'quantity_in_base' => 10,
+            'order_id'         => 1,
+            'reserved_by'      => 1,
+        ]);
+        // 4. Fan - 15 pcs
+        $res = StockReservation::create([
+            'stock_id'         => Stock::where('product_id', 4)->first()->id,
+            'uom_id'           => $pcs->id,
+            'input_quantity'   => 15,
+            'quantity_in_base' => 15,
+            'order_id'         => 1,
+            'reserved_by'      => 1,
+        ]);
+        // 5. Air Purifier - 5 pcs
+        $res = StockReservation::create([
+            'stock_id'         => Stock::where('product_id', 5)->first()->id,
+            'uom_id'           => $pcs->id,
+            'input_quantity'   => 5,
+            'quantity_in_base' => 5,
+            'order_id'         => 1,
+            'reserved_by'      => 1,
+        ]);
+        // 6. Conveyor Belt - 2 meters
+        $res = StockReservation::create([
+            'stock_id'         => Stock::where('product_id', 6)->first()->id,
+            'uom_id'           => $m->id,
+            'input_quantity'   => 2,
+            'quantity_in_base' => 2,
+            'order_id'         => 1,
+            'reserved_by'      => 1,
         ]);
         DB::table('shipments')->insert([
             [
@@ -430,7 +524,7 @@ class MockDataDBSeeder extends Seeder
                 'shipment_id'   => DB::table('shipments')->where('tracking_number', 'TRACK-001')->first()->id,
                 'product_id'    => DB::table('products')->where('name', 'Motorized Fan')->first()->id,
                 'order_item_id' => DB::table('order_items')->where('product_id', DB::table('products')->where('name', 'Motorized Fan')->first()->id)->first()->id,
-                'inventory_id'  => DB::table('inventory')->where('product_id', DB::table('products')->where('name', 'Motorized Fan')->first()->id)->first()->id,
+                'stock_id'      => DB::table('stock')->where('product_id', DB::table('products')->where('name', 'Motorized Fan')->first()->id)->first()->id,
                 'quantity'      => 2,
                 'created_at'    => Carbon::now(),
                 'updated_at'    => Carbon::now(),
@@ -439,7 +533,7 @@ class MockDataDBSeeder extends Seeder
                 'shipment_id'   => DB::table('shipments')->where('tracking_number', 'TRACK-002')->first()->id,
                 'product_id'    => DB::table('products')->where('name', 'Industrial Air Purifier')->first()->id,
                 'order_item_id' => DB::table('order_items')->where('product_id', DB::table('products')->where('name', 'Industrial Air Purifier')->first()->id)->first()->id,
-                'inventory_id'  => DB::table('inventory')->where('product_id', DB::table('products')->where('name', 'Industrial Air Purifier')->first()->id)->first()->id,
+                'stock_id'      => DB::table('stock')->where('product_id', DB::table('products')->where('name', 'Industrial Air Purifier')->first()->id)->first()->id,
                 'quantity'      => 3,
                 'created_at'    => Carbon::now(),
                 'updated_at'    => Carbon::now(),
@@ -448,7 +542,7 @@ class MockDataDBSeeder extends Seeder
                 'shipment_id'   => DB::table('shipments')->where('tracking_number', 'TRACK-003')->first()->id,
                 'product_id'    => DB::table('products')->where('name', 'Automated Conveyor Belt')->first()->id,
                 'order_item_id' => DB::table('order_items')->where('product_id', DB::table('products')->where('name', 'Automated Conveyor Belt')->first()->id)->first()->id,
-                'inventory_id'  => DB::table('inventory')->where('product_id', DB::table('products')->where('name', 'Automated Conveyor Belt')->first()->id)->first()->id,
+                'stock_id'      => DB::table('stock')->where('product_id', DB::table('products')->where('name', 'Automated Conveyor Belt')->first()->id)->first()->id,
                 'quantity'      => 2,
                 'created_at'    => Carbon::now(),
                 'updated_at'    => Carbon::now(),
@@ -782,33 +876,33 @@ class MockDataDBSeeder extends Seeder
                 'updated_at'     => Carbon::now(),
             ],
         ]);
-        DB::table('inventory_reports')->insert([
+        DB::table('stock_reports')->insert([
             [
-                'report_date'           => Carbon::now()->subDays(7),
-                'total_items'           => 150,
-                'low_stock_items'       => 10,
-                'out_of_stock_items'    => 2,
-                'total_inventory_value' => 35000.00,
-                'created_at'            => Carbon::now(),
-                'updated_at'            => Carbon::now(),
+                'report_date'        => Carbon::now()->subDays(7),
+                'total_items'        => 150,
+                'low_stock_items'    => 10,
+                'out_of_stock_items' => 2,
+                'total_stock_value'  => 35000.00,
+                'created_at'         => Carbon::now(),
+                'updated_at'         => Carbon::now(),
             ],
             [
-                'report_date'           => Carbon::now()->subDays(14),
-                'total_items'           => 170,
-                'low_stock_items'       => 8,
-                'out_of_stock_items'    => 1,
-                'total_inventory_value' => 40000.00,
-                'created_at'            => Carbon::now(),
-                'updated_at'            => Carbon::now(),
+                'report_date'        => Carbon::now()->subDays(14),
+                'total_items'        => 170,
+                'low_stock_items'    => 8,
+                'out_of_stock_items' => 1,
+                'total_stock_value'  => 40000.00,
+                'created_at'         => Carbon::now(),
+                'updated_at'         => Carbon::now(),
             ],
             [
-                'report_date'           => Carbon::now()->subDays(21),
-                'total_items'           => 140,
-                'low_stock_items'       => 12,
-                'out_of_stock_items'    => 3,
-                'total_inventory_value' => 30000.00,
-                'created_at'            => Carbon::now(),
-                'updated_at'            => Carbon::now(),
+                'report_date'        => Carbon::now()->subDays(21),
+                'total_items'        => 140,
+                'low_stock_items'    => 12,
+                'out_of_stock_items' => 3,
+                'total_stock_value'  => 30000.00,
+                'created_at'         => Carbon::now(),
+                'updated_at'         => Carbon::now(),
             ],
         ]);
         DB::table('product_bundles')->insert([
@@ -830,6 +924,8 @@ class MockDataDBSeeder extends Seeder
             [
                 'product_bundle_id' => 1,
                 'product_id'        => 6,
+                'uom_id'            => $m->id,
+                'dimension_values'  => json_encode(['length' => 100, 'width' => 50, 'height' => 30]),
                 'quantity'          => 1,
                 'created_at'        => Carbon::now(),
                 'updated_at'        => Carbon::now(),
@@ -837,6 +933,8 @@ class MockDataDBSeeder extends Seeder
             [
                 'product_bundle_id' => 1,
                 'product_id'        => 5,
+                'uom_id'            => $pcs->id,
+                'dimension_values'  => json_encode(['length' => 80, 'width' => 40, 'height' => 20]),
                 'quantity'          => 2,
                 'created_at'        => Carbon::now(),
                 'updated_at'        => Carbon::now(),
@@ -845,6 +943,8 @@ class MockDataDBSeeder extends Seeder
             [
                 'product_bundle_id' => 2,
                 'product_id'        => 3,
+                'uom_id'            => $m->id,
+                'dimension_values'  => json_encode(['length' => 60, 'width' => 30, 'height' => 15]),
                 'quantity'          => 1,
                 'created_at'        => Carbon::now(),
                 'updated_at'        => Carbon::now(),
@@ -852,6 +952,8 @@ class MockDataDBSeeder extends Seeder
             [
                 'product_bundle_id' => 2,
                 'product_id'        => 4,
+                'uom_id'            => $pcs->id,
+                'dimension_values'  => json_encode(['length' => 70, 'width' => 35, 'height' => 18]),
                 'quantity'          => 1,
                 'created_at'        => Carbon::now(),
                 'updated_at'        => Carbon::now(),

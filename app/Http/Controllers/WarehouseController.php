@@ -19,10 +19,10 @@ class WarehouseController extends Controller
 
     public function all()
     {
-        $query = Warehouse::query();
+        $query = Warehouse::with(['stocks', 'stockMovement']);
         return DataTables::of($query)
-            ->addColumn('id', fn ($warehouse) => $warehouse->id)
-            ->addColumn('action', fn ($warehouse) => '')
+            ->addColumn('id', fn($warehouse) => $warehouse->id)
+            ->addColumn('action', fn($warehouse) => '')
             ->toJson();
     }
 
@@ -31,11 +31,16 @@ class WarehouseController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name'     => 'required|string|unique:warehouses',
-            'location' => 'nullable|string',
+        $validated = $request->validate([
+            'name'        => 'required|string|unique:warehouses,name',
+            'location'    => 'nullable|string',
+            'description' => 'nullable|string',
         ]);
-        return Warehouse::create($request->all());
+        $warehouse = Warehouse::create($validated);
+        return response()->json([
+            'message' => 'Warehouse created successfully.',
+            'data'    => $warehouse,
+        ], 201);
     }
 
     /**
@@ -52,8 +57,16 @@ class WarehouseController extends Controller
     public function update(Request $request, string $id)
     {
         $warehouse = Warehouse::findOrFail($id);
-        $warehouse->update($request->all());
-        return response()->json($warehouse);
+        $validated = $request->validate([
+            'name'        => 'required|string|unique:warehouses,name,' . $warehouse->id,
+            'location'    => 'nullable|string',
+            'description' => 'nullable|string',
+        ]);
+        $warehouse->update($validated);
+        return response()->json([
+            'message' => 'Warehouse updated successfully.',
+            'data'    => $warehouse,
+        ]);
     }
 
     /**
@@ -61,7 +74,15 @@ class WarehouseController extends Controller
      */
     public function destroy(string $id)
     {
-        Warehouse::findOrFail($id)->delete();
-        return response()->json(['message' => 'Deleted successfully']);
+        $warehouse = Warehouse::findOrFail($id);
+        if ($warehouse->hasStock()) {
+            return response()->json([
+                'message' => 'Cannot delete warehouse with existing stock.'
+            ], 400);
+        }
+        $warehouse->delete();
+        return response()->json([
+            'message' => 'Warehouse deleted successfully.'
+        ]);
     }
 }

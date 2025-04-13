@@ -1,33 +1,51 @@
 import {createAsyncThunk, createSlice, createSelector} from '@reduxjs/toolkit';
-import {addWarehouse, deleteWarehouse, getWarehouses, getWarehousesTable, updateWarehouse} from '../services/warehouseService';
+import {createWarehouse, deleteWarehouse, getWarehouses, getWarehousesTable, updateWarehouse} from '../services/warehouseService';
 
-export const fetchWarehouses = createAsyncThunk('warehouse/fetchWarehouses', async () => {
-    return await getWarehouses();
+export const fetchWarehouses = createAsyncThunk('warehouse/fetchWarehouses', async (_, {rejectWithValue}) => {
+    try {
+        return await getWarehouses();
+    } catch (e) {
+        return rejectWithValue(e.response?.data || e.message);
+    }
 });
 
-export const fetchWarehousesTable = createAsyncThunk('warehouse/fetchWarehousesTable', async () => {
-    return await getWarehousesTable();
+export const fetchWarehousesTable = createAsyncThunk('warehouse/fetchWarehousesTable', async (_, {rejectWithValue}) => {
+    try {
+        return await getWarehousesTable();
+    } catch (e) {
+        return rejectWithValue(e.response?.data || e.message);
+    }
 });
 
-export const addWarehouseItem = createAsyncThunk('warehouse/addWarehouseItem', async (data) => {
-    return await addWarehouse(data);
+export const addWarehouse = createAsyncThunk('warehouse/addWarehouse', async ({data}, {rejectWithValue}) => {
+    try {
+        return await createWarehouse(data);
+    } catch (e) {
+        return rejectWithValue(e.response?.data || e.message);
+    }
 });
 
-// Async thunk to update an warehouse item
-export const updateWarehouseItem = createAsyncThunk('warehouse/updateWarehouseItem', async ({id, data}) => {
-    return await updateWarehouse(id, data);
+export const editWarehouse = createAsyncThunk('warehouse/editWarehouse', async ({id, data}, {rejectWithValue}) => {
+    try {
+        return await updateWarehouse(id, data);
+    } catch (e) {
+        return rejectWithValue(e.response?.data || e.message);
+    }
 });
 
-// Async thunk to delete an warehouse item
-export const removeWarehouseItem = createAsyncThunk('warehouse/removeWarehouseItem', async (id) => {
-    await deleteWarehouse(id);
-    return id; // Return the deleted item's ID
+export const removeWarehouse = createAsyncThunk('warehouse/removeWarehouse', async ({id}, {rejectWithValue}) => {
+    try {
+        await deleteWarehouse(id);
+        return id;
+    } catch (e) {
+        return rejectWithValue(e.response?.data || e.message);
+    }
 });
 
 const warehouseSlice = createSlice({
     name: 'warehouse',
     initialState: {
-        items: [],
+        list: [],
         dataTable: [],
         loading: false,
         error: null
@@ -43,7 +61,7 @@ const warehouseSlice = createSlice({
             })
             .addCase(fetchWarehouses.fulfilled, (state, action) => {
                 state.loading = false;
-                state.items = action.payload;
+                state.list = action.payload;
             })
             .addCase(fetchWarehousesTable.fulfilled, (state, action) => {
                 state.loading = false;
@@ -57,23 +75,23 @@ const warehouseSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message;
             })
-            .addCase(addWarehouseItem.fulfilled, (state, action) => {
-                state.items.push(action.payload);
+            .addCase(addWarehouse.fulfilled, (state, action) => {
+                state.list.push(action.payload);
             })
-            .addCase(updateWarehouseItem.fulfilled, (state, action) => {
-                state.items = state.items.map((item) =>
+            .addCase(editWarehouse.fulfilled, (state, action) => {
+                state.list = state.list.map((item) =>
                     item.id === action.payload.id ? action.payload : item
                 );
             })
-            .addCase(removeWarehouseItem.fulfilled, (state, action) => {
-                state.items = state.items.filter((item) => item.id !== action.payload);
+            .addCase(removeWarehouse.fulfilled, (state, action) => {
+                state.list = state.list.filter((item) => item.id !== action.payload);
             });
     },
 });
 
 export const warehousesSelector = createSelector(
-    (state) => state.warehouses.items,
-    (items) => items,
+    (state) => state.warehouses.list,
+    (list) => list,
 );
 
 export default warehouseSlice.reducer;

@@ -42,8 +42,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'perform_quality_check',
             'update_stock',
             'allocate_materials_to_production',
-            'update_inventory_levels',
-            'generate_inventory_report',
+            'update_stock_levels',
+            'generate_stock_report',
             'schedule_production',
             'assign_production_tasks',
             'create_work_order',
@@ -74,8 +74,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'view_sales_report',
             'generate_production_efficiency_report',
             'view_production_report',
-            'generate_inventory_report',
-            'view_inventory_report',
+            'generate_stock_report',
+            'view_stock_report',
             'create_custom_report',
             'export_report',
         ];
@@ -87,7 +87,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $salesRepresentative = Role::firstOrCreate(['name' => 'sales_representative']);
         $procurementManager = Role::firstOrCreate(['name' => 'procurement_manager']);
         $procurementOfficer = Role::firstOrCreate(['name' => 'procurement_officer']);
-        $inventoryManager = Role::firstOrCreate(['name' => 'inventory_manager']);
+        $stockManager = Role::firstOrCreate(['name' => 'stock_manager']);
         $warehouseStaff = Role::firstOrCreate(['name' => 'warehouse_staff']);
         $productionManager = Role::firstOrCreate(['name' => 'production_manager']);
         $productionStaff = Role::firstOrCreate(['name' => 'production_staff']);
@@ -118,7 +118,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'approve_purchase_order',
             'track_purchase_order',
             'manage_supplier_interactions',
-            'generate_inventory_report',
+            'generate_stock_report',
         ]);
         $procurementOfficer->givePermissionTo([
             'create_purchase_order',
@@ -127,10 +127,10 @@ class RolesAndPermissionsSeeder extends Seeder
             'check_raw_material_availability',
             'trigger_procurement',
         ]);
-        $inventoryManager->givePermissionTo([
+        $stockManager->givePermissionTo([
             'allocate_materials_to_production',
-            'update_inventory_levels',
-            'generate_inventory_report',
+            'update_stock_levels',
+            'generate_stock_report',
         ]);
         $warehouseStaff->givePermissionTo([
             'receive_materials',
@@ -181,7 +181,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $reportingAnalyst->givePermissionTo([
             'generate_sales_report',
             'generate_production_efficiency_report',
-            'generate_inventory_report',
+            'generate_stock_report',
             'create_custom_report',
             'export_report',
         ]);

@@ -18,18 +18,18 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->group('api', [
             SubstituteBindings::class,
         ]);
+        $middleware->statefulApi();
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        $exceptions->render(function (AuthenticationException $exception, Request $request) {
-            if ($request->expectsJson() || $request->is('api/*')) {
-                return response()->json(['message' => 'Unauthenticated.'], 401);
-            }
-            return redirect()->guest(route('login'));
-        });
         $exceptions->shouldRenderJsonWhen(function (Request $request, Throwable $e) {
-            if ($request->expectsJson() || $request->is('api/*')) {
-                return true;
-            }
-            return $request->expectsJson();
+            return $request->is('api/*') ||
+                $request->expectsJson();
         });
-    })->create();
+        $exceptions->render(function (AuthenticationException $exception) {
+            return response()->json([
+                'error'   => 'Unauthenticated',
+                'message' => 'Authentication required to access this resource.',
+            ], 401);
+        });
+    })
+    ->create();

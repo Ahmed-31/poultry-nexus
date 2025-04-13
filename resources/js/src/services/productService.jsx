@@ -2,50 +2,50 @@ import API from './axios.jsx';
 
 export const getProducts = async () => {
     try {
-        const response = await API.get('/api/inventory/products');
+        const response = await API.get('/api/stock/products');
         return response.data;
     } catch (e) {
         console.error(e);
-        return [];
+        throw e;
     }
 };
 
 export const getProductsTable = async () => {
     try {
-        const response = await API.get('/api/inventory/products/all');
+        const response = await API.get('/api/stock/products/all');
         return response.data.data;
     } catch (e) {
         console.error(e);
-        return [];
+        throw e;
     }
 };
 
 export const createProduct = async (productData) => {
     try {
-        const response = await API.post('/api/inventory/products', productData);
+        const response = await API.post('/api/stock/products', productData);
         return response.data;
     } catch (e) {
         console.error(e);
-        return [];
+        throw e;
     }
 };
 
 export const updateProduct = async (id, productData) => {
     try {
-        const response = await API.put(`/api/inventory/products/${id}`, productData);
+        const response = await API.put(`/api/stock/products/${id}`, productData);
         return response.data;
     } catch (e) {
         console.error(e);
-        return [];
+        throw e;
     }
 };
 
 export const deleteProduct = async (id) => {
     try {
-        const response = await API.delete(`/api/inventory/products/${id}`);
+        const response = await API.delete(`/api/stock/products/${id}`);
         return response.data;
     } catch (e) {
         console.error(e);
-        return [];
+        throw e;
     }
 };

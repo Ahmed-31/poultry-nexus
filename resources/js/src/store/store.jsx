@@ -1,15 +1,23 @@
 import {configureStore} from '@reduxjs/toolkit';
-import inventoryReducer from './inventorySlice';
+import stockReducer from './stockSlice';
 import productsReducer from './productsSlice';
 import stockMovementsReducer from './stockMovementsSlice';
 import warehousesReducer from './warehouseSlice';
+import uomsReducer from './uomSlice';
+import categoryReducer from './categorySlice';
+import uomDimensionsReducer from './uomDimensionsSlice';
+import productBundlesReducer from './productBundlesSlice.jsx';
 
 const store = configureStore({
     reducer: {
-        inventory: inventoryReducer,
+        stock: stockReducer,
         products: productsReducer,
         stockMovements: stockMovementsReducer,
-        warehouses: warehousesReducer
+        warehouses: warehousesReducer,
+        uoms: uomsReducer,
+        categories: categoryReducer,
+        uomDimensions: uomDimensionsReducer,
+        productBundles: productBundlesReducer,
     },
 });
 

@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('inventory_reports', function (Blueprint $table) {
+        Schema::create('uom_groups', function (Blueprint $table) {
             $table->id();
-            $table->date('report_date');
-            $table->integer('total_items');
-            $table->integer('low_stock_items')->nullable();
-            $table->integer('out_of_stock_items')->nullable();
-            $table->decimal('total_inventory_value', 15, 2);
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('inventory_reports');
+        Schema::dropIfExists('uom_groups');
     }
 };

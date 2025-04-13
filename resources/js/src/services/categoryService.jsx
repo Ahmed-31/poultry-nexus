@@ -2,7 +2,7 @@ import API from './axios.jsx';
 
 export const getCategories = async () => {
     try {
-        const response = await API.get('/api/inventory/categories');
+        const response = await API.get('/api/stock/categories');
         return response.data;
     } catch (e) {
         console.error(e);
@@ -12,7 +12,7 @@ export const getCategories = async () => {
 
 export const getCategoriesTable = async () => {
     try {
-        const response = await API.get('/api/inventory/categories/all');
+        const response = await API.get('/api/stock/categories/all');
         return response.data.data;
     } catch (e) {
         console.error(e);
@@ -22,7 +22,7 @@ export const getCategoriesTable = async () => {
 
 export const createCategory = async (categoryData) => {
     try {
-        const response = await API.post('/api/inventory/categories', categoryData);
+        const response = await API.post('/api/stock/categories', categoryData);
         return response.data;
     } catch (e) {
         console.error(e);
@@ -32,7 +32,7 @@ export const createCategory = async (categoryData) => {
 
 export const updateCategory = async (id, categoryData) => {
     try {
-        const response = await API.put(`/api/inventory/categories/${id}`, categoryData);
+        const response = await API.put(`/api/stock/categories/${id}`, categoryData);
         return response.data;
     } catch (e) {
         console.error(e);
@@ -42,7 +42,7 @@ export const updateCategory = async (id, categoryData) => {
 
 export const deleteCategory = async (id) => {
     try {
-        const response = await API.delete(`/api/inventory/categories/${id}`);
+        const response = await API.delete(`/api/stock/categories/${id}`);
         return response.data;
     } catch (e) {
         console.error(e);

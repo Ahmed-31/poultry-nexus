@@ -5,8 +5,8 @@ import procurementImage from '../../../images/Procurement & Inventory Control.we
 import packagingImage from '../../../images/Packaging & Dispatch Management.webp';
 import productionImage from '../../../images/a factory that manufactures poultry equipment.webp';
 import deliveryImage from '../../../images/Delivery & Internal Support.webp';
-import {useAuth} from '../context/AuthContext';
-import Loader from '../components/common/Loader';
+import {useAuth} from '@/src/context/AuthContext';
+import Loader from '@/src/components/common/Loader';
 
 const HomePage = () => {
     const {user, loading} = useAuth();
@@ -54,11 +54,11 @@ const HomePage = () => {
                 />
 
                 <ZigZagSection
-                    title="Procurement & Inventory Control"
+                    title="Procurement & Stock Control"
                     steps={[
                         'Review stock levels and initiate procurement if necessary.',
                         'Create purchase orders and monitor supplier deliveries.',
-                        'Receive and inspect materials, then update inventory records.',
+                        'Receive and inspect materials, then update stock records.',
                         'Allocate materials to corresponding production tasks.'
                     ]}
                     reverse={true}

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import Button from '../Common/Button.jsx';
-import {useOrders} from '../../context/OrderContext';
+import {Button} from '@/Components/ui/button';
+import {useOrders} from '@/src/context/OrderContext';
 
 const OrderForm = ({onClose, initialData}) => {
     const {addOrderItem, updateOrderItem, products, customers, productBundles} = useOrders();
@@ -167,7 +167,7 @@ const OrderForm = ({onClose, initialData}) => {
                                         required
                                     />
 
-                                    <Button type="button" variant="danger" onClick={() => removeProductLine(index)}>
+                                    <Button type="button" variant="destructive" onClick={() => removeProductLine(index)}>
                                         Remove
                                     </Button>
                                 </div>
@@ -280,7 +280,7 @@ const OrderForm = ({onClose, initialData}) => {
                                     </div>
 
                                     <div className="sm:col-span-2 flex justify-end">
-                                        <Button type="button" variant="danger" onClick={() => removeBundleLine(index)}>
+                                        <Button type="button" variant="destructive" onClick={() => removeBundleLine(index)}>
                                             Remove
                                         </Button>
                                     </div>

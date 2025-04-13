@@ -1,17 +1,15 @@
 import React, {useEffect, useState, useMemo} from "react";
 import {useSelector, useDispatch} from "react-redux";
-import {fetchWarehousesTable} from "../store/warehouseSlice";
-import {fetchInventory} from "../store/inventorySlice";
+import {fetchWarehousesTable, removeWarehouse} from "../store/warehouseSlice";
+import {FaPlus} from "react-icons/fa";
+import {Button} from "@/Components/ui/button";
 import DataTable from "react-data-table-component";
-import Button from "../components/common/Button";
-import {FaPlus, FaEdit} from "react-icons/fa";
-import WarehouseForm from "@/src/components/Inventory/WarehouseForm.jsx";
+import WarehouseFormModal from "@/src/components/Stock/WarehouseFormModal.jsx";
 
 const WarehouseManagement = () => {
     const dispatch = useDispatch();
 
     const warehouses = useSelector((state) => state.warehouses.dataTable || []);
-    const inventory = useSelector((state) => state.inventory.items || []);
     const loading = useSelector((state) => state.warehouses.loading);
 
     const [searchTerm, setSearchTerm] = useState("");
@@ -20,50 +18,58 @@ const WarehouseManagement = () => {
 
     useEffect(() => {
         dispatch(fetchWarehousesTable());
-        dispatch(fetchInventory());
     }, [dispatch]);
 
-    const warehouseStockUsage = useMemo(() => {
-        return warehouses.map((warehouse) => ({
-            ...warehouse,
-            usedCapacity: inventory
-                .filter((item) => item.warehouse.id === warehouse.id)
-                .reduce((sum, item) => sum + item.quantity, 0),
-        }));
-    }, [warehouses, inventory]);
+    const enrichedWarehouses = useMemo(() => {
+        return warehouses.map((warehouse) => {
+            const totalQuantity = (warehouse.stocks || []).reduce((sum, stock) => sum + stock.quantity_in_base, 0);
+            return {
+                ...warehouse,
+                totalQuantity,
+            };
+        });
+    }, [warehouses]);
 
     const filteredWarehouses = useMemo(() => {
-        return warehouseStockUsage.filter((warehouse) =>
+        return enrichedWarehouses.filter((warehouse) =>
             warehouse.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             (warehouse.location && warehouse.location.toLowerCase().includes(searchTerm.toLowerCase()))
         );
-    }, [warehouseStockUsage, searchTerm]);
+    }, [searchTerm, enrichedWarehouses]);
 
     const handleEdit = (item) => {
         setEditItem(item);
         setShowForm(true);
     };
 
+    const handleDelete = (id) => {
+        if (window.confirm("Are you sure you want to delete this warehouse?")) {
+            dispatch(removeWarehouse({id}))
+                .unwrap()
+                .then(() => dispatch(fetchWarehousesTable()))
+                .catch((err) => {
+                    console.error("Delete failed:", err);
+                    alert("Something went wrong while deleting.");
+                });
+        }
+    };
+
     const handleCloseForm = () => {
         setShowForm(false);
         setEditItem(null);
+        dispatch(fetchWarehousesTable());
     };
 
     const columns = [
         {name: "Warehouse Name", selector: (row) => row.name, sortable: true},
         {name: "Location", selector: (row) => row.location || "N/A", sortable: true},
         {
-            name: "Used Capacity",
-            selector: (row) => row.usedCapacity,
+            name: "Total Stock",
+            selector: (row) => row.totalQuantity,
             sortable: true,
             cell: (row) => (
-                <div className="w-full h-5 bg-gray-200 rounded-md overflow-hidden">
-                    <div
-                        className="h-full bg-blue-500 text-xs text-white flex items-center justify-center"
-                        style={{width: `${(row.usedCapacity / (row.maximum_capacity || 1000)) * 100}%`}}
-                    >
-                        {row.usedCapacity}
-                    </div>
+                <div className="text-sm font-medium text-gray-700">
+                    {row.totalQuantity} units
                 </div>
             ),
         },
@@ -72,6 +78,7 @@ const WarehouseManagement = () => {
             cell: (row) => (
                 <div className="flex space-x-2">
                     <Button variant="warning" onClick={() => handleEdit(row)}>Edit</Button>
+                    <Button variant="destructive" onClick={() => handleDelete(row.id)}>Delete</Button>
                 </div>
             ),
         },
@@ -95,23 +102,29 @@ const WarehouseManagement = () => {
                     placeholder="🔍 Search by name or location..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full~"
+                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full"
                 />
             </div>
 
-            {/* Warehouse Table */}
+            <div className="text-right text-sm text-gray-500 px-8 pb-2">
+                Showing {filteredWarehouses.length} of {warehouses.length} warehouses
+            </div>
+
             <div className="w-full overflow-x-auto">
-                <div className="w-full">
-                    <DataTable
-                        columns={columns}
-                        data={filteredWarehouses}
-                        progressPending={loading}
-                        pagination
-                        highlightOnHover
-                        striped
-                        className="border rounded-none shadow-sm w-full"
-                    />
-                </div>
+                <DataTable
+                    columns={columns}
+                    data={filteredWarehouses}
+                    progressPending={loading}
+                    pagination
+                    highlightOnHover
+                    striped
+                    className="border rounded-none shadow-sm w-full"
+                />
+                {!loading && filteredWarehouses.length === 0 && (
+                    <div className="text-center text-gray-500 py-8">
+                        No warehouses found matching your search.
+                    </div>
+                )}
             </div>
 
             {showForm && (
@@ -119,7 +132,7 @@ const WarehouseManagement = () => {
                     className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center backdrop-blur-sm transition-opacity duration-300">
                     <div
                         className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg border border-gray-200 transform transition-all">
-                        <WarehouseForm onClose={handleCloseForm} initialData={editItem}/>
+                        <WarehouseFormModal showModal={showForm} onClose={handleCloseForm} initialData={editItem}/>
                     </div>
                 </div>
             )}

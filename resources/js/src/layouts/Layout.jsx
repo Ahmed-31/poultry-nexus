@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import {Outlet} from 'react-router-dom';
-import Navbar from "../components/Navbar.jsx";
-import Sidebar from "../components/Sidebar.jsx";
+import Navbar from "@/src/components/Navbar.jsx";
+import Sidebar from "@/src/components/Sidebar.jsx";
+import {Toaster} from "@/components/ui/toaster";
 
 const Layout = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -25,6 +26,7 @@ const Layout = () => {
                     &copy; {new Date().getFullYear()} Poultry Nexus. All rights reserved.
                 </footer>
             </div>
+            <Toaster/>
         </div>
     );
 };

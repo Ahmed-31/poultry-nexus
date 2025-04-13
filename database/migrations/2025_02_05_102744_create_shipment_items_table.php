@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('shipment_id')->constrained()->cascadeOnDelete();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
             $table->foreignId('order_item_id')->nullable()->constrained('order_items')->nullOnDelete();
-            $table->foreignId('inventory_id')->nullable()->constrained('inventory')->nullOnDelete();
+            $table->foreignId('stock_id')->nullable()->constrained('stock')->nullOnDelete();
             $table->integer('quantity');
             $table->timestamps();
         });

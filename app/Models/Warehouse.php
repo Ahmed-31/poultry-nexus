@@ -12,12 +12,19 @@ class Warehouse extends Model
         'description',
     ];
 
-    public function inventories()
+    public function stocks()
     {
-        return $this->hasMany(Inventory::class);
+        return $this->hasMany(Stock::class);
     }
 
-    public function stockMovement() {
+    public function stockMovement()
+    {
         return $this->hasMany(StockMovement::class);
+    }
+
+    public function hasStock()
+    : bool
+    {
+        return $this->stocks()->sum('quantity_in_base') > 0;
     }
 }

@@ -13,7 +13,8 @@ class Product extends Model
         'min_stock',
         'sku',
         'type',
-        'unit',
+        'uom_group_id',
+        'default_uom_id',
         'category_id',
     ];
 
@@ -27,13 +28,42 @@ class Product extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    public function inventory()
+    public function bundles()
     {
-        return $this->hasOne(Inventory::class);
+        return $this->belongsToMany(ProductBundle::class, 'product_bundle_items')
+            ->withPivot('quantity')
+            ->withTimestamps();
+    }
+
+    public function stock()
+    {
+        return $this->hasOne(Stock::class);
     }
 
     public function stockMovements()
     {
         return $this->hasMany(StockMovement::class);
+    }
+
+    public function allowedUoms()
+    {
+        return $this->belongsToMany(Uom::class, 'product_uoms');
+    }
+
+    public function dimensions()
+    {
+        return $this->belongsToMany(UomDimension::class, 'product_dimensions', 'product_id', 'dimension_id')
+            ->with('uom');
+    }
+
+    public function defaultUom()
+    {
+        return $this->belongsTo(Uom::class, 'default_uom_id');
+    }
+
+    public function hasStock()
+    : bool
+    {
+        return $this->stock()->sum('quantity_in_base') > 0;
     }
 }

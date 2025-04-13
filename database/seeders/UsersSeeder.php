@@ -49,10 +49,10 @@ class UsersSeeder extends Seeder
                 'role'     => 'procurement_officer',
             ],
             [
-                'name'     => 'Inventory Manager 1',
-                'email'    => 'inventory_manager@example.com',
+                'name'     => 'Stock Manager 1',
+                'email'    => 'stock_manager@example.com',
                 'password' => Hash::make('password'),
-                'role'     => 'inventory_manager',
+                'role'     => 'stock_manager',
             ],
             [
                 'name'     => 'Warehouse Staff 1',

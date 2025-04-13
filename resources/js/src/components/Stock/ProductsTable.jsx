@@ -1,0 +1,143 @@
+import React, {useEffect, useState, useMemo} from "react";
+import {useSelector, useDispatch} from "react-redux";
+import {fetchProductsTable, removeProduct} from "@/src/store/productsSlice";
+import DataTable from "react-data-table-component";
+import {Button} from "@/Components/ui/button";
+import {FaPlus} from "react-icons/fa";
+import ItemFormModal from "@/src/components/Stock/ItemFormModal.jsx";
+import ExpandedProductDetails from "@/src/components/Stock/ExpandedProductDetails.jsx";
+
+const ProductManagement = () => {
+    const dispatch = useDispatch();
+
+    const products = useSelector((state) => state.products.dataTable || []);
+    const loading = useSelector((state) => state.products.loading);
+
+    const [searchTerm, setSearchTerm] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const [showForm, setShowForm] = useState(false);
+    const [editOrder, setEditOrder] = useState(null);
+    const [selectedType, setSelectedType] = useState("");
+
+    useEffect(() => {
+        dispatch(fetchProductsTable());
+    }, [dispatch]);
+
+    const filteredProducts = useMemo(() => {
+        return products
+            .filter((product) =>
+                product.name.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .filter((product) => (selectedCategory ? product.category.id === selectedCategory : true))
+            .filter((product) => (selectedType ? product.type === selectedType : true));
+    }, [products, searchTerm, selectedCategory, selectedType]);
+
+    const handleEdit = (order) => {
+        setEditOrder(order);
+        setShowForm(true);
+    };
+
+    const handleDelete = (id) => {
+        if (window.confirm("Are you sure you want to delete this product?")) {
+            dispatch(removeProduct(id));
+        }
+    };
+
+    const handleCloseForm = () => {
+        setShowForm(false);
+        setEditOrder(null);
+        dispatch(fetchProductsTable());
+    };
+
+    const columns = [
+        {name: "SKU", selector: (row) => row.sku, sortable: true},
+        {name: "Product Name", selector: (row) => row.name, sortable: true},
+        {name: "Category", selector: (row) => row.category?.name || "N/A", sortable: true},
+        {name: "Type", selector: (row) => row.type, sortable: true},
+        {name: "Default Unit", selector: (row) => row.unit, sortable: true},
+        {name: "Dimensions", selector: (row) => row.dimensionsString, sortable: true},
+        {name: "Price", selector: (row) => row.price, sortable: true},
+        {
+            name: "Actions",
+            cell: (row) => (
+                <div className="flex space-x-2">
+                    <Button variant="warning" onClick={() => handleEdit(row)}>Edit</Button>
+                    <Button variant="destructive" onClick={() => handleDelete(row.id)}>Delete</Button>
+                </div>
+            ),
+        },
+    ];
+
+    return (
+        <div className="bg-white rounded-2xl shadow-lg w-full max-w-none overflow-x-hidden">
+            <div className="flex justify-between items-center px-8 py-6">
+                <h2 className="text-4xl font-bold text-gray-800">📦 Product Management</h2>
+                <Button
+                    onClick={() => setShowForm(true)}
+                    className="px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all bg-blue-600 text-white flex items-center font-medium"
+                >
+                    <FaPlus className="mr-2"/> Add Product
+                </Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-gray-50 p-5 rounded-xl shadow mx-8">
+                <input
+                    type="text"
+                    placeholder="🔍 Search product name..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full"
+                />
+
+                <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full"
+                >
+                    <option value="">All Categories</option>
+                    <option value="1">Electronics</option>
+                    <option value="2">Raw Materials</option>
+                </select>
+
+                <select
+                    value={selectedType}
+                    onChange={(e) => setSelectedType(e.target.value)}
+                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full"
+                >
+                    <option value="">All Types</option>
+                    <option value="raw_material">Raw Material</option>
+                    <option value="component">Component</option>
+                    <option value="consumable">Consumable</option>
+                </select>
+            </div>
+
+            <div className="w-full overflow-x-auto">
+                <div className="w-full">
+                    <DataTable
+                        columns={columns}
+                        data={filteredProducts}
+                        progressPending={loading}
+                        pagination
+                        highlightOnHover
+                        striped
+                        className="border rounded-none shadow-sm w-full"
+                        expandableRows
+                        expandableRowsComponent={ExpandedProductDetails}
+                    />
+                </div>
+            </div>
+
+            {showForm && (
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center backdrop-blur-sm transition-opacity duration-300">
+                    <div
+                        className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg border border-gray-200 transform transition-all">
+                        <ItemFormModal showModal={showForm} onClose={handleCloseForm} initialData={editOrder}/>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default ProductManagement;

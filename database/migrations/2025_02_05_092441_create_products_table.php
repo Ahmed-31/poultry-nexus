@@ -19,7 +19,8 @@ return new class extends Migration {
             $table->integer('min_stock')->default(0);
             $table->string('sku')->unique()->index();
             $table->enum('type', ['raw_material', 'component', 'consumable']);
-            $table->string('unit')->default('pcs');
+            $table->foreignId('uom_group_id')->constrained('uom_groups');
+            $table->foreignId('default_uom_id')->constrained('uoms');
             $table->foreignId('category_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
             $table->softDeletes();

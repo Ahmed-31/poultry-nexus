@@ -14,12 +14,12 @@ class MenusTableSeeder extends Seeder
         $menus = [
             ['title' => 'System Overview', 'url' => '/', 'icon' => 'Layout', 'parent_id' => null, 'order' => 1],
 
-            ['title' => 'Inventory Management', 'url' => '/inventory', 'icon' => 'Box', 'parent_id' => null, 'order' => 2],
-            ['title' => 'Inventory Dashboard', 'url' => '/inventory/dashboard', 'icon' => 'Package', 'parent_id' => 2, 'order' => 1],
-            ['title' => 'Inventory List', 'url' => '/inventory/list', 'icon' => 'Cogs', 'parent_id' => 2, 'order' => 2],
-            ['title' => 'Stock Levels & Movements', 'url' => '/inventory/stock-levels', 'icon' => 'BarChart', 'parent_id' => 2, 'order' => 3],
-            ['title' => 'Warehouses', 'url' => '/inventory/warehouses', 'icon' => 'CheckCircle', 'parent_id' => 2, 'order' => 4],
-            ['title' => 'Products', 'url' => '/inventory/products', 'icon' => 'Package', 'parent_id' => 2, 'order' => 5],
+            ['title' => 'Stock Management', 'url' => '/stock', 'icon' => 'Box', 'parent_id' => null, 'order' => 2],
+            ['title' => 'Stock Dashboard', 'url' => '/stock/dashboard', 'icon' => 'Package', 'parent_id' => 2, 'order' => 1],
+            ['title' => 'Stock List', 'url' => '/stock/list', 'icon' => 'Cogs', 'parent_id' => 2, 'order' => 2],
+            ['title' => 'Stock Levels & Movements', 'url' => '/stock/stock-movements', 'icon' => 'BarChart', 'parent_id' => 2, 'order' => 3],
+            ['title' => 'Warehouses', 'url' => '/stock/warehouses', 'icon' => 'CheckCircle', 'parent_id' => 2, 'order' => 4],
+            ['title' => 'Products', 'url' => '/stock/products', 'icon' => 'Package', 'parent_id' => 2, 'order' => 5],
 
             ['title' => 'Production & Processing', 'url' => '/production', 'icon' => 'Gears', 'parent_id' => null, 'order' => 3],
             ['title' => 'Production Orders', 'url' => '/production/orders', 'icon' => 'ClipboardList', 'parent_id' => 8, 'order' => 1],
@@ -63,7 +63,7 @@ class MenusTableSeeder extends Seeder
 
             ['title' => 'Reports & Analytics', 'url' => '/reports', 'icon' => 'TrendingUp', 'parent_id' => null, 'order' => 11],
             ['title' => 'Production Performance', 'url' => '/reports/production-performance', 'icon' => 'TrendingUp', 'parent_id' => 40, 'order' => 1],
-            ['title' => 'Inventory Turnover', 'url' => '/reports/inventory-turnover', 'icon' => 'RefreshCw', 'parent_id' => 40, 'order' => 2],
+            ['title' => 'Stock Turnover', 'url' => '/reports/stock-turnover', 'icon' => 'RefreshCw', 'parent_id' => 40, 'order' => 2],
             ['title' => 'Sales & Revenue Reports', 'url' => '/reports/sales-revenue', 'icon' => 'BarChart2', 'parent_id' => 40, 'order' => 3],
             ['title' => 'Quality & Compliance Reports', 'url' => '/reports/quality-compliance', 'icon' => 'CheckCircle', 'parent_id' => 40, 'order' => 4],
         ];

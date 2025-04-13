@@ -1,7 +1,7 @@
 import React, {useContext, lazy, Suspense, useMemo, useEffect} from "react";
 import {NavLink, useLocation} from "react-router-dom";
 import {ChevronDown, ChevronUp, Menu as DefaultIcon} from "lucide-react";
-import {MenuContext} from "../context/MenuContext";
+import {MenuContext} from "@/src/context/MenuContext";
 
 const DynamicIcon = ({name, size = 20}) => {
     const IconComponent = useMemo(() => {

@@ -33,19 +33,19 @@ class OrderItem extends Model
             }
         });
         static::created(function ($orderItem) {
-            $inventory = Inventory::where('product_id', $orderItem->product_id)->first();
-            if ($inventory) {
-                $inventory->reserved_quantity += $orderItem->quantity;
-                $inventory->quantity -= $orderItem->quantity;
-                $inventory->save();
+            $stock = Stock::where('product_id', $orderItem->product_id)->first();
+            if ($stock) {
+                $stock->reserved_quantity += $orderItem->quantity;
+                $stock->quantity -= $orderItem->quantity;
+                $stock->save();
             }
         });
         static::deleted(function ($orderItem) {
-            $inventory = Inventory::where('product_id', $orderItem->product_id)->first();
-            if ($inventory) {
-                $inventory->reserved_quantity -= $orderItem->quantity;
-                $inventory->quantity += $orderItem->quantity;
-                $inventory->save();
+            $stock = Stock::where('product_id', $orderItem->product_id)->first();
+            if ($stock) {
+                $stock->reserved_quantity -= $orderItem->quantity;
+                $stock->quantity += $orderItem->quantity;
+                $stock->save();
             }
         });
     }

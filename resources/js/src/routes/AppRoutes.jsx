@@ -2,24 +2,25 @@
 import React from 'react';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import {Provider} from 'react-redux';
-import store from '../store/store';
-import Layout from '../layouts/Layout.jsx';
-import InventoryPage from '../pages/InventoryPage.jsx';
-import NotFoundPage from '../pages/NotFoundPage.jsx';
-import HomePage from '../pages/HomePage.jsx';
-import OrderPage from "../pages/OrderPage.jsx";
-import Login from '../pages/Login.jsx';
-import Logout from '../components/Auth/Logout.jsx';
+import store from '@/src/store/store';
+import Layout from '@/src/layouts/Layout.jsx';
+import StockPage from '@/src/pages/StockPage.jsx';
+import NotFoundPage from '@/src/pages/NotFoundPage.jsx';
+import HomePage from '@/src/pages/HomePage.jsx';
+import OrderPage from "@/src/pages/OrderPage.jsx";
+import Login from '@/src/pages/Login.jsx';
+import Logout from '@/src/components/Auth/Logout.jsx';
 import PrivateRoutes from './PrivateRoutes.jsx';
 import PublicRoute from './PublicRoutes.jsx';
-import {AuthProvider} from "../context/AuthContext.jsx";
-import {OrderProvider} from "../context/OrderContext.jsx";
-import OrderDetails from '../components/Order/OrderDetails.jsx';
-import {MenuProvider} from '../context/MenuContext.jsx';
-import InventoryList from '../pages/InventoryList.jsx'
+import {AuthProvider} from "@/src/context/AuthContext.jsx";
+import {OrderProvider} from "@/src/context/OrderContext.jsx";
+import OrderDetails from '@/src/components/Order/OrderDetails.jsx';
+import {MenuProvider} from '@/src/context/MenuContext.jsx';
+import StockList from '@/src/pages/StockList.jsx'
 import StockLevelsMovements from "@/src/pages/StockLevelsMovements.jsx";
 import WarehousesPage from "@/src/pages/WarehousesPage.jsx";
 import ProductsPage from "@/src/pages/ProductsPage.jsx";
+import StockScanPage from "@/src/pages/StockScanPage.jsx";
 
 const AppRoutes = () => (
     <Provider store={store}>
@@ -44,24 +45,28 @@ const AppRoutes = () => (
                             <Route path="orders/:orderId" element={<OrderProvider> <OrderDetails/> </OrderProvider>}/>
 
                             <Route
-                                path="inventory/dashboard"
-                                element={<InventoryPage/>}
+                                path="stock/dashboard"
+                                element={<StockPage/>}
                             />
                             <Route
-                                path="inventory/list"
-                                element={<InventoryList/>}
+                                path="stock/list"
+                                element={<StockList/>}
                             />
                             <Route
-                                path="inventory/stock-levels"
+                                path="stock/stock-movements"
                                 element={<StockLevelsMovements/>}
                             />
                             <Route
-                                path="inventory/warehouses"
+                                path="stock/warehouses"
                                 element={<WarehousesPage/>}
                             />
                             <Route
-                                path="inventory/products"
+                                path="stock/products"
                                 element={<ProductsPage/>}
+                            />
+                            <Route
+                                path="stock/update-manual"
+                                element={<StockScanPage/>}
                             />
                         </Route>
                     </Route>

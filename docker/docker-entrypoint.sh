@@ -24,6 +24,10 @@ else
     echo "✅ Composer dependencies already installed, skipping..."
 fi
 
+# Clear and optimize Laravel cache
+php artisan optimize:clear
+php artisan optimize
+
 # Wait for MySQL to be ready
 until timeout 1 bash -c "echo > /dev/tcp/$DB_HOST/3306"; do
     echo "⏳ Waiting for database connection..."
@@ -35,18 +39,13 @@ echo "✅ Database is available!"
 echo "🔄 Running migrations if necessary..."
 php artisan migrate --force || echo "⚠️ Migrations failed or already applied."
 
-echo "🔄 Running seeders..."
-php artisan db:seed
+if [ "$APP_ENV" != "production" ]; then
+    echo "🔄 Running seeders..."
+    php artisan db:seed
+fi
 
 echo "🔄 Install Node dependencies & build frontend..."
 npm install && npm run build
-
-echo "moving manifest to build root..."
-cp public/build/.vite/manifest.json public/build/manifest.json
-
-# Clear and optimize Laravel cache
-php artisan optimize:clear
-php artisan optimize
 
 # Start Apache in the foreground (no need to restart manually)
 echo "🚀 Starting Apache..."

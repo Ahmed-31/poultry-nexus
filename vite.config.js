@@ -24,20 +24,6 @@ export default defineConfig({
         }),
         react(),
     ],
-    build: {
-        outDir: 'public/build',
-        manifest: true,
-        emptyOutDir: true,
-        rollupOptions: {
-            input: {
-                main: 'resources/js/src/main.jsx',
-                styles: 'resources/js/src/styles/app.css',
-            },
-            output: {
-                manualChunks: undefined,
-            },
-        },
-    },
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "resources/js"),

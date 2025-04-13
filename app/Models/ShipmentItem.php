@@ -10,7 +10,7 @@ class ShipmentItem extends Model
         'shipment_id',
         'product_id',
         'order_item_id',
-        'inventory_id',
+        'stock_id',
         'quantity'
     ];
 
@@ -26,7 +26,7 @@ class ShipmentItem extends Model
         return $this->belongsTo(OrderItem::class, 'order_item_id');
     }
 
-    public function inventory() {
-        return $this->belongsTo(Inventory::class);
+    public function stock() {
+        return $this->belongsTo(Stock::class);
     }
 }

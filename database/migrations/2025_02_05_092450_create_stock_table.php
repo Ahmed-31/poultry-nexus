@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('inventory', function (Blueprint $table) {
+        Schema::create('stock', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->foreignId('warehouse_id')->constrained()->onDelete('cascade');
-            $table->integer('quantity')->default(0);
-            $table->integer('minimum_stock_level')->default(0);
-            $table->integer('maximum_capacity')->nullable();
-            $table->integer('reserved_quantity')->default(0);
+            $table->float('quantity_in_base');
+            $table->foreignId('input_uom_id')->nullable()->constrained('uoms');
+            $table->float('input_quantity')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('inventory');
+        Schema::dropIfExists('stock');
     }
 };

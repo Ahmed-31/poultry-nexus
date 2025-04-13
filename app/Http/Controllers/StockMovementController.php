@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\StockMovement;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class StockMovementController extends Controller
 {
@@ -13,6 +14,16 @@ class StockMovementController extends Controller
     public function index()
     {
         return StockMovement::with(['product', 'warehouse'])->get();
+    }
+
+    public function all()
+    {
+        $query = StockMovement::with(['product', 'warehouse'])
+            ->orderBy('movement_date', 'desc');
+        return DataTables::of($query)
+            ->addColumn('id', fn($item) => $item->id)
+            ->addColumn('action', fn($item) => '')
+            ->toJson();
     }
 
     /**
