@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useForm, useFieldArray, Controller} from 'react-hook-form';
 import {Button} from '@/components/ui/button';
@@ -11,12 +11,22 @@ import {fetchProductBundles} from '@/src/store/productBundlesSlice';
 import {Label} from "@/components/ui/label";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import Modal from "@/src/components/common/Modal.jsx";
+import {Info} from "lucide-react";
+
+const PRIORITY_LEVELS = [
+    {value: 1, label: 'Very Low', description: 'Can be delayed'},
+    {value: 2, label: 'Low', description: 'Less urgent'},
+    {value: 3, label: 'Medium', description: 'Default level'},
+    {value: 4, label: 'High', description: 'High priority'},
+    {value: 5, label: 'Very High', description: 'Top priority order'},
+];
 
 const OrderForm = ({onClose, initialData, showModal}) => {
     const dispatch = useDispatch();
     const products = useSelector(state => state.products.list || []);
     const customers = useSelector(state => state.customers.list || []);
     const productBundles = useSelector(state => state.productBundles.list || []);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     const {
         register,
@@ -34,19 +44,20 @@ const OrderForm = ({onClose, initialData, showModal}) => {
             order_items: [],
             order_bundles: [],
             notes: '',
+            priority: 3
         }
     });
 
     const {
         fields: orderItems,
         append: appendItem,
-        remove: removeItem,
+        remove: removeItem
     } = useFieldArray({control, name: 'order_items'});
 
     const {
         fields: orderBundles,
         append: appendBundle,
-        remove: removeBundle,
+        remove: removeBundle
     } = useFieldArray({control, name: 'order_bundles'});
 
     useEffect(() => {
@@ -61,20 +72,43 @@ const OrderForm = ({onClose, initialData, showModal}) => {
                 customer_id: initialData.customer_id?.toString() || '',
                 order_number: initialData.order_number || '',
                 ordered_at: initialData.ordered_at?.split('T')[0] || '',
-                order_items: initialData.order_items || [],
-                order_bundles: initialData.bundles || [],
+                priority: initialData.priority || 3,
                 notes: initialData.notes || '',
+                order_items: initialData.order_items?.map(item => ({
+                    ...item,
+                    dimensions: item?.dimension_values?.reduce((acc, dim) => {
+                        acc[dim.dimension.id] = {
+                            value: dim.value,
+                            dimension_id: dim.dimension.id,
+                            uom_id: dim.uom_id
+                        };
+                        return acc;
+                    }, {}) || {}
+                })) || [],
+                order_bundles: initialData.bundles || []
             });
         }
     }, [initialData, reset]);
 
     const onSubmit = async (data) => {
-        if (initialData) {
-            await dispatch(editOrder({id: initialData.id, order: data}));
-        } else {
-            await dispatch(createOrder({order: data}));
+        try {
+            const cleanData = {
+                ...data,
+                order_bundles: data.order_bundles.map(bundle => ({
+                    ...bundle,
+                    total_units: bundle.poultry_house_count * bundle.lines_number * bundle.units_per_line
+                }))
+            };
+
+            if (initialData) {
+                await dispatch(editOrder({id: initialData.id, order: cleanData})).unwrap();
+            } else {
+                await dispatch(createOrder({order: cleanData})).unwrap();
+            }
+            onClose();
+        } catch (err) {
+            setErrorMessage(err?.message || 'Something went wrong!');
         }
-        onClose();
     };
 
     return (
@@ -84,9 +118,14 @@ const OrderForm = ({onClose, initialData, showModal}) => {
             </h2>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 max-h-[70vh] overflow-y-auto pr-1">
+                {errorMessage && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 p-3 rounded">
+                        {errorMessage}
+                    </div>
+                )}
 
                 <div>
-                    <Label className="mb-1 block">Customer</Label>
+                    <Label>Customer</Label>
                     <select {...register("customer_id", {required: true})} className="w-full p-3 border rounded-lg">
                         <option value="">Select Customer</option>
                         {customers.map(c => (
@@ -96,7 +135,7 @@ const OrderForm = ({onClose, initialData, showModal}) => {
                     {errors.customer_id && <p className="text-red-500 text-sm">Customer is required.</p>}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                         <Label>Order Date</Label>
                         <Input type="date" {...register("ordered_at", {required: true})} />
@@ -104,6 +143,16 @@ const OrderForm = ({onClose, initialData, showModal}) => {
                     <div>
                         <Label>Order Number</Label>
                         <Input type="text" {...register("order_number", {required: true})} />
+                    </div>
+                    <div>
+                        <Label className="flex items-center gap-2">Priority
+                            <Info size={16} className="text-gray-500" title="1 = Highest, 5 = Lowest"/>
+                        </Label>
+                        <select {...register("priority", {required: true})} className="w-full p-3 border rounded-lg">
+                            {PRIORITY_LEVELS.map(p => (
+                                <option key={p.value} value={p.value}>{p.label} - {p.description}</option>
+                            ))}
+                        </select>
                     </div>
                 </div>
 
@@ -113,7 +162,7 @@ const OrderForm = ({onClose, initialData, showModal}) => {
                     {orderItems.map((item, index) => {
                         const productId = watch(`order_items.${index}.product_id`);
                         const selectedProduct = products.find(p => p.id === parseInt(productId));
-                        const uoms = selectedProduct?.allowed_uoms?.length > 0
+                        const uoms = selectedProduct?.allowed_uoms?.length
                             ? selectedProduct.allowed_uoms
                             : selectedProduct?.default_uom ? [selectedProduct.default_uom] : [];
 
@@ -131,7 +180,11 @@ const OrderForm = ({onClose, initialData, showModal}) => {
                                                     value={field.value?.toString() || ''}
                                                     onValueChange={(value) => {
                                                         field.onChange(value);
-                                                        setValue(`order_items.${index}.uom_id`, '');
+                                                        const newProduct = products.find(p => p.id === parseInt(value));
+                                                        const defaultUomId = newProduct?.allowed_uoms?.[0]?.id || newProduct?.default_uom?.id;
+                                                        if (defaultUomId) {
+                                                            setValue(`order_items.${index}.uom_id`, defaultUomId.toString());
+                                                        }
                                                     }}
                                                 >
                                                     <SelectTrigger className="w-full p-3 border rounded-lg">
@@ -155,9 +208,6 @@ const OrderForm = ({onClose, initialData, showModal}) => {
                                         <Label>Quantity</Label>
                                         <Input type="number"
                                                min="1" {...register(`order_items.${index}.quantity`, {required: true})} />
-                                        {errors.order_items?.[index]?.quantity && (
-                                            <p className="text-red-500 text-sm mt-1">Quantity is required.</p>
-                                        )}
                                     </div>
 
                                     <div>
@@ -185,9 +235,6 @@ const OrderForm = ({onClose, initialData, showModal}) => {
                                                 </Select>
                                             )}
                                         />
-                                        {errors.order_items?.[index]?.uom_id && (
-                                            <p className="text-red-500 text-sm mt-1">UOM is required.</p>
-                                        )}
                                     </div>
                                 </div>
 
@@ -195,14 +242,12 @@ const OrderForm = ({onClose, initialData, showModal}) => {
                                     <div>
                                         <h4 className="text-md font-semibold mb-2">Dimensions</h4>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                            {selectedProduct.dimensions.map((dimension) => (
+                                            {selectedProduct.dimensions.map(dimension => (
                                                 <div key={dimension.id}>
-                                                    <Label>{dimension.name} <span
-                                                        className="text-sm text-gray-500">({dimension.uom?.symbol})</span></Label>
+                                                    <Label>{dimension.name} ({dimension.uom?.symbol})</Label>
                                                     <Input
                                                         type="number"
                                                         step="any"
-                                                        placeholder={`Enter ${dimension.name}`}
                                                         {...register(`order_items.${index}.dimensions.${dimension.id}.value`, {required: true})}
                                                     />
                                                     <input

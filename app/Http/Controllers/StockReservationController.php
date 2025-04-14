@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\StockReservation;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class StockReservationController extends Controller
 {
@@ -12,7 +13,17 @@ class StockReservationController extends Controller
      */
     public function index()
     {
-        //
+        $stockReservations = StockReservation::withAllRelations()->get();
+        return response()->json($stockReservations);
+    }
+
+    public function all()
+    {
+        $query = StockReservation::withAllRelations();
+        return DataTables::of($query)
+            ->addColumn('id', fn($stockReservation) => $stockReservation->id)
+            ->addColumn('actions', fn() => '')
+            ->toJson();
     }
 
     /**

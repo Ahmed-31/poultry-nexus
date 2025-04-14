@@ -16,6 +16,11 @@ class Order extends Model
         'ordered_at',
     ];
 
+    public function scopeWithAllRelations($query)
+    {
+        return $query->with(['orderItems.product', 'orderItems.source', 'orderItems.dimensionValues.dimension.uom', 'orderItems.uom', 'user', 'customer', 'payments', 'shipments', 'bundles.bundle']);
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class);
@@ -49,10 +54,12 @@ class Order extends Model
     public static function boot()
     {
         parent::boot();
-        static::created(function ($order) {
-            if (!isset($order->ordered_at)) {
-                $order->ordered_at = $order->created_at;
-                $order->save();
+        static::creating(function ($order) {
+            if (empty($order->ordered_at)) {
+                $order->ordered_at = now();
+            }
+            if (empty($order->order_number)) {
+                $order->order_number = strtoupper(uniqid('ORD-')) . '-' . now()->format('YmdHis');
             }
         });
     }

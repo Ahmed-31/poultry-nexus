@@ -87,7 +87,9 @@ const OrderList = () => {
                 <h2 className="text-2xl font-semibold text-gray-800">Orders List</h2>
                 <div className="flex gap-2">
                     <Button onClick={() => dispatch(fetchOrdersTable())} variant="outline">🔄 Refresh</Button>
-                    <Button onClick={() => setFormState({show: true, mode: 'create', data: null})} variant="primary">+
+                    <Button onClick={() => setFormState({show: true, mode: 'create', data: null})}
+                            className="px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all bg-blue-600 text-white flex items-center font-medium"
+                    >
                         Create Order</Button>
                 </div>
             </div>

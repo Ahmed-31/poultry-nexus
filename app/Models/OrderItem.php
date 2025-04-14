@@ -49,21 +49,5 @@ class OrderItem extends Model
                 $orderItem->total_price = $product->price * $orderItem->quantity;
             }
         });
-        static::created(function ($orderItem) {
-            $stock = Stock::where('product_id', $orderItem->product_id)->first();
-            if ($stock) {
-                $stock->reserved_quantity += $orderItem->quantity;
-                $stock->quantity -= $orderItem->quantity;
-                $stock->save();
-            }
-        });
-        static::deleted(function ($orderItem) {
-            $stock = Stock::where('product_id', $orderItem->product_id)->first();
-            if ($stock) {
-                $stock->reserved_quantity -= $orderItem->quantity;
-                $stock->quantity += $orderItem->quantity;
-                $stock->save();
-            }
-        });
     }
 }

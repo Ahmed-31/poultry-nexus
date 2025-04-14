@@ -7,6 +7,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProductBundleController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockMovementController;
+use App\Http\Controllers\StockReservationController;
 use App\Http\Controllers\UomController;
 use App\Http\Controllers\UomDimensionController;
 use App\Http\Controllers\WarehouseController;
@@ -38,6 +39,8 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::get('orders/all', [OrderController::class, 'all']);
     Route::apiResource('orders', OrderController::class);
+    Route::get('orders/stock-reservations/all', [StockReservationController::class, 'all']);
+    Route::apiResource('orders/stock-reservations', StockReservationController::class);
     Route::prefix('customers')->group(function () {
         Route::get('/', [CustomerController::class, 'index']);
     });

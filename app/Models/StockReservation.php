@@ -12,6 +12,22 @@ class StockReservation extends Model
         'order_id', 'status', 'revoked_reason', 'reserved_by', 'reserved_at'
     ];
 
+    public function scopeWithAllRelations($query)
+    {
+        return $query->with([
+            'stock',
+            'stock.product',
+            'stock.warehouse',
+            'uom',
+            'order.orderItems',
+            'order.orderItems.product',
+            'order.orderItems.uom',
+            'order.bundles',
+            'order.bundles.bundle.products',
+            'dimensions.dimension.uom'
+        ]);
+    }
+
     public function stock()
     {
         return $this->belongsTo(Stock::class);
