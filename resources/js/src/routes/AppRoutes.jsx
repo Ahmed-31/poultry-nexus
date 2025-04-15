@@ -19,6 +19,7 @@ import StockLevelsMovements from "@/src/pages/StockLevelsMovements.jsx";
 import WarehousesPage from "@/src/pages/WarehousesPage.jsx";
 import ProductsPage from "@/src/pages/ProductsPage.jsx";
 import StockScanPage from "@/src/pages/StockScanPage.jsx";
+import ReservationList from "@/src/components/Order/ReservationList.jsx";
 
 const AppRoutes = () => (
     <Provider store={store}>
@@ -65,6 +66,10 @@ const AppRoutes = () => (
                             <Route
                                 path="stock/update-manual"
                                 element={<StockScanPage/>}
+                            />
+                            <Route
+                                path="/stock/reservations"
+                                element={<ReservationList />}
                             />
                         </Route>
                     </Route>

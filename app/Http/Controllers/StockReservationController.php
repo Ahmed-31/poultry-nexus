@@ -11,15 +11,22 @@ class StockReservationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $stockReservations = StockReservation::withAllRelations()->get();
-        return response()->json($stockReservations);
-    }
-
-    public function all()
+    public function index(Request $request)
     {
         $query = StockReservation::withAllRelations();
+        if ($request->filled('order_id')) {
+            $query->where('order_id', $request->order_id);
+        }
+        return response()->json($query->get());
+    }
+
+    public function all(Request $request)
+    {
+        $query = StockReservation::withAllRelations();
+        if ($request->filled('order_id')) {
+            logger('filtered');
+            $query->where('order_id', $request->input('order_id'));
+        }
         return DataTables::of($query)
             ->addColumn('id', fn($stockReservation) => $stockReservation->id)
             ->addColumn('actions', fn() => '')
@@ -37,9 +44,10 @@ class StockReservationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(StockReservation $stockReservation)
+    public function show($id)
     {
-        //
+        $reservation = StockReservation::withAllRelations()->findOrFail($id);
+        return response()->json($reservation);
     }
 
     /**

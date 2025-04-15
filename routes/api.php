@@ -30,6 +30,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('items/{stock}/issue', [StockController::class, 'issue']);
         Route::get('stock-movements/all', [StockMovementController::class, 'all']);
         Route::post('update-manual', [StockController::class, 'updateManual']);
+        Route::get('reservations', [StockReservationController::class, 'index']);
+        Route::get('reservations/all', [StockReservationController::class, 'all']);
+        Route::get('reservations/{id}', [StockReservationController::class, 'show']);
         Route::apiResource('products/bundles', ProductBundleController::class);
         Route::apiResource('products', ProductController::class);
         Route::apiResource('categories', CategoryController::class);
@@ -39,8 +42,6 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::get('orders/all', [OrderController::class, 'all']);
     Route::apiResource('orders', OrderController::class);
-    Route::get('orders/stock-reservations/all', [StockReservationController::class, 'all']);
-    Route::apiResource('orders/stock-reservations', StockReservationController::class);
     Route::prefix('customers')->group(function () {
         Route::get('/', [CustomerController::class, 'index']);
     });

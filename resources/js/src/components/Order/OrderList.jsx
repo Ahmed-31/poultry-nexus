@@ -7,38 +7,76 @@ import OrderForm from './OrderForm.jsx';
 import ExpandedOrderDetails from './ExpandedOrderDetails.jsx';
 import {fetchOrdersTable, removeOrder} from '@/src/store/ordersSlice';
 
+// 🔧 Optimized Action Column Component
+const OrderActions = React.memo(({order, onEdit, onDelete}) => (
+    <div className="flex flex-wrap gap-2">
+        <Link
+            to={`/orders/${order.id}`}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-xs"
+        >
+            View
+        </Link>
+        <Link
+            to={`/stock/reservations?order_id=${order.id}`}
+            className="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded-md text-xs"
+        >
+            Reservations
+        </Link>
+        <Button variant="warning" size="sm" onClick={() => onEdit(order)}>
+            Edit
+        </Button>
+        <Button variant="destructive" size="sm" onClick={() => onDelete(order.id)}>
+            Delete
+        </Button>
+    </div>
+));
+
 const getColumns = (handleEdit, handleDelete) => [
-    {name: 'Order Number', selector: row => row.order_number, sortable: true},
-    {name: 'Customer', selector: row => row.customer?.name || 'N/A', sortable: true},
-    {name: 'Status', selector: row => row.status, sortable: true},
+    {
+        name: 'Order Number',
+        selector: row => row.order_number,
+        sortable: true
+    },
+    {
+        name: 'Customer',
+        selector: row => row.customer?.name || 'N/A',
+        sortable: true
+    },
+    {
+        name: 'Status',
+        selector: row => row.status,
+        sortable: true
+    },
     {
         name: 'Priority',
         selector: row => row.priority,
         sortable: true,
         cell: row => (
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                row.priority >= 4 ? 'bg-red-100 text-red-700' :
-                    row.priority >= 2 ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-green-100 text-green-700'
-            }`}>
-        {row.priority}
-      </span>
+            <span
+                className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    row.priority >= 4
+                        ? 'bg-red-100 text-red-700'
+                        : row.priority >= 2
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-green-100 text-green-700'
+                }`}
+            >
+                {row.priority}
+            </span>
         )
     },
     {
         name: 'Actions',
         cell: row => (
-            <div className="flex gap-2">
-                <Link
-                    to={`/orders/${row.id}`}
-                    className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm"
-                >
-                    View
-                </Link>
-                <Button variant="warning" size="sm" onClick={() => handleEdit(row)}>Edit</Button>
-                <Button variant="destructive" size="sm" onClick={() => handleDelete(row.id)}>Delete</Button>
-            </div>
-        )
+            <OrderActions
+                order={row}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+            />
+        ),
+        ignoreRowClick: true,
+        allowOverflow: true,
+        button: true
     }
 ];
 
@@ -55,11 +93,11 @@ const OrderList = () => {
         dispatch(fetchOrdersTable());
     }, [dispatch]);
 
-    const handleEdit = useCallback((order) => {
+    const handleEdit = useCallback(order => {
         setFormState({show: true, mode: 'edit', data: order});
     }, []);
 
-    const handleDelete = useCallback((id) => {
+    const handleDelete = useCallback(id => {
         if (window.confirm('Are you sure you want to delete this order?')) {
             dispatch(removeOrder(id));
         }
@@ -86,11 +124,15 @@ const OrderList = () => {
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-semibold text-gray-800">Orders List</h2>
                 <div className="flex gap-2">
-                    <Button onClick={() => dispatch(fetchOrdersTable())} variant="outline">🔄 Refresh</Button>
-                    <Button onClick={() => setFormState({show: true, mode: 'create', data: null})}
-                            className="px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all bg-blue-600 text-white flex items-center font-medium"
+                    <Button onClick={() => dispatch(fetchOrdersTable())} variant="outline">
+                        🔄 Refresh
+                    </Button>
+                    <Button
+                        onClick={() => setFormState({show: true, mode: 'create', data: null})}
+                        className="px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all bg-blue-600 text-white"
                     >
-                        Create Order</Button>
+                        Create Order
+                    </Button>
                 </div>
             </div>
 
