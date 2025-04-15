@@ -69,9 +69,9 @@ const OrderForm = ({onClose, initialData, showModal}) => {
     useEffect(() => {
         if (initialData) {
             reset({
-                customer_id: initialData.customer_id?.toString() || '',
+                customer_id: initialData.customer_id || '',
                 order_number: initialData.order_number || '',
-                ordered_at: initialData.ordered_at?.split('T')[0] || '',
+                ordered_at: new Date(initialData.ordered_at).toISOString().split('T')[0] || '',
                 priority: initialData.priority || 3,
                 notes: initialData.notes || '',
                 order_items: initialData.order_items?.map(item => ({
@@ -153,7 +153,7 @@ const OrderForm = ({onClose, initialData, showModal}) => {
                     </div>
                     <div>
                         <Label>Order Number</Label>
-                        <Input type="text" {...register("order_number", {required: true})} />
+                        <Input type="text" disabled={!!initialData} {...register("order_number", {required: true})} />
                     </div>
                     <div className="flex flex-col">
                         <Label className="flex items-center gap-1 mb-1">
@@ -366,7 +366,7 @@ const OrderForm = ({onClose, initialData, showModal}) => {
                     <Textarea {...register("notes")} rows="4"/>
                 </div>
 
-                <div className="flex justify-end space-x-4 pt-4 border-t mt-8">
+                <div className="sticky bottom-0 flex justify-end space-x-4 pt-4 border-t mt-8">
                     <Button type="button" onClick={onClose} variant="outline">Cancel</Button>
                     <Button type="submit">{initialData ? 'Update Order' : 'Create Order'}</Button>
                 </div>
