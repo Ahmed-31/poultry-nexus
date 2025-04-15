@@ -156,16 +156,13 @@ class OrderController extends Controller
                 'uom_id'     => $item['uom_id'],
             ]);
             if (!empty($item['dimensions']) && is_array($item['dimensions'])) {
-                $dimensionValues = array_map(function ($dimension) {
+                $dimensionValues = array_map(function ($dimension) use ($orderItem) {
                     return [
                         'dimension_id' => $dimension['dimension_id'],
                         'value'        => $dimension['value'],
-                        'uom_id'       => $dimension['uom_id'],
-                        'created_at'   => now(),
-                        'updated_at'   => now(),
                     ];
                 }, $item['dimensions']);
-                $orderItem->dimensionValues()->insert($dimensionValues);
+                $orderItem->dimensionValues()->createMany($dimensionValues);
             }
         }
     }
