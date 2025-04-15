@@ -75,8 +75,6 @@ const getColumns = (handleEdit, handleDelete) => [
             />
         ),
         ignoreRowClick: true,
-        allowOverflow: true,
-        button: true
     }
 ];
 
