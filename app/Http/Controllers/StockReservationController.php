@@ -24,7 +24,6 @@ class StockReservationController extends Controller
     {
         $query = StockReservation::withAllRelations();
         if ($request->filled('order_id')) {
-            logger('filtered');
             $query->where('order_id', $request->input('order_id'));
         }
         return DataTables::of($query)
