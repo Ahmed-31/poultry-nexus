@@ -168,16 +168,11 @@ const OrderList = () => {
             />
 
             {formState.mode && (
-                <div
-                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center backdrop-blur-sm z-50">
-                    <div className="bg-white p-6 rounded-xl shadow-2xl w-full max-w-lg border border-gray-200">
-                        <OrderForm
-                            showModal={formState.show}
-                            onClose={handleCloseForm}
-                            initialData={formState.mode === 'edit' ? formState.data : null}
-                        />
-                    </div>
-                </div>
+                <OrderForm
+                    showModal={formState.show}
+                    onClose={handleCloseForm}
+                    initialData={formState.mode === 'edit' ? formState.data : null}
+                />
             )}
         </div>
     );

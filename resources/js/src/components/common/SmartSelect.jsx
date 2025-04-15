@@ -1,6 +1,6 @@
 "use client"
 
-import React, {useState} from "react"
+import React, {useState, useRef, useEffect} from "react"
 import {
     Popover,
     PopoverTrigger,
@@ -26,9 +26,12 @@ export function SmartSelect({
                                 multiple = true
                             }) {
     const [open, setOpen] = useState(false)
+    const listRef = useRef(null)
+    const scrollTopRef = useRef(0)
 
     const toggleOption = (value) => {
         if (multiple) {
+            scrollTopRef.current = listRef.current?.scrollTop || 0
             if (selected.includes(value)) {
                 onChange(selected.filter((v) => v !== value))
             } else {
@@ -50,6 +53,13 @@ export function SmartSelect({
             .join(", ")
         : options.find((opt) => opt.value === selected)?.label
 
+    // Restore scroll position after re-render
+    useEffect(() => {
+        if (listRef.current && scrollTopRef.current) {
+            listRef.current.scrollTop = scrollTopRef.current
+        }
+    }, [selected])
+
     return (
         <div className="w-full">
             {label && <label className="block text-sm font-medium mb-1">{label}</label>}
@@ -70,22 +80,25 @@ export function SmartSelect({
                         <CommandInput placeholder="Search..."/>
                         <CommandEmpty>No options found.</CommandEmpty>
                         <CommandGroup>
-                            {options.map((option) => (
-                                <CommandItem
-                                    key={option.value}
-                                    onSelect={() => toggleOption(option.value)}
-                                >
-                                    <div className="flex items-center">
-                                        <Check
-                                            className={cn(
-                                                "mr-2 h-4 w-4",
-                                                isSelected(option.value) ? "opacity-100" : "opacity-0"
-                                            )}
-                                        />
-                                        {option.label}
-                                    </div>
-                                </CommandItem>
-                            ))}
+                            <div ref={listRef} className="max-h-[240px] overflow-y-auto">
+                                {options.map((option) => (
+                                    <CommandItem
+                                        key={option.value}
+                                        onSelect={() => toggleOption(option.value)}
+                                        className="cursor-pointer"
+                                    >
+                                        <div className="flex items-center">
+                                            <Check
+                                                className={cn(
+                                                    "mr-2 h-4 w-4",
+                                                    isSelected(option.value) ? "opacity-100" : "opacity-0"
+                                                )}
+                                            />
+                                            {option.label}
+                                        </div>
+                                    </CommandItem>
+                                ))}
+                            </div>
                         </CommandGroup>
                     </Command>
                 </PopoverContent>

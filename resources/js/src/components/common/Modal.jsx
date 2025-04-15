@@ -1,10 +1,13 @@
-import {useEffect} from "react";
+import {useEffect, useRef} from "react";
 import {X} from "lucide-react";
 
 const Modal = ({isOpen, onClose, children}) => {
+    const modalRef = useRef(null);
+
     useEffect(() => {
         if (isOpen) {
             document.body.classList.add("overflow-hidden");
+            setTimeout(() => modalRef.current?.focus(), 10);
         } else {
             document.body.classList.remove("overflow-hidden");
         }
@@ -14,25 +17,46 @@ const Modal = ({isOpen, onClose, children}) => {
         };
     }, [isOpen]);
 
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === "Escape") onClose?.();
+        };
+
+        if (isOpen) {
+            window.addEventListener("keydown", handleKeyDown);
+        }
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [isOpen, onClose]);
+
     if (!isOpen) return null;
 
     return (
         <div
-            className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 cursor-default"
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center transition-opacity duration-300"
             onClick={onClose}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title"
         >
             <div
-                className="relative bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg border border-gray-200 max-h-screen overflow-y-auto"
+                ref={modalRef}
+                tabIndex={-1}
+                className="relative bg-white p-6 sm:p-8 rounded-2xl shadow-xl w-[90%] max-w-4xl max-h-[90vh] overflow-y-auto border border-gray-200 animate-fadeIn"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Close Button */}
                 <button
-                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+                    className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 focus:outline-none"
                     onClick={onClose}
-                    aria-label="Close"
+                    aria-label="Close modal"
                 >
-                    <X className="w-6 h-6"/>
+                    <X className="w-5 h-5 sm:w-6 sm:h-6"/>
                 </button>
+
+                <div id="modal-title" className="sr-only">Modal Dialog</div>
 
                 {children}
             </div>

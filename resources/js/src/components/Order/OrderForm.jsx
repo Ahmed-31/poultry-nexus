@@ -9,9 +9,9 @@ import {fetchProducts} from '@/src/store/productsSlice';
 import {fetchCustomers} from '@/src/store/customersSlice';
 import {fetchProductBundles} from '@/src/store/productBundlesSlice';
 import {Label} from "@/components/ui/label";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import Modal from "@/src/components/common/Modal.jsx";
 import {Info} from "lucide-react";
+import {SmartSelect} from "@/src/components/common/SmartSelect.jsx";
 
 const PRIORITY_LEVELS = [
     {value: 1, label: 'Very Low', description: 'Can be delayed'},
@@ -125,13 +125,21 @@ const OrderForm = ({onClose, initialData, showModal}) => {
                 )}
 
                 <div>
-                    <Label>Customer</Label>
-                    <select {...register("customer_id", {required: true})} className="w-full p-3 border rounded-lg">
-                        <option value="">Select Customer</option>
-                        {customers.map(c => (
-                            <option key={c.id} value={c.id}>{c.name}</option>
-                        ))}
-                    </select>
+                    <Controller
+                        name={"customer_id"}
+                        control={control}
+                        rules={{required: true}}
+                        render={({field}) => (
+                            <SmartSelect
+                                label={"Customer"}
+                                placeholder={"Select Customer"}
+                                options={customers.map((c) => ({label: c.name, value: c.id}))}
+                                selected={field.value}
+                                onChange={field.onChange}
+                                multiple={false}
+                            />
+                        )}
+                    />
                     {errors.customer_id && <p className="text-red-500 text-sm">Customer is required.</p>}
                 </div>
 
@@ -144,15 +152,25 @@ const OrderForm = ({onClose, initialData, showModal}) => {
                         <Label>Order Number</Label>
                         <Input type="text" {...register("order_number", {required: true})} />
                     </div>
-                    <div>
-                        <Label className="flex items-center gap-2">Priority
-                            <Info size={16} className="text-gray-500" title="1 = Highest, 5 = Lowest"/>
+                    <div className="flex flex-col">
+                        <Label className="flex items-center gap-1 mb-1">
+                            Priority
+                            <Info size={14} className="text-gray-500" title="1 = Very Low, 5 = Very High"/>
                         </Label>
-                        <select {...register("priority", {required: true})} className="w-full p-3 border rounded-lg">
-                            {PRIORITY_LEVELS.map(p => (
-                                <option key={p.value} value={p.value}>{p.label} - {p.description}</option>
-                            ))}
-                        </select>
+                        <Controller
+                            name="priority"
+                            control={control}
+                            rules={{required: true}}
+                            render={({field}) => (
+                                <SmartSelect
+                                    multiple={false}
+                                    options={PRIORITY_LEVELS.map(p => ({label: p.label, value: p.value}))}
+                                    selected={field.value}
+                                    onChange={field.onChange}
+                                    placeholder="Select Priority"
+                                />
+                            )}
+                        />
                     </div>
                 </div>
 
@@ -170,33 +188,29 @@ const OrderForm = ({onClose, initialData, showModal}) => {
                             <div key={item.id} className="border rounded-xl p-5 bg-white space-y-5 shadow-sm">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <Label>Product</Label>
                                         <Controller
                                             name={`order_items.${index}.product_id`}
                                             control={control}
                                             rules={{required: true}}
                                             render={({field}) => (
-                                                <Select
-                                                    value={field.value?.toString() || ''}
-                                                    onValueChange={(value) => {
+                                                <SmartSelect
+                                                    label="Product"
+                                                    placeholder="Select Product"
+                                                    options={products.map((p) => ({
+                                                        label: p.name,
+                                                        value: p.id.toString(),
+                                                    }))}
+                                                    selected={field.value?.toString() || ""}
+                                                    onChange={(value) => {
                                                         field.onChange(value);
-                                                        const newProduct = products.find(p => p.id === parseInt(value));
+                                                        const newProduct = products.find((p) => p.id === parseInt(value));
                                                         const defaultUomId = newProduct?.allowed_uoms?.[0]?.id || newProduct?.default_uom?.id;
                                                         if (defaultUomId) {
                                                             setValue(`order_items.${index}.uom_id`, defaultUomId.toString());
                                                         }
                                                     }}
-                                                >
-                                                    <SelectTrigger className="w-full p-3 border rounded-lg">
-                                                        <SelectValue placeholder="Select Product"/>
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {products.map(p => (
-                                                            <SelectItem key={p.id}
-                                                                        value={p.id.toString()}>{p.name}</SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
+                                                    multiple={false}
+                                                />
                                             )}
                                         />
                                         {errors.order_items?.[index]?.product_id && (
@@ -211,67 +225,66 @@ const OrderForm = ({onClose, initialData, showModal}) => {
                                     </div>
 
                                     <div>
-                                        <Label>Unit of Measure</Label>
                                         <Controller
                                             name={`order_items.${index}.uom_id`}
                                             control={control}
                                             rules={{required: true}}
                                             render={({field}) => (
-                                                <Select
+                                                <SmartSelect
+                                                    label="Unit of Measure"
+                                                    placeholder="Select UOM"
+                                                    options={uoms.map((uom) => ({
+                                                        label: `${uom.name} (${uom.symbol})`,
+                                                        value: uom.id.toString(),
+                                                    }))}
+                                                    selected={field.value?.toString() || ""}
+                                                    onChange={field.onChange}
+                                                    multiple={false}
                                                     disabled={!selectedProduct}
-                                                    value={field.value?.toString() || ''}
-                                                    onValueChange={field.onChange}
-                                                >
-                                                    <SelectTrigger className="w-full p-3 border rounded-lg">
-                                                        <SelectValue placeholder="Select UOM"/>
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {uoms.map(uom => (
-                                                            <SelectItem key={uom.id} value={uom.id.toString()}>
-                                                                {uom.name} ({uom.symbol})
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
+                                                />
                                             )}
                                         />
+
                                     </div>
                                 </div>
 
-                                {selectedProduct?.dimensions?.length > 0 && (
-                                    <div>
-                                        <h4 className="text-md font-semibold mb-2">Dimensions</h4>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                            {selectedProduct.dimensions.map(dimension => (
-                                                <div key={dimension.id}>
-                                                    <Label>{dimension.name} ({dimension.uom?.symbol})</Label>
-                                                    <Input
-                                                        type="number"
-                                                        step="any"
-                                                        {...register(`order_items.${index}.dimensions.${dimension.id}.value`, {required: true})}
-                                                    />
-                                                    <input
-                                                        type="hidden"
-                                                        {...register(`order_items.${index}.dimensions.${dimension.id}.dimension_id`)}
-                                                        value={dimension.id}
-                                                    />
-                                                    <input
-                                                        type="hidden"
-                                                        {...register(`order_items.${index}.dimensions.${dimension.id}.uom_id`)}
-                                                        value={dimension.uom_id}
-                                                    />
-                                                </div>
-                                            ))}
+                                {
+                                    selectedProduct?.dimensions?.length > 0 && (
+                                        <div>
+                                            <h4 className="text-md font-semibold mb-2">Dimensions</h4>
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                {selectedProduct.dimensions.map(dimension => (
+                                                    <div key={dimension.id}>
+                                                        <Label>{dimension.name} ({dimension.uom?.symbol})</Label>
+                                                        <Input
+                                                            type="number"
+                                                            step="any"
+                                                            {...register(`order_items.${index}.dimensions.${dimension.id}.value`, {required: true})}
+                                                        />
+                                                        <input
+                                                            type="hidden"
+                                                            {...register(`order_items.${index}.dimensions.${dimension.id}.dimension_id`)}
+                                                            value={dimension.id}
+                                                        />
+                                                        <input
+                                                            type="hidden"
+                                                            {...register(`order_items.${index}.dimensions.${dimension.id}.uom_id`)}
+                                                            value={dimension.uom_id}
+                                                        />
+                                                    </div>
+                                                ))}
+                                            </div>
                                         </div>
-                                    </div>
-                                )}
+                                    )
+                                }
 
                                 <div className="flex justify-end">
                                     <Button type="button" variant="destructive" onClick={() => removeItem(index)}>Remove
                                         Item</Button>
                                 </div>
                             </div>
-                        );
+                        )
+                            ;
                     })}
 
                     <Button
@@ -289,14 +302,25 @@ const OrderForm = ({onClose, initialData, showModal}) => {
                     {orderBundles.map((bundle, index) => (
                         <div key={bundle.id} className="border rounded-xl p-5 bg-white space-y-5 shadow-sm">
                             <div>
-                                <Label>Product Bundle</Label>
-                                <select {...register(`order_bundles.${index}.product_bundle_id`, {required: true})}
-                                        className="w-full p-3 border rounded-lg">
-                                    <option value="">Select Bundle</option>
-                                    {productBundles.map(pb => (
-                                        <option key={pb.id} value={pb.id}>{pb.name}</option>
-                                    ))}
-                                </select>
+                                <Controller
+                                    name={`order_bundles.${index}.product_bundle_id`}
+                                    control={control}
+                                    rules={{required: true}}
+                                    render={({field}) => (
+                                        <SmartSelect
+                                            label="Product Bundle"
+                                            placeholder="Select Bundle"
+                                            options={productBundles.map((pb) => ({
+                                                label: pb.name,
+                                                value: pb.id.toString(),
+                                            }))}
+                                            selected={field.value?.toString() || ""}
+                                            onChange={field.onChange}
+                                            multiple={false}
+                                        />
+                                    )}
+                                />
+
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
