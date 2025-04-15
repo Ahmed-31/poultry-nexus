@@ -12,6 +12,7 @@ import {Label} from "@/components/ui/label";
 import Modal from "@/src/components/common/Modal.jsx";
 import {Info} from "lucide-react";
 import {SmartSelect} from "@/src/components/common/SmartSelect.jsx";
+import {toast} from "@/hooks/use-toast.js";
 
 const PRIORITY_LEVELS = [
     {value: 1, label: 'Very Low', description: 'Can be delayed'},
@@ -26,7 +27,6 @@ const OrderForm = ({onClose, initialData, showModal}) => {
     const products = useSelector(state => state.products.list || []);
     const customers = useSelector(state => state.customers.list || []);
     const productBundles = useSelector(state => state.productBundles.list || []);
-    const [errorMessage, setErrorMessage] = useState(null);
 
     const {
         register,
@@ -105,9 +105,18 @@ const OrderForm = ({onClose, initialData, showModal}) => {
             } else {
                 await dispatch(createOrder({order: cleanData})).unwrap();
             }
+            toast({
+                title: "Success",
+                description: "Order created successfully.",
+                variant: "default",
+            });
             onClose();
         } catch (err) {
-            setErrorMessage(err?.message || 'Something went wrong!');
+            toast({
+                title: "Error",
+                description: err.message || "Something went wrong.",
+                variant: "destructive",
+            });
         }
     };
 
@@ -118,12 +127,6 @@ const OrderForm = ({onClose, initialData, showModal}) => {
             </h2>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 max-h-[70vh] overflow-y-auto pr-1">
-                {errorMessage && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 p-3 rounded">
-                        {errorMessage}
-                    </div>
-                )}
-
                 <div>
                     <Controller
                         name={"customer_id"}
