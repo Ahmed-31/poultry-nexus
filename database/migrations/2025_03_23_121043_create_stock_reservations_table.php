@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->float('input_quantity');
             $table->float('quantity_in_base');
             $table->foreignId('order_id')->nullable();
-            $table->enum('status', ['active', 'revoked'])->default('active');
+            $table->enum('status', ['active', 'revoked', 'released', 'fulfilled', 'partial', 'failed'])->default('active');
             $table->text('revoked_reason')->nullable();
             $table->foreignId('reserved_by')->nullable();
             $table->timestamp('reserved_at')->useCurrent();
