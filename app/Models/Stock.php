@@ -35,6 +35,11 @@ class Stock extends Model
         return $this->belongsTo(Uom::class, 'input_uom_id');
     }
 
+    public function reservations()
+    {
+        return $this->hasMany(StockReservation::class, 'stock_id');
+    }
+
     public static function boot()
     {
         parent::boot();
