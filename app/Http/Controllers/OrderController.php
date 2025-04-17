@@ -53,7 +53,7 @@ class OrderController extends Controller
             if (!empty($request->order_bundles) && is_array($request->order_bundles)) {
                 $this->createOrderBundles($order, $request->order_bundles);
             }
-            $order->load(['orderItems.product', 'bundles.bundle.products']);
+            $order->load(['orderItems.product', 'bundles.bundle.products', 'orderItems.dimensionValues']);
             (new OrderStockReservationService())->reserve($order);
             DB::commit();
             return response()->json([

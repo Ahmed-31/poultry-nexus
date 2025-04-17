@@ -30,14 +30,28 @@ class StockHelper
         }
         $stock->quantity_in_base -= $baseToDeduct;
         if ($stock->quantity_in_base <= 0) {
-            $stock->dimensionValues()->delete();
-            $stock->delete();
-        } else {
-            $convertedInputQuantity = $stock->quantity_in_base / $newUom->conversion_factor;
-            $stock->input_quantity = $convertedInputQuantity;
-            $stock->input_uom_id = $newUomId;
+            $stock->quantity_in_base = 0;
+            $stock->input_quantity = 0;
+            $stock->status = 'exhausted';
             $stock->save();
+            return true;
         }
+        $convertedInputQuantity = $stock->quantity_in_base / $newUom->conversion_factor;
+        $stock->input_quantity = $convertedInputQuantity;
+        $stock->input_uom_id = $newUomId;
+        $stock->save();
         return true;
+    }
+
+    public static function addStockWithNewUom(Stock $stock, float $addedQuantity, int $newUomId)
+    : void
+    {
+        $newUom = Uom::findOrFail($newUomId);
+        $baseToAdd = $addedQuantity * $newUom->conversion_factor;
+        $stock->quantity_in_base += $baseToAdd;
+        $convertedInputQuantity = $stock->quantity_in_base / $newUom->conversion_factor;
+        $stock->input_quantity = $convertedInputQuantity;
+        $stock->input_uom_id = $newUomId;
+        $stock->save();
     }
 }
