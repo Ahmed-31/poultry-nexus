@@ -15,10 +15,10 @@ const StockList = () => {
     const loading = useSelector((state) => state.stock.loading);
 
     const [searchTerm, setSearchTerm] = useState("");
+    const [selectedWarehouse, setSelectedWarehouse] = useState("");
+    const [stockLevel, setStockLevel] = useState("");
     const [showForm, setShowForm] = useState(false);
     const [editItem, setEditItem] = useState(null);
-    const [selectedWarehouse, setSelectedWarehouse] = useState("");
-    const [stockFilter, setStockFilter] = useState("");
 
     useEffect(() => {
         dispatch(fetchStockTable());
@@ -27,12 +27,24 @@ const StockList = () => {
 
     const filteredStock = useMemo(() => {
         return stock
-            .filter((item) =>
-                item.product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                item.warehouse.name.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-            .filter((item) => (selectedWarehouse ? item.warehouse.id === selectedWarehouse : true));
-    }, [stock, searchTerm, selectedWarehouse, stockFilter]);
+            .filter((item) => {
+                const productName = item.product?.name?.toLowerCase() || "";
+                const warehouseName = item.warehouse?.name?.toLowerCase() || "";
+                return (
+                    productName.includes(searchTerm.toLowerCase()) ||
+                    warehouseName.includes(searchTerm.toLowerCase())
+                );
+            })
+            .filter((item) => {
+                if (!selectedWarehouse) return true;
+                return item.warehouse?.id?.toString() === selectedWarehouse;
+            })
+            .filter((item) => {
+                if (!stockLevel) return true;
+                const isLow = item.amount < (item.minimum_stock_level || 0);
+                return stockLevel === "low" ? isLow : !isLow;
+            });
+    }, [stock, searchTerm, selectedWarehouse, stockLevel]);
 
     const handleEdit = (item) => {
         setEditItem(item);
@@ -49,66 +61,79 @@ const StockList = () => {
         {
             name: "Product",
             selector: (row) => row.product?.name ?? "-",
-            sortable: true
+            sortable: true,
+            grow: 2,
         },
         {
             name: "Warehouse",
             selector: (row) => row.warehouse?.name ?? "-",
-            sortable: true
+            sortable: true,
+            grow: 2,
         },
         {
             name: "Amount",
             selector: (row) => row.amount,
-            sortable: true
+            sortable: true,
+            right: "true",
         },
         {
-            name: "Unit of Measure",
+            name: "Unit",
             selector: (row) => row.unit ?? "-",
-            sortable: true
+            sortable: true,
         },
         {
             name: "Dimensions",
-            selector: (row) => row.dimensions,
-            sortable: false
+            selector: (row) => row.dimensions || "-",
+            sortable: false,
+            grow: 2,
         },
         {
             name: "Actions",
             cell: (row) => (
-                <div className="flex space-x-2">
-                    <Button variant="warning" onClick={() => handleEdit(row)}>
-                        <FaEdit className="mr-1"/> Edit
-                    </Button>
-                </div>
-            )
-        }
+                <Button variant="warning" onClick={() => handleEdit(row)} className="flex items-center gap-1">
+                    <FaEdit/> Edit
+                </Button>
+            ),
+            ignoreRowClick: true,
+            allowoverflow: true,
+            button: "true",
+        },
     ];
 
 
     return (
-        <div className="bg-white rounded-2xl shadow-lg w-full max-w-none overflow-x-hidden">
-            <div className="flex justify-between items-center px-8 py-6">
-                <h2 className="text-4xl font-bold text-gray-800">📦 Stock Management</h2>
-                <Button
-                    onClick={() => setShowForm(true)}
-                    className="px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all bg-blue-600 text-white flex items-center font-medium"
-                >
-                    <FaPlus className="mr-2"/> Add Stock Item
-                </Button>
+        <div className="bg-white rounded-2xl shadow-lg w-full overflow-hidden">
+            {/* Header */}
+            <div className="flex flex-wrap justify-between items-center px-8 py-6 gap-4">
+                <h2 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
+                    📦 Stock Management
+                </h2>
+                <div className="flex gap-2">
+                    <Button onClick={() => dispatch(fetchStockTable())} variant="outline">
+                        🔄 Refresh
+                    </Button>
+                    <Button
+                        onClick={() => setShowForm(true)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 px-4 py-2 rounded-lg shadow transition-all"
+                    >
+                        <FaPlus/> Add Stock Item
+                    </Button>
+                </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-gray-50 p-5 rounded-xl shadow mx-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 px-8">
                 <input
                     type="text"
                     placeholder="🔍 Search product or warehouse..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full"
+                    className="p-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-400"
                 />
 
                 <select
                     value={selectedWarehouse}
                     onChange={(e) => setSelectedWarehouse(e.target.value)}
-                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full"
+                    className="p-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-400"
                 >
                     <option value="">All Warehouses</option>
                     {warehouses.map((warehouse) => (
@@ -119,35 +144,35 @@ const StockList = () => {
                 </select>
 
                 <select
-                    value={stockFilter}
-                    onChange={(e) => setStockFilter(e.target.value)}
-                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full"
+                    value={stockLevel}
+                    onChange={(e) => setStockLevel(e.target.value)}
+                    className="p-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-400"
                 >
                     <option value="">All Stock Levels</option>
                     <option value="low">Low Stock</option>
-                    <option value="high">High Stock</option>
+                    <option value="high">Sufficient Stock</option>
                 </select>
             </div>
 
-            <div className="w-full overflow-x-auto">
-                <div className="w-full">
-                    <DataTable
-                        columns={columns}
-                        data={filteredStock}
-                        progressPending={loading}
-                        pagination
-                        highlightOnHover
-                        striped
-                        className="border rounded-lg shadow-sm w-full"
-                    />
-                </div>
+            {/* Table */}
+            <div className="px-8 pb-8">
+                <DataTable
+                    columns={columns}
+                    data={filteredStock}
+                    progressPending={loading}
+                    pagination
+                    striped
+                    highlightOnHover
+                    responsive
+                    persistTableHead
+                    className="rounded-lg border shadow-sm"
+                />
             </div>
 
             {showForm && (
                 <div
-                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center backdrop-blur-sm transition-opacity duration-300">
-                    <div
-                        className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg border border-gray-200 transform transition-all">
+                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center backdrop-blur-sm">
+                    <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg">
                         <StockFormModal showModal={showForm} onClose={handleCloseForm} initialData={editItem}/>
                     </div>
                 </div>

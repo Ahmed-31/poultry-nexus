@@ -70,14 +70,19 @@ const ProductManagement = () => {
 
     return (
         <div className="bg-white rounded-2xl shadow-lg w-full max-w-none overflow-x-hidden">
-            <div className="flex justify-between items-center px-8 py-6">
-                <h2 className="text-4xl font-bold text-gray-800">📦 Product Management</h2>
-                <Button
-                    onClick={() => setShowForm(true)}
-                    className="px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all bg-blue-600 text-white flex items-center font-medium"
-                >
-                    <FaPlus className="mr-2"/> Add Product
-                </Button>
+            <div className="flex justify-between items-center px-8 py-6 gap-4 flex-wrap">
+                <h2 className="text-3xl font-bold text-gray-800">📦 Product Management</h2>
+                <div className="flex gap-3">
+                    <Button onClick={() => dispatch(fetchProductsTable())} variant="outline">
+                        🔄 Refresh
+                    </Button>
+                    <Button
+                        onClick={() => setShowForm(true)}
+                        className="px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all bg-blue-600 text-white flex items-center font-medium"
+                    >
+                        <FaPlus className="mr-2"/> Add Product
+                    </Button>
+                </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-gray-50 p-5 rounded-xl shadow mx-8">

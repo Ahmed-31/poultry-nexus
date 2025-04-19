@@ -5,9 +5,10 @@ import DataTable from 'react-data-table-component';
 import {Button} from '@/components/ui/button';
 import OrderForm from './OrderForm.jsx';
 import ExpandedOrderDetails from './ExpandedOrderDetails.jsx';
+import DeleteConfirmationModal from '@/src/components/common/DeleteConfirmationModal.jsx';
 import {fetchOrdersTable, removeOrder} from '@/src/store/ordersSlice';
+import {toast} from "@/hooks/use-toast.js";
 
-// 🔧 Optimized Action Column Component
 const OrderActions = React.memo(({order, onEdit, onDelete}) => (
     <div className="flex flex-wrap gap-2">
         <Link
@@ -30,6 +31,14 @@ const OrderActions = React.memo(({order, onEdit, onDelete}) => (
         </Button>
     </div>
 ));
+
+const PRIORITY_LABELS = {
+    1: 'Very Low',
+    2: 'Low',
+    3: 'Medium',
+    4: 'High',
+    5: 'Critical',
+};
 
 const getColumns = (handleEdit, handleDelete) => [
     {
@@ -61,7 +70,7 @@ const getColumns = (handleEdit, handleDelete) => [
                             : 'bg-green-100 text-green-700'
                 }`}
             >
-                {row.priority}
+                {PRIORITY_LABELS[row.priority] || 'N/A'}
             </span>
         )
     },
@@ -69,6 +78,7 @@ const getColumns = (handleEdit, handleDelete) => [
         name: 'Actions',
         cell: row => (
             <OrderActions
+                key={row.id}
                 order={row}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
@@ -86,6 +96,7 @@ const OrderList = () => {
 
     const [searchTerm, setSearchTerm] = useState('');
     const [formState, setFormState] = useState({show: false, mode: null, data: null});
+    const [deleteState, setDeleteState] = useState({show: false, entityId: null});
 
     useEffect(() => {
         dispatch(fetchOrdersTable());
@@ -96,10 +107,31 @@ const OrderList = () => {
     }, []);
 
     const handleDelete = useCallback(id => {
-        if (window.confirm('Are you sure you want to delete this order?')) {
-            dispatch(removeOrder(id));
+        setDeleteState({show: true, entityId: id});
+    }, []);
+
+    const confirmDelete = async () => {
+        try {
+            await dispatch(removeOrder({id: deleteState.entityId})).unwrap();
+            dispatch(fetchOrdersTable());
+            toast({
+                title: "Success",
+                description: "Order deleted successfully.",
+                variant: "default",
+            });
+        } catch (e) {
+            toast({
+                title: "Error",
+                description: e.message || "Something went wrong.",
+                variant: "destructive",
+            });
         }
-    }, [dispatch]);
+        setDeleteState({show: false, entityId: null});
+    };
+
+    const cancelDelete = () => {
+        setDeleteState({show: false, entityId: null});
+    };
 
     const handleCloseForm = () => {
         setFormState({show: false, mode: null, data: null});
@@ -107,7 +139,7 @@ const OrderList = () => {
     };
 
     const filteredOrders = useMemo(() => {
-        const term = searchTerm.toLowerCase();
+        const term = searchTerm.trim().toLowerCase();
         return orders.filter(order =>
             order.order_number?.toLowerCase().includes(term) ||
             order.customer?.name?.toLowerCase().includes(term) ||
@@ -137,7 +169,7 @@ const OrderList = () => {
             <div className="mb-4">
                 <input
                     type="text"
-                    placeholder="Search orders..."
+                    placeholder="Search by number, customer, status..."
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
                     className="w-full p-2 border rounded shadow-sm text-sm"
@@ -172,6 +204,14 @@ const OrderList = () => {
                     initialData={formState.mode === 'edit' ? formState.data : null}
                 />
             )}
+
+            <DeleteConfirmationModal
+                showModal={deleteState.show}
+                entityName="Order"
+                entityId={deleteState.entityId}
+                onConfirm={confirmDelete}
+                onCancel={cancelDelete}
+            />
         </div>
     );
 };
