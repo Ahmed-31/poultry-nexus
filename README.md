@@ -1,66 +1,106 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🐣 Poultry Nexus ERP
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A modular ERP system tailored for poultry equipment manufacturing and logistics. Designed to handle procurement, stock,
+production, and order management workflows with precision, unit conversions, dimensions tracking, and automation.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 What This Project Does
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+This ERP system covers:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- ✅ **Product Catalog**: Products, bundles, unit groups, categories
+- ✅ **Stock Management**:
+    - Real-time stock levels
+    - UOM conversion support
+    - Dimension-based inventory (e.g., width, height)
+- ✅ **Order Management**:
+    - Customers & sales orders
+    - Order items and product bundles
+    - Priority-based stock reservation
+- ✅ **Stock Reservation Engine**:
+    - Smart logic for dimensions, UOM, and bundle resolution
+    - Revoke lower priority reservations automatically
+- ✅ **Future-Ready Modules**:
+    - Production work orders (planned)
+    - Procurement requests (planned)
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🛠️ Requirements
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Only Docker is required:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Docker (with Docker Compose)
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## ⚙️ Installation Steps
 
-### Premium Partners
+```bash
+# 1. Clone the repository
+git clone https://github.com/Ahmed-31/poultry-nexus.git
+cd poultry-nexus
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+# 2. Run the app using Docker
+docker compose up -d --build
+```
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 📚 Project Structure
 
-## Code of Conduct
+```
+app/
+├── Models/               # Core models (Product, Order, Stock, etc.)
+├── Services/             # Reservation logic, production hooks
+├── Http/Controllers/     # API endpoints
+├── Helpers/              # Stock helpers, dimension utilities
+├── Console/              # Commands for cleanup, reporting
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 🧠 Key Concepts
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- **UOM Groups & Conversion**: Each product belongs to a UOM group with a base unit. All stock is stored in base and
+  input units.
+- **Dimension-Aware Stock**: Products may have dimensional constraints (e.g. length, width).
+- **Priority-Based Reservation**: Higher-priority orders can override stock reserved by lower ones.
+- **Future Handling**:
+    - Missing stock triggers `stock_shortages` which link to planned procurement/production modules.
+    - Depleted stock is retained or removed based on relationships and cleanup strategy.
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## ✅ What’s Working
+
+- [x] Multi-product stock handling with dimensions
+- [x] Orders, bundles, and nested reservations
+- [x] Full stock reservation engine
+- [x] Queue-ready structure
+
+---
+
+## 🔧 To-Do / Planned
+
+- [ ] Production Module with Work Orders
+- [ ] Procurement Module with Approvals
+- [ ] Notifications and approvals dashboard
+- [ ] UI for bundle progress tracking
+- [ ] Admin settings for cleanup/auto-build
+
+---
+
+## 👤 Author
+
+**Ahmed Elrefae**  
+Backend Developer  
+Email: ahmedelrefae56@gmail.com
+GitHub: https://github.com/Ahmed-31
+
+---
+
+## 📄 License
+
+MIT
