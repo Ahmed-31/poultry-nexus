@@ -53,7 +53,31 @@ export default {
                     '4': 'hsl(var(--chart-4))',
                     '5': 'hsl(var(--chart-5))'
                 }
-            }
+            },
+            keyframes: {
+                'slide-down-fade': {
+                    '0%': {opacity: 0, transform: 'translateY(-4px)'},
+                    '100%': {opacity: 1, transform: 'translateY(0)'},
+                },
+                'fade-in': {
+                    '0%': {opacity: 0},
+                    '100%': {opacity: 1},
+                },
+                'spin-once': {
+                    '0%': {transform: 'rotate(0deg)'},
+                    '100%': {transform: 'rotate(360deg)'},
+                },
+                'pulse-scale': {
+                    '0%, 100%': {transform: 'scale(1)'},
+                    '50%': {transform: 'scale(1.1)'},
+                },
+            },
+            animation: {
+                'slide-down-fade': 'slide-down-fade 0.2s ease-out',
+                'fade-in': 'fade-in 0.2s ease-in',
+                'spin-once': 'spin-once 0.4s ease-in-out',
+                'pulse-scale': 'pulse-scale 0.4s ease-in-out',
+            },
         }
     },
     plugins: [require("tailwindcss-animate")],

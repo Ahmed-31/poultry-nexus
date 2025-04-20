@@ -7,16 +7,18 @@ import productionImage from '../../../images/a factory that manufactures poultry
 import deliveryImage from '../../../images/Delivery & Internal Support.webp';
 import {useAuth} from '@/src/context/AuthContext';
 import Loader from '@/src/components/common/Loader';
+import {useTranslation} from "react-i18next";
 
 const HomePage = () => {
     const {user, loading} = useAuth();
+    const {t} = useTranslation();
 
     if (loading) {
         return (<Loader/>);
     }
 
     if (!user) {
-        return <p className="text-center mt-10 text-xl">You are not logged in.</p>;
+        return <p className="text-center mt-10 text-xl">{t('auth.notLoggedIn')}</p>;
     }
 
     return (
@@ -28,7 +30,7 @@ const HomePage = () => {
                     animate={{opacity: 1, y: 0}}
                     transition={{duration: 0.7}}
                 >
-                    Internal Operations Workflow
+                    {t('home.title')}
                 </motion.h1>
                 <motion.p
                     className="text-xl text-gray-700 mt-6"
@@ -36,68 +38,46 @@ const HomePage = () => {
                     animate={{opacity: 1}}
                     transition={{delay: 0.4, duration: 0.7}}
                 >
-                    Enhancing Internal Processes for Sales, Procurement, Production, and Delivery
+                    {t('home.subtitle')}
                 </motion.p>
             </header>
 
             <div className="space-y-16">
                 <ZigZagSection
-                    title="Sales & Order Processing"
-                    steps={[
-                        'Internal teams submit order requests with product specifications and deadlines.',
-                        'Generate quotations and initiate approval workflows.',
-                        'Finalize order details, assign internal order numbers, and create invoices.'
-                    ]}
+                    title={t('home.sections.sales.title')}
+                    steps={t('home.sections.sales.steps', {returnObjects: true})}
                     reverse={false}
                     image={salesImage}
                     imageAlt='A simple, realistic high-definition photo of a small office focused on Sales & Order Processing in the poultry equipment industry.'
                 />
 
                 <ZigZagSection
-                    title="Procurement & Stock Control"
-                    steps={[
-                        'Review stock levels and initiate procurement if necessary.',
-                        'Create purchase orders and monitor supplier deliveries.',
-                        'Receive and inspect materials, then update stock records.',
-                        'Allocate materials to corresponding production tasks.'
-                    ]}
+                    title={t('home.sections.procurement.title')}
+                    steps={t('home.sections.procurement.steps', {returnObjects: true})}
                     reverse={true}
                     image={procurementImage}
                     imageAlt='A simple, realistic high-definition photo of an office environment focused on Procurement & Inventory Control in the poultry equipment industry.'
                 />
 
                 <ZigZagSection
-                    title="Production Oversight"
-                    steps={[
-                        'Plan production schedules based on internal priorities.',
-                        'Generate work instructions for production teams.',
-                        'Monitor production progress and address any issues.',
-                        'Conduct quality checks and document results for compliance.'
-                    ]}
+                    title={t('home.sections.production.title')}
+                    steps={t('home.sections.production.steps', {returnObjects: true})}
                     reverse={false}
                     image={productionImage}
                     imageAlt='A simple, realistic high-definition photo of a factory that manufactures poultry equipment. The photo shows a production manager wearing a hard hat.'
                 />
 
                 <ZigZagSection
-                    title="Packaging & Dispatch Management"
-                    steps={[
-                        'Package products securely and ensure correct labeling.',
-                        'Organize internal logistics and prepare dispatch documentation.',
-                        'Update internal systems upon dispatch and track shipments.'
-                    ]}
+                    title={t('home.sections.packaging.title')}
+                    steps={t('home.sections.packaging.steps', {returnObjects: true})}
                     reverse={true}
                     image={packagingImage}
                     imageAlt='A simple, realistic high-definition photo of a factory focused on Packaging & Dispatch Management for poultry equipment.'
                 />
 
                 <ZigZagSection
-                    title="Delivery & Internal Support"
-                    steps={[
-                        'Confirm product receipt with relevant internal departments.',
-                        'Manage internal service requests and maintenance schedules.',
-                        'Collect feedback from internal stakeholders for continuous improvement.'
-                    ]}
+                    title={t('home.sections.delivery.title')}
+                    steps={t('home.sections.delivery.steps', {returnObjects: true})}
                     reverse={false}
                     image={deliveryImage}
                     imageAlt='A simple, realistic high-definition photo of a factory focused on Delivery & Internal Support for poultry equipment.'

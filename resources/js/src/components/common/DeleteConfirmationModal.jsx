@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from "@/src/components/common/Modal.jsx";
 import {Button} from "@/components/ui/button";
+import {useTranslation} from "react-i18next";
 
 const DeleteConfirmationModal = ({
                                      showModal,
@@ -9,20 +10,20 @@ const DeleteConfirmationModal = ({
                                      onConfirm,
                                      onCancel,
                                  }) => {
+    const {t} = useTranslation();
     return (
         <Modal isOpen={showModal} onClose={onCancel}>
-            <h2 className="text-lg font-semibold mb-4">Confirm Deletion</h2>
+            <h2 className="text-lg font-semibold mb-4">{t('deleteModal.title')}</h2>
             <p className="text-sm text-gray-700 mb-6">
-                Are you sure you want to delete this {entityName.toLowerCase()} (ID: {entityId})?
-                This action cannot be undone.
+                {t('deleteModal.message', {entity: entityName.toLowerCase(), id: entityId})}
             </p>
 
             <div className="flex justify-end gap-4">
                 <Button variant="outline" onClick={onCancel}>
-                    Cancel
+                    {t('global.cancel')}
                 </Button>
                 <Button variant="destructive" onClick={onConfirm}>
-                    Delete
+                    {t('deleteModal.confirm')}
                 </Button>
             </div>
         </Modal>

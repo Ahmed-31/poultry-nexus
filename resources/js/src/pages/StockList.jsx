@@ -6,6 +6,7 @@ import DataTable from "react-data-table-component";
 import {Button} from "@/Components/ui/button";
 import {FaPlus, FaEdit} from "react-icons/fa";
 import StockFormModal from "@/src/components/Stock/StockFormModal.jsx";
+import {useTranslation} from "react-i18next";
 
 const StockList = () => {
     const dispatch = useDispatch();
@@ -19,6 +20,7 @@ const StockList = () => {
     const [stockLevel, setStockLevel] = useState("");
     const [showForm, setShowForm] = useState(false);
     const [editItem, setEditItem] = useState(null);
+    const {t} = useTranslation();
 
     useEffect(() => {
         dispatch(fetchStockTable());
@@ -59,30 +61,30 @@ const StockList = () => {
 
     const columns = [
         {
-            name: "Product",
+            name: t('stockList.columns.product'),
             selector: (row) => row.product?.name ?? "-",
             sortable: true,
             grow: 2,
         },
         {
-            name: "Warehouse",
+            name: t('stockList.columns.warehouse'),
             selector: (row) => row.warehouse?.name ?? "-",
             sortable: true,
             grow: 2,
         },
         {
-            name: "Amount",
+            name: t('stockList.columns.amount'),
             selector: (row) => row.amount,
             sortable: true,
             right: "true",
         },
         {
-            name: "Unit",
+            name: t('stockList.columns.unit'),
             selector: (row) => row.unit ?? "-",
             sortable: true,
         },
         {
-            name: "Dimensions",
+            name: t('stockList.columns.dimensions'),
             selector: (row) => row.dimensions || "-",
             sortable: false,
             grow: 2,
@@ -91,7 +93,7 @@ const StockList = () => {
             name: "Actions",
             cell: (row) => (
                 <Button variant="warning" onClick={() => handleEdit(row)} className="flex items-center gap-1">
-                    <FaEdit/> Edit
+                    <FaEdit/> {t('stockList.columns.edit')}
                 </Button>
             ),
             ignoreRowClick: true,
@@ -106,17 +108,17 @@ const StockList = () => {
             {/* Header */}
             <div className="flex flex-wrap justify-between items-center px-8 py-6 gap-4">
                 <h2 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
-                    📦 Stock Management
+                    📦 {t('stockList.title')}
                 </h2>
                 <div className="flex gap-2">
                     <Button onClick={() => dispatch(fetchStockTable())} variant="outline">
-                        🔄 Refresh
+                        🔄 {t('global.refresh')}
                     </Button>
                     <Button
                         onClick={() => setShowForm(true)}
                         className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 px-4 py-2 rounded-lg shadow transition-all"
                     >
-                        <FaPlus/> Add Stock Item
+                        <FaPlus/> {t('stockList.buttons.add')}
                     </Button>
                 </div>
             </div>
@@ -124,7 +126,7 @@ const StockList = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 px-8">
                 <input
                     type="text"
-                    placeholder="🔍 Search product or warehouse..."
+                    placeholder={"🔍 " + t('stockList.filters.searchPlaceholder')}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="p-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-400"
@@ -135,7 +137,7 @@ const StockList = () => {
                     onChange={(e) => setSelectedWarehouse(e.target.value)}
                     className="p-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-400"
                 >
-                    <option value="">All Warehouses</option>
+                    <option value="">{t('stockList.filters.allWarehouses')}</option>
                     {warehouses.map((warehouse) => (
                         <option key={warehouse.id} value={warehouse.id}>
                             {warehouse.name}
@@ -148,9 +150,9 @@ const StockList = () => {
                     onChange={(e) => setStockLevel(e.target.value)}
                     className="p-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-400"
                 >
-                    <option value="">All Stock Levels</option>
-                    <option value="low">Low Stock</option>
-                    <option value="high">Sufficient Stock</option>
+                    <option value="">{t('stockList.filters.allStockLevels')}</option>
+                    <option value="low">{t('stockList.filters.low')}</option>
+                    <option value="high">{t('stockList.filters.high')}</option>
                 </select>
             </div>
 

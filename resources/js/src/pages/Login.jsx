@@ -2,8 +2,10 @@ import React, {useState} from 'react';
 import {useAuth} from '../context/AuthContext';
 import {useNavigate} from 'react-router-dom';
 import Loader from "../components/common/Loader.jsx";
+import {useTranslation} from "react-i18next";
 
 const Login = () => {
+    const {t} = useTranslation();
     const {login} = useAuth();
     const navigate = useNavigate();
 
@@ -20,7 +22,7 @@ const Login = () => {
             await login(email, password);
             navigate('/');
         } catch {
-            setError('Invalid credentials, please try again.');
+            setError(t('login.errors.invalid'));
         } finally {
             setIsSubmitting(false);
         }
@@ -33,12 +35,12 @@ const Login = () => {
                     <Loader/>
                 </div>
             )}
-            <h2 className="text-2xl font-bold mb-4">Login</h2>
+            <h2 className="text-2xl font-bold mb-4">{t('login.title')}</h2>
             {error && <p className="text-red-500 mb-4">{error}</p>}
             <form onSubmit={handleSubmit} className={isSubmitting ? 'opacity-50' : ''}>
                 <input
                     type="email"
-                    placeholder="Email"
+                    placeholder={t('login.fields.email')}
                     className="w-full p-2 mb-4 border rounded"
                     onChange={(e) => setEmail(e.target.value)}
                     value={email}
@@ -46,7 +48,7 @@ const Login = () => {
                 />
                 <input
                     type="password"
-                    placeholder="Password"
+                    placeholder={t('login.fields.password')}
                     className="w-full p-2 mb-4 border rounded"
                     onChange={(e) => setPassword(e.target.value)}
                     value={password}
@@ -57,7 +59,7 @@ const Login = () => {
                     className="w-full bg-blue-500 text-white p-2 rounded"
                     disabled={isSubmitting}
                 >
-                    Login
+                    {t('login.actions.submit')}
                 </button>
             </form>
         </div>

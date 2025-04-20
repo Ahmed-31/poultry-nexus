@@ -1,8 +1,10 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import {UserCircle, Menu, X} from 'lucide-react';
+import LanguageSwitcher from '@/src/components/common/LanguageSwitcher';
 
 const Navbar = ({toggleSidebar, isSidebarOpen}) => {
+
     return (
         <nav className="bg-gray-100 text-gray-800 p-4 shadow-md flex justify-between items-center">
             <div className="flex items-center">
@@ -12,7 +14,8 @@ const Navbar = ({toggleSidebar, isSidebarOpen}) => {
                 </button>
                 <Link to="/" className="font-bold text-xl">Poultry Nexus</Link>
             </div>
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-4">
+                <LanguageSwitcher/>
                 <Link to="/profile" className="hover:text-gray-600 flex items-center transition duration-300">
                     <UserCircle className="mr-2" size={22}/> Profile
                 </Link>

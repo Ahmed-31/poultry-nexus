@@ -62,13 +62,13 @@ export default function ManualStockScan() {
     }, [productId]);
 
     useEffect(() => {
-    if (selectedProduct?.dimensions?.length) {
-        selectedProduct.dimensions.forEach(dimension => {
-            setValue(`dimensions.${dimension.id}.dimension_id`, dimension.id);
-            setValue(`dimensions.${dimension.id}.uom_id`, dimension.uom_id);
-        });
-    }
-}, [selectedProduct, setValue]);
+        if (selectedProduct?.dimensions?.length) {
+            selectedProduct.dimensions.forEach(dimension => {
+                setValue(`dimensions.${dimension.id}.dimension_id`, dimension.id);
+                setValue(`dimensions.${dimension.id}.uom_id`, dimension.uom_id);
+            });
+        }
+    }, [selectedProduct, setValue]);
 
     const getUomSymbol = (uom_id) => {
         const match = uoms.find(u => u.id === uom_id);
@@ -118,18 +118,18 @@ export default function ManualStockScan() {
                 <div className="mb-4">
                     <BackButton/>
                 </div>
-                <h1 className="text-2xl font-semibold mb-6">Manual Stock Scan</h1>
+                <h1 className="text-2xl font-semibold mb-6">{t('manualScan.title')}</h1>
                 <Card>
                     <CardContent className="space-y-6 p-6">
                         {!selectedWarehouse ? (
                             <div>
-                                <Label>Select Warehouse to Start</Label>
+                                <Label>{t('manualScan.selectWarehouse')}</Label>
                                 <Select onValueChange={(value) => {
                                     setSelectedWarehouse(value);
                                     setValue("warehouse_id", value);
                                 }}>
                                     <SelectTrigger>
-                                        <SelectValue placeholder="Select a warehouse"/>
+                                        <SelectValue placeholder={t('manualScan.placeholders.warehouse')}/>
                                     </SelectTrigger>
                                     <SelectContent>
                                         {warehouses.map((w) => (
@@ -142,7 +142,7 @@ export default function ManualStockScan() {
                             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                                 <div className="flex justify-between items-center">
                                     <div className="w-full">
-                                        <Label>Warehouse</Label>
+                                        <Label>{t('manualScan.fields.warehouse')}</Label>
                                         <Input
                                             disabled
                                             value={warehouses.find(w => w.id.toString() === selectedWarehouse)?.name || ''}
@@ -158,13 +158,13 @@ export default function ManualStockScan() {
                                                 reset();
                                             }}
                                         >
-                                            Change Warehouse
+                                            {t('manualScan.actions.changeWarehouse')}
                                         </Button>
                                     </div>
                                 </div>
 
                                 <div>
-                                    <Label>Product</Label>
+                                    <Label>{t('manualScan.fields.product')}</Label>
                                     <Select
                                         onValueChange={(value) => {
                                             setValue("product_id", value);
@@ -173,7 +173,7 @@ export default function ManualStockScan() {
                                         value={watch("product_id")}
                                     >
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select a product"/>
+                                            <SelectValue placeholder={t('manualScan.placeholders.product')}/>
                                         </SelectTrigger>
                                         <SelectContent>
                                             {products.map((p) => (
@@ -181,29 +181,29 @@ export default function ManualStockScan() {
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    {errors.product_id && <p className="text-red-500 text-sm">Product is required.</p>}
+                                    {errors.product_id && <p className="text-red-500 text-sm">{t('manualScan.errors.product')}</p>}
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <Label>Quantity</Label>
+                                        <Label>{t('manualScan.fields.quantity')}</Label>
                                         <Input
                                             type="number"
                                             {...register("input_quantity", {required: true})}
                                         />
                                         {errors.input_quantity &&
-                                            <p className="text-red-500 text-sm">Quantity is required.</p>}
+                                            <p className="text-red-500 text-sm">{t('manualScan.errors.quantity')}</p>}
                                     </div>
 
                                     <div>
-                                        <Label>Unit of Measure</Label>
+                                        <Label>{t('manualScan.fields.uom')}</Label>
                                         <Select
                                             onValueChange={(value) => setValue("input_uom_id", value)}
                                             value={watch("input_uom_id")}
                                             disabled={!productId || selectedProductUoms.length === 0}
                                         >
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Select UOM"/>
+                                                <SelectValue placeholder={t('manualScan.placeholders.uom')}/>
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {selectedProductUoms.map((uom) => (
@@ -215,13 +215,13 @@ export default function ManualStockScan() {
                                         </Select>
                                         <input type="hidden" {...register("input_uom_id", {required: true})}/>
                                         {errors.input_uom_id &&
-                                            <p className="text-red-500 text-sm">Unit is required.</p>}
+                                            <p className="text-red-500 text-sm">{t('manualScan.errors.uom')}</p>}
                                     </div>
                                 </div>
 
                                 {selectedProduct?.dimensions?.length > 0 && (
                                     <div>
-                                        <h3 className="text-lg font-semibold mb-2">Dimensions</h3>
+                                        <h3 className="text-lg font-semibold mb-2">{t('manualScan.fields.dimensions')}</h3>
                                         <div className="grid grid-cols-2 gap-4">
                                             {selectedProduct.dimensions.map((dimension) => (
                                                 <div key={dimension.id}>
@@ -234,7 +234,7 @@ export default function ManualStockScan() {
                                                     <Input
                                                         type="number"
                                                         step="any"
-                                                        placeholder={`Enter ${dimension.name}`}
+                                                        placeholder={t('manualScan.placeholders.dimension', {name: dimension.name})}
                                                         {...register(`dimensions.${dimension.id}.value`, {required: true})}
                                                     />
                                                     <input
@@ -249,7 +249,7 @@ export default function ManualStockScan() {
                                                     />
                                                     {errors?.dimensions?.[dimension.id]?.value && (
                                                         <p className="text-red-500 text-sm mt-1">
-                                                            {dimension.name} is required.
+                                                            {t('manualScan.errors.dimensionRequired', {name: dimension.name})}
                                                         </p>
                                                     )}
                                                 </div>
@@ -259,7 +259,7 @@ export default function ManualStockScan() {
                                 )}
 
                                 <Button type="submit" className="w-full">
-                                    Submit Scan
+                                    {t('manualScan.actions.submit')}
                                 </Button>
                             </form>
                         )}

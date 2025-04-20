@@ -62,7 +62,7 @@ const WarehouseManagement = () => {
 
     const columns = [
         {name: "Warehouse Name", selector: (row) => row.name, sortable: true},
-        {name: "Location", selector: (row) => row.location || "N/A", sortable: true},
+        {name: "Location", selector: (row) => row.location || t('global.na'), sortable: true},
         {
             name: "Total Stock",
             selector: (row) => row.totalQuantity,

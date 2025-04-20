@@ -21,7 +21,7 @@ const ExpandedProductDetails = ({data}) => {
     const stockColumns = [
         {name: "Warehouse ID", selector: row => row.warehouse_id, sortable: true},
         {name: "Quantity", selector: row => row.input_quantity, sortable: true},
-        {name: "UOM", selector: row => data?.default_uom?.symbol || "N/A", sortable: false},
+        {name: "UOM", selector: row => data?.default_uom?.symbol || t('global.na'), sortable: false},
         {name: "Last Updated", selector: row => new Date(row.updated_at).toLocaleString(), sortable: true},
     ];
 
@@ -41,7 +41,7 @@ const ExpandedProductDetails = ({data}) => {
             <Section title="Product Metadata">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     <div>
-                        <strong>Category:</strong> {data.category?.name || "N/A"}
+                        <strong>Category:</strong> {data.category?.name || t('global.na')}
                         <br/>
                         <em className="text-gray-500">{data.category?.description}</em>
                     </div>
@@ -59,7 +59,7 @@ const ExpandedProductDetails = ({data}) => {
                         <strong>Dimensions:</strong>{" "}
                         {Array.isArray(data.dimensions) && data.dimensions.length > 0
                             ? data.dimensions.map(dim => dim.name).join(" x ")
-                            : "N/A"}
+                            : t('global.na')}
                     </div>
                 </div>
             </Section>
@@ -74,7 +74,7 @@ const ExpandedProductDetails = ({data}) => {
                         <strong>Is Base Unit:</strong> {data.default_uom?.is_base ? "Yes" : "No"}
                     </div>
                     <div>
-                        <strong>UOM Group:</strong> {data.default_uom?.group?.name || "N/A"}
+                        <strong>UOM Group:</strong> {data.default_uom?.group?.name || t('global.na')}
                     </div>
                 </div>
                 {dimensions.length > 0 && (

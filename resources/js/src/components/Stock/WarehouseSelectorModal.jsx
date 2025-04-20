@@ -87,7 +87,7 @@ const WarehouseSelectorModal = ({showModal, onClose, action}) => {
                             >
                                 <div className="text-sm font-medium">{warehouse.name}</div>
                                 <div className="text-xs text-gray-500">
-                                    Location: {warehouse.location || "N/A"}
+                                    Location: {warehouse.location || t('global.na')}
                                 </div>
                             </div>
                         ))}

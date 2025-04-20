@@ -6,8 +6,10 @@ import {Label} from '@/components/ui/label';
 import Modal from '@/src/components/common/Modal';
 import {ScrollArea} from '@/components/ui/scroll-area';
 import {SmartSelect} from "@/src/components/common/SmartSelect";
+import {useTranslation} from "react-i18next";
 
 const StockCountModal = ({showModal, onClose}) => {
+    const {t} = useTranslation();
     const dispatch = useDispatch();
 
     const products = useSelector((state) => state.products.list || []);
@@ -39,9 +41,9 @@ const StockCountModal = ({showModal, onClose}) => {
 
     return (
         <Modal isOpen={showModal} onClose={onClose}>
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Stock Count Viewer</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">{t('stockCount.title')}</h2>
 
-            <Label>Product</Label>
+            <Label>{t('stockCount.fields.product')}</Label>
             <SmartSelect
                 multiple={false}
                 options={products.map((p) => ({
@@ -50,19 +52,19 @@ const StockCountModal = ({showModal, onClose}) => {
                 }))}
                 selected={selectedProductId?.toString()}
                 onChange={(val) => setSelectedProductId(val)}
-                placeholder="Select product"
+                placeholder={t('stockCount.placeholders.product')}
             />
 
-            {loading && <p className="text-sm text-gray-500 mt-4">Loading stock data...</p>}
+            {loading && <p className="text-sm text-gray-500 mt-4">{t('stockCount.messages.loading')}</p>}
 
             {!loading && selectedProductId && (
                 <>
                     <div className="mt-4 text-sm font-semibold text-gray-700">
-                        Total Quantity: {totalQuantity} {uomSymbol}
+                        {t('stockCount.labels.totalQuantity', {quantity: totalQuantity, symbol: uomSymbol})}
                     </div>
                     <ScrollArea className="max-h-96 mt-4 pr-2">
                         {Object.entries(stockByWarehouse).length === 0 && (
-                            <p className="text-gray-500 text-sm">No stock found for this product.</p>
+                            <p className="text-gray-500 text-sm">{t('stockCount.messages.noStock')}</p>
                         )}
                         {Object.entries(stockByWarehouse).map(([warehouse, stocks]) => (
                             <div key={warehouse} className="mb-6">
@@ -74,7 +76,10 @@ const StockCountModal = ({showModal, onClose}) => {
                                             className="border p-3 rounded bg-gray-50 shadow-sm"
                                         >
                                             <div className="text-sm font-medium">
-                                                Qty: {stock.input_quantity} ({stock.input_uom?.symbol})
+                                                {t('stockCount.labels.quantity', {
+                                                    quantity: stock.input_quantity,
+                                                    uom: stock.input_uom?.symbol
+                                                })}
                                             </div>
                                             {stock.dimension_values?.length > 0 && (
                                                 <div className="text-xs text-gray-600">
@@ -92,7 +97,7 @@ const StockCountModal = ({showModal, onClose}) => {
 
             <div className="mt-6 flex justify-end">
                 <button className="bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-4 rounded" onClick={onClose}>
-                    Close
+                    {t('global.close')}
                 </button>
             </div>
         </Modal>

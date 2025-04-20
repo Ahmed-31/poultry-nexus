@@ -1,8 +1,9 @@
 import React, {useState, useMemo} from 'react';
 import DataTable from 'react-data-table-component';
+import {useTranslation} from "react-i18next";
 
 const Section = ({title, children}) => {
-    const [isOpen, setIsOpen] = useState(true); // expanded by default
+    const [isOpen, setIsOpen] = useState(true);
     return (
         <div className="bg-white border rounded-lg p-4 shadow mb-4">
             <div
@@ -16,14 +17,15 @@ const Section = ({title, children}) => {
         </div>
     );
 };
-
 const ExpandedOrderDetails = ({data}) => {
+
+    const {t} = useTranslation();
     const itemColumns = useMemo(() => [
-        {name: 'Product', selector: row => row.product?.name || 'N/A', sortable: true},
-        {name: 'Quantity', selector: row => row.quantity, sortable: true},
-        {name: 'UOM', selector: row => row.uom?.name || '—', sortable: true},
+        {name: t('orderDetails.columns.product'), selector: row => row.product?.name || t('global.na'), sortable: true},
+        {name: t('orderDetails.columns.quantity'), selector: row => row.quantity, sortable: true},
+        {name: t('orderDetails.columns.uom'), selector: row => row.uom?.name || '—', sortable: true},
         {
-            name: "Dimensions",
+            name: t('orderDetails.columns.dimensions'),
             cell: row =>
                 row.dimension_values?.length ? (
                     <ul className="text-sm text-gray-700 list-disc pl-4">
@@ -36,59 +38,60 @@ const ExpandedOrderDetails = ({data}) => {
                 ) : "—"
         },
         {
-            name: 'Total Price',
+            name: t('orderDetails.columns.totalPrice'),
             selector: row => `${parseFloat(row.total_price || 0).toFixed(2)} EGP`,
             sortable: true
         }
     ], []);
 
     const bundleColumns = useMemo(() => [
-        {name: 'Bundle', selector: row => row.bundle?.name || 'N/A', sortable: true},
-        {name: 'Status', selector: row => row.status || '—', sortable: true},
-        {name: 'Progress', selector: row => `${row.progress}%`, sortable: true},
-        {name: 'Height', selector: row => row.height, sortable: true},
-        {name: 'Levels', selector: row => row.levels, sortable: true},
-        {name: 'Lines', selector: row => row.lines_number, sortable: true},
-        {name: 'Units/Line', selector: row => row.units_per_line, sortable: true},
-        {name: 'Total Units', selector: row => row.total_units, sortable: true},
-        {name: 'Houses', selector: row => row.poultry_house_count, sortable: true},
+        {name: t('orderDetails.columns.bundle'), selector: row => row.bundle?.name || t('global.na'), sortable: true},
+        {name: t('orderDetails.columns.status'), selector: row => row.status || '—', sortable: true},
+        {name: t('orderDetails.columns.progress'), selector: row => `${row.progress}%`, sortable: true},
+        {name: t('orderDetails.columns.height'), selector: row => row.height, sortable: true},
+        {name: t('orderDetails.columns.levels'), selector: row => row.levels, sortable: true},
+        {name: t('orderDetails.columns.lines'), selector: row => row.lines_number, sortable: true},
+        {name: t('orderDetails.columns.unitsPerLine'), selector: row => row.units_per_line, sortable: true},
+        {name: t('orderDetails.columns.totalUnits'), selector: row => row.total_units, sortable: true},
+        {name: t('orderDetails.columns.houses'), selector: row => row.poultry_house_count, sortable: true},
     ], []);
 
     const paymentColumns = useMemo(() => [
-        {name: 'Method', selector: row => row.payment_method, sortable: true},
+        {name: t('orderDetails.columns.method'), selector: row => row.payment_method, sortable: true},
         {
-            name: 'Amount',
+            name: t('orderDetails.columns.amount'),
             selector: row => `${parseFloat(row.amount || 0).toFixed(2)} EGP`,
             sortable: true
         },
-        {name: 'Status', selector: row => row.status, sortable: true},
-        {name: 'Reference', selector: row => row.transaction_reference || '—', sortable: false}
+        {name: t('orderDetails.columns.status'), selector: row => row.status, sortable: true},
+        {name: 	t('orderDetails.columns.reference'), selector: row => row.transaction_reference || '—', sortable: false}
     ], []);
 
     const shipmentColumns = useMemo(() => [
-        {name: 'Carrier', selector: row => row.carrier || '—', sortable: true},
-        {name: 'Tracking #', selector: row => row.tracking_number || '—', sortable: true},
-        {name: 'Status', selector: row => row.status || '—', sortable: true},
-        {name: 'Shipped At', selector: row => row.shipped_at || '—', sortable: false},
-        {name: 'Delivered At', selector: row => row.delivered_at || '—', sortable: false},
-        {name: 'Notes', selector: row => row.notes || '—', sortable: false}
+        {name: t('orderDetails.columns.carrier'), selector: row => row.carrier || '—', sortable: true},
+        {name: t('orderDetails.columns.tracking'), selector: row => row.tracking_number || '—', sortable: true},
+        {name: t('orderDetails.columns.status'), selector: row => row.status || '—', sortable: true},
+        {name: t('orderDetails.columns.shippedAt'), selector: row => row.shipped_at || '—', sortable: false},
+        {name: t('orderDetails.columns.deliveredAt'), selector: row => row.delivered_at || '—', sortable: false},
+        {name: t('orderDetails.columns.notes'), selector: row => row.notes || '—', sortable: false}
     ], []);
 
     return (
         <div className="p-4 bg-gray-50 border rounded-xl space-y-5">
             <div className="space-y-1">
                 <p className="text-base text-gray-700">
-                    <strong>Order Number:</strong> {data?.order_number}
+                    <strong>{t('orderDetails.meta.orderNumber')}</strong> {data?.order_number}
                 </p>
                 <p className="text-sm text-gray-600">
-                    <strong>Status:</strong> {data?.status} &nbsp;|&nbsp;
-                    <strong>Priority:</strong> {data?.priority} &nbsp;|&nbsp;
-                    <strong>Ordered At:</strong> {data?.ordered_at}
+                    <strong>{t('orderDetails.columns.status')}:</strong> {data?.status} &nbsp;|&nbsp;
+                    {/*todo: add priority string.*/}
+                    <strong>{t('orderDetails.meta.priority')}:</strong> {data?.priority} &nbsp;|&nbsp;
+                    <strong>{t('orderDetails.meta.orderedAt')}:</strong> {data?.ordered_at}
                 </p>
-                <p className="text-sm text-gray-600"><strong>Notes:</strong> {data?.notes || '—'}</p>
+                <p className="text-sm text-gray-600"><strong>{t('orderDetails.meta.notes')}:</strong> {data?.notes || '—'}</p>
             </div>
 
-            <Section title="Order Items">
+            <Section title={t('orderDetails.sections.items')}>
                 <DataTable
                     columns={itemColumns}
                     data={data?.order_items || []}
@@ -100,7 +103,7 @@ const ExpandedOrderDetails = ({data}) => {
             </Section>
 
             {data?.bundles?.length > 0 && (
-                <Section title="Product Bundles">
+                <Section title={t('orderDetails.sections.bundles')}>
                     <DataTable
                         columns={bundleColumns}
                         data={data.bundles}
@@ -113,7 +116,7 @@ const ExpandedOrderDetails = ({data}) => {
             )}
 
             {data?.payments?.length > 0 && (
-                <Section title="Payments">
+                <Section title={t('orderDetails.sections.payments')}>
                     <DataTable
                         columns={paymentColumns}
                         data={data.payments}
@@ -126,7 +129,7 @@ const ExpandedOrderDetails = ({data}) => {
             )}
 
             {data?.shipments?.length > 0 && (
-                <Section title="Shipments">
+                <Section title={t('orderDetails.sections.shipments')}>
                     <DataTable
                         columns={shipmentColumns}
                         data={data.shipments}

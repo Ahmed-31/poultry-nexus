@@ -1,0 +1,713 @@
+{
+    "languageChanged": "Language has been changed to English.",
+    "languageChangedTitle": "Language Changed",
+    "global": {
+        "back": "Back",
+        "cancel": "Cancel",
+        "refresh": "Refresh",
+        "create": "Create",
+        "update": "Update",
+        "edit": "Edit",
+        "delete": "Delete",
+        "continue": "Continue",
+        "na": "N/A",
+        "error": "Error",
+        "none": "None",
+        "required": "Required",
+        "missingData": {
+            "title": "Missing Data",
+            "message": "Please select both product and warehouse."
+        },
+        "toasts": {
+            "successTitle": "Success",
+            "errorTitle": "Error",
+            "errorMessage": "Something went wrong."
+        }
+    },
+    "priority": {
+        "1": {
+            "label": "Very Low",
+            "description": "Can be delayed"
+        },
+        "2": {
+            "label": "Low",
+            "description": "Less urgent"
+        },
+        "3": {
+            "label": "Medium",
+            "description": "Default level"
+        },
+        "4": {
+            "label": "High",
+            "description": "High priority"
+        },
+        "5": {
+            "label": "Very High",
+            "description": "Top priority order"
+        }
+    },
+    "auth": {
+        "notLoggedIn": "You are not logged in."
+    },
+    "home": {
+        "title": "Internal Operations Workflow",
+        "subtitle": "Enhancing Internal Processes for Sales, Procurement, Production, and Delivery",
+        "sections": {
+            "sales": {
+                "title": "Sales & Order Processing",
+                "steps": [
+                    "Internal teams submit order requests with product specifications and deadlines.",
+                    "Generate quotations and initiate approval workflows.",
+                    "Finalize order details, assign internal order numbers, and create invoices."
+                ]
+            },
+            "procurement": {
+                "title": "Procurement & Stock Control",
+                "steps": [
+                    "Review stock levels and initiate procurement if necessary.",
+                    "Create purchase orders and monitor supplier deliveries.",
+                    "Receive and inspect materials, then update stock records.",
+                    "Allocate materials to corresponding production tasks."
+                ]
+            },
+            "production": {
+                "title": "Production Oversight",
+                "steps": [
+                    "Plan production schedules based on internal priorities.",
+                    "Generate work instructions for production teams.",
+                    "Monitor production progress and address any issues.",
+                    "Conduct quality checks and document results for compliance."
+                ]
+            },
+            "packaging": {
+                "title": "Packaging & Dispatch Management",
+                "steps": [
+                    "Package products securely and ensure correct labeling.",
+                    "Organize internal logistics and prepare dispatch documentation.",
+                    "Update internal systems upon dispatch and track shipments."
+                ]
+            },
+            "delivery": {
+                "title": "Delivery & Internal Support",
+                "steps": [
+                    "Confirm product receipt with relevant internal departments.",
+                    "Manage internal service requests and maintenance schedules.",
+                    "Collect feedback from internal stakeholders for continuous improvement."
+                ]
+            }
+        }
+    },
+    "deleteModal": {
+        "title": "Confirm Deletion",
+        "message": "Are you sure you want to delete this {{entity}} (ID: {{id}})? This action cannot be undone.",
+        "confirm": "Delete"
+    },
+    "modal": {
+        "close": "Close modal",
+        "title": "Modal Dialog"
+    },
+    "smartSelect": {
+        "placeholder": "Select option(s)",
+        "searchPlaceholder": "Search...",
+        "noResults": "No options found.",
+        "label": "Choose an option"
+    },
+    "orderDetails": {
+        "sections": {
+            "items": "Order Items",
+            "bundles": "Product Bundles",
+            "payments": "Payments",
+            "shipments": "Shipments"
+        },
+        "columns": {
+            "product": "Product",
+            "quantity": "Quantity",
+            "uom": "UOM",
+            "dimensions": "Dimensions",
+            "totalPrice": "Total Price",
+            "bundle": "Bundle",
+            "totalUnits": "Total Units",
+            "config": "Config",
+            "status": "Status",
+            "progress": "Progress",
+            "height": "Height",
+            "beltWidth": "Belt Width",
+            "levels": "Levels",
+            "lines": "Lines",
+            "unitsPerLine": "Units/Line",
+            "houses": "Houses",
+            "method": "Method",
+            "amount": "Amount",
+            "reference": "Reference",
+            "carrier": "Carrier",
+            "tracking": "Tracking #",
+            "shippedAt": "Shipped At",
+            "deliveredAt": "Delivered At",
+            "notes": "Notes"
+        },
+        "meta": {
+            "orderNumber": "Order Number",
+            "priority": "Priority",
+            "orderedAt": "Ordered At",
+            "notes": "Notes"
+        }
+    },
+    "orderDetailsPage": {
+        "title": "Order Details",
+        "back": "Back to Orders",
+        "meta": {
+            "status": "Status",
+            "orderedAt": "Ordered At",
+            "notes": "Notes",
+            "noNotes": "No notes provided",
+            "orderNumber": "Order Number",
+            "createdBy": "Created By",
+            "ownerNote": "You created this order."
+        },
+        "customer": {
+            "title": "Customer Information",
+            "name": "Name",
+            "email": "Email",
+            "phone": "Phone",
+            "address": "Address"
+        },
+        "tables": {
+            "items": "Order Items",
+            "bundles": "Order Bundles",
+            "payments": "Payments",
+            "shipments": "Shipment Info",
+            "noPayments": "No payment records available.",
+            "noShipments": "No shipment records available."
+        },
+        "actions": {
+            "title": "Order Actions",
+            "approve": "Approve",
+            "reject": "Reject",
+            "edit": "Edit Order"
+        }
+    },
+    "orderForm": {
+        "title": {
+            "edit": "Edit Order",
+            "create": "Create New Order"
+        },
+        "fields": {
+            "customer": {
+                "label": "Customer",
+                "placeholder": "Select Customer",
+                "required": "Customer is required."
+            },
+            "date": {
+                "label": "Order Date"
+            },
+            "number": {
+                "label": "Order Number"
+            },
+            "priority": {
+                "label": "Priority",
+                "placeholder": "Select Priority"
+            },
+            "product": {
+                "label": "Product",
+                "placeholder": "Select Product",
+                "required": "Product is required."
+            },
+            "quantity": {
+                "label": "Quantity"
+            },
+            "uom": {
+                "label": "Unit of Measure",
+                "placeholder": "Select UOM"
+            },
+            "dimensions": {
+                "label": "Dimensions"
+            },
+            "bundle": {
+                "label": "Product Bundle",
+                "placeholder": "Select Bundle",
+                "height": "Height",
+                "belt_width": "Belt Width",
+                "levels": "Levels",
+                "units_per_line": "Units per Line",
+                "lines_number": "Number of Lines",
+                "poultry_house_count": "Number of Poultry Houses"
+            },
+            "notes": {
+                "label": "Notes"
+            }
+        },
+        "sections": {
+            "bundles": "Order Bundles"
+        },
+        "buttons": {
+            "removeItem": "Remove Item",
+            "addItem": "Add Product",
+            "removeBundle": "Remove Bundle",
+            "addBundle": "Add Bundle",
+            "cancel": "Cancel",
+            "create": "Create Order",
+            "update": "Update Order"
+        },
+        "toast": {
+            "successMessage": "Order created successfully."
+        }
+    },
+    "orderList": {
+        "title": "Orders List",
+        "columns": {
+            "orderNumber": "Order Number",
+            "customer": "Customer",
+            "status": "Status",
+            "priority": "Priority",
+            "actions": "Actions"
+        },
+        "buttons": {
+            "create": "Create Order"
+        },
+        "search": {
+            "placeholder": "Search by number, customer, status..."
+        },
+        "noResults": {
+            "filtered": "No matching orders found.",
+            "empty": "No orders available."
+        },
+        "toast": {
+            "successMessage": "Order deleted successfully."
+        }
+    },
+    "reservations": {
+        "title": {
+            "order": "Reservations for Order",
+            "all": "All Stock Reservations"
+        },
+        "columns": {
+            "product": "Product",
+            "warehouse": "Warehouse",
+            "qtyReserved": "Qty Reserved",
+            "status": "Status",
+            "orderNumber": "Order No."
+        },
+        "noResults": "No reservations found."
+    },
+    "ordersPage": {
+        "title": "Orders Dashboard"
+    },
+    "stockDashboard": {
+        "sections": {
+            "operations": "Operations",
+            "masterData": "Master Data",
+            "alerts": "Alerts & Warnings",
+            "recentMovements": "Recent Stock Movements",
+            "warehouseOverview": "Warehouse Overview",
+            "stockByCategory": "Stock by Category"
+        },
+        "kpis": {
+            "totalItems": "Total Items",
+            "outOfStock": "Out of Stock",
+            "lowStockAlerts": "Low Stock Alerts",
+            "totalValue": "Total Value"
+        },
+        "table": {
+            "date": "Date",
+            "product": "Product",
+            "uom": "UoM",
+            "action": "Action",
+            "qty": "Qty",
+            "warehouse": "Warehouse",
+            "user": "User"
+        },
+        "warehouse": {
+            "capacityUsed": "Capacity Used",
+            "status": "Status",
+            "full": "Full",
+            "normal": "Normal"
+        },
+        "actions": {
+            "manualStockScan": {
+                "title": "Manual Stock Scan",
+                "action": "\uD83D\uDCDD Go to Scan"
+            },
+            "addStock": {
+                "title": "Add Stock Entry",
+                "action": "+ Add Stock"
+            },
+            "issueStock": {
+                "title": "Remove Stock",
+                "action": "- Issue Stock"
+            },
+            "transferStock": {
+                "title": "Transfer Stock",
+                "action": "↔ Transfer Stock"
+            },
+            "adjustStock": {
+                "title": "Stock Adjustment",
+                "action": "✏ Adjust Quantity"
+            },
+            "stockCount": {
+                "title": "Stock Count",
+                "action": "📦 Start Count"
+            },
+            "createItem": {
+                "title": "Create Item",
+                "action": "+ New Item"
+            },
+            "editItem": {
+                "title": "Edit Item",
+                "action": "🛠 Edit Item"
+            },
+            "removeItem": {
+                "title": "Remove Item",
+                "action": "❌ Delete Item"
+            },
+            "createWarehouse": {
+                "title": "Create Warehouse",
+                "action": "+ New Warehouse"
+            },
+            "editWarehouse": {
+                "title": "Edit Warehouse",
+                "action": "✏️ Edit Warehouse"
+            },
+            "removeWarehouse": {
+                "title": "Remove Warehouse",
+                "action": "🗑 Delete Warehouse"
+            },
+            "viewItems": {
+                "title": "View All Items",
+                "action": "📦 Item List"
+            },
+            "manageUoM": {
+                "title": "Manage UoM",
+                "action": "⚖ Unit Setup"
+            },
+            "thresholds": {
+                "title": "Set Stock Thresholds",
+                "action": "📉 Min/Max Levels"
+            },
+            "bulkImportItems": {
+                "title": "Bulk Import Items",
+                "action": "⬆ Upload Excel"
+            },
+            "exportItems": {
+                "title": "Export Items",
+                "action": "⬇ Download Excel"
+            },
+            "manageCategories": {
+                "title": "Manage Categories",
+                "action": "📁 Item Groups"
+            },
+            "manualScan": {
+                "title": "Manual Stock Scan",
+                "action": "Go to Scan"
+            },
+            "createPurchase": {
+                "title": "Create Purchase",
+                "action": "+ Create PO"
+            },
+            "stockReport": {
+                "title": "Stock Report",
+                "action": "📄 Generate Report"
+            },
+            "stockHistory": {
+                "title": "Stock History",
+                "action": "📖 View Ledger"
+            },
+            "lowStockAlerts": {
+                "title": "Low Stock Alerts",
+                "action": "⚠ View Alerts"
+            }
+        },
+        "charts": {
+            "quantity": "Quantity",
+            "categories": {
+                "finishedProducts": "Finished Products",
+                "rawMaterials": "Raw Materials",
+                "consumables": "Consumables",
+                "miscellaneous": "Miscellaneous"
+            }
+        }
+    },
+    "stockPage": {
+        "title": "Stock Dashboard"
+    },
+    "stockList": {
+        "title": "Stock Management",
+        "buttons": {
+            "add": "Add Stock Item"
+        },
+        "filters": {
+            "searchPlaceholder": "Search product or warehouse...",
+            "allWarehouses": "All Warehouses",
+            "allStockLevels": "All Stock Levels",
+            "low": "Low Stock",
+            "high": "Sufficient Stock"
+        },
+        "columns": {
+            "product": "Product",
+            "warehouse": "Warehouse",
+            "amount": "Amount",
+            "unit": "Unit",
+            "dimensions": "Dimensions",
+            "edit": "Edit"
+        }
+    },
+    "stockLevels": {
+        "title": "Stock Levels & History",
+        "sections": {
+            "current": "Current Stock Levels",
+            "ledger": "Stock Movement Ledger"
+        },
+        "searchPlaceholder": "Search product, warehouse, or reason...",
+        "columns": {
+            "product": "Product",
+            "warehouse": "Warehouse",
+            "available": "Available Stock",
+            "reserved": "Reserved",
+            "status": "Status",
+            "date": "Date",
+            "type": "Type",
+            "quantity": "Quantity",
+            "reason": "Reason",
+            "balance": "Balance"
+        },
+        "status": {
+            "low": "Low Stock",
+            "sufficient": "Sufficient"
+        },
+        "types": {
+            "inbound": "Inbound",
+            "outbound": "Outbound",
+            "adjustment": "Adjustment"
+        }
+    },
+    "productsPage": {
+        "productsTitle": "Products",
+        "bundlesTitle": "Product Bundles"
+    },
+    "manualScan": {
+        "title": "Manual Stock Scan",
+        "selectWarehouse": "Select Warehouse to Start",
+        "fields": {
+            "warehouse": "Warehouse",
+            "product": "Product",
+            "quantity": "Quantity",
+            "uom": "Unit of Measure",
+            "dimensions": "Dimensions"
+        },
+        "placeholders": {
+            "warehouse": "Select a warehouse",
+            "product": "Select a product",
+            "uom": "Select UOM",
+            "dimension": "Enter {{name}}"
+        },
+        "errors": {
+            "product": "Product is required.",
+            "quantity": "Quantity is required.",
+            "uom": "Unit is required.",
+            "dimensionRequired": "{{name}} is required."
+        },
+        "actions": {
+            "changeWarehouse": "Change Warehouse",
+            "submit": "Submit Scan"
+        }
+    },
+    "notFound": {
+        "message": "Oops! The page you're looking for doesn't exist.",
+        "goBack": "Go Back to Last Page",
+        "goHome": "Go to Home"
+    },
+    "login": {
+        "title": "Login",
+        "fields": {
+            "email": "Email",
+            "password": "Password"
+        },
+        "actions": {
+            "submit": "Login"
+        },
+        "errors": {
+            "invalid": "Invalid credentials, please try again."
+        }
+    },
+    "adjustStock": {
+        "title": "Adjust Stock",
+        "fields": {
+            "product": "Product",
+            "warehouse": "Warehouse",
+            "dimensions": "Dimensions",
+            "currentQty": "Current Quantity",
+            "type": "Adjustment Type",
+            "quantity": "Quantity",
+            "uom": "Unit of Measure",
+            "reason": "Reason (optional)",
+            "reference": "Reference (optional)"
+        },
+        "placeholders": {
+            "type": "Select type",
+            "uom": "Select UoM"
+        },
+        "actions": {
+            "submit": "Adjust Stock",
+            "submitting": "Adjusting..."
+        },
+        "toasts": {
+            "successDesc": "Stock adjusted successfully.",
+            "invalidQtyTitle": "Invalid Quantity",
+            "invalidQtyDesc": "Quantity must be greater than 0."
+        }
+    },
+    "productBundles": {
+        "title": "Product Bundles",
+        "actions": {
+            "add": "Add Bundle"
+        },
+        "placeholders": {
+            "search": "Search bundle name..."
+        },
+        "columns": {
+            "name": "Bundle Name",
+            "description": "Description",
+            "createdAt": "Created At",
+            "actions": "Actions"
+        },
+        "confirmDelete": "Are you sure you want to delete this bundle?"
+    },
+    "expandedBundle": {
+        "title": "🎁 Bundle Details: {{name}}",
+        "sections": {
+            "description": "Bundle Description",
+            "products": "Included Products"
+        },
+        "columns": {
+            "sku": "SKU",
+            "name": "Name",
+            "type": "Type",
+            "quantity": "Quantity",
+            "unit": "Unit",
+            "dimensions": "Dimensions",
+            "price": "Price"
+        },
+        "descriptionFallback": "No description provided."
+    },
+    "issueStock": {
+        "title": "Issue Stock",
+        "fields": {
+            "warehouse": "Warehouse",
+            "product": "Product",
+            "quantity": "Quantity",
+            "uom": "UoM",
+            "reason": "Reason",
+            "issuedTo": "Issued To (optional)",
+            "issueReference": "Issue Reference (optional)"
+        },
+        "placeholders": {
+            "warehouse": "Select warehouse",
+            "product": "Select product",
+            "uom": "Select UoM",
+            "reason": "Select reason"
+        },
+        "reasons": {
+            "sale": "Sale",
+            "damage": "Damage",
+            "expired": "Expired",
+            "internal": "Internal Use"
+        },
+        "actions": {
+            "submit": "Issue Stock"
+        },
+        "toast": {
+            "successMessage": "Stock issued successfully."
+        }
+    },
+    "itemForm": {
+        "title": {
+            "add": "Add Product",
+            "edit": "Edit Product"
+        },
+        "fields": {
+            "name": "Name",
+            "description": "Description",
+            "price": "Price",
+            "minStock": "Minimum Stock",
+            "sku": "SKU",
+            "defaultUom": "Unit",
+            "category": "Category",
+            "type": "Type",
+            "allowedUoms": "Allowed Units",
+            "dimensions": "Dimensions"
+        },
+        "placeholders": {
+            "uom": "Select Unit",
+            "category": "Select Category",
+            "type": "Select Type",
+            "allowedUoms": "Select Allowed Units",
+            "dimensions": "Select Dimensions"
+        },
+        "types": {
+            "raw": "Raw Material",
+            "component": "Component",
+            "consumable": "Consumable"
+        },
+        "toast": {
+            "successMessage": "Product created successfully."
+        }
+    },
+    "productSelector": {
+        "title": "Select Product",
+        "label": {
+            "search": "Search by name or SKU"
+        },
+        "placeholder": {
+            "search": "Search products..."
+        },
+        "loading": "Loading products...",
+        "empty": "No matching products found.",
+        "success": {
+            "delete": "Product deleted successfully."
+        },
+        "error": {
+            "delete": "Failed to delete the product."
+        },
+        "productInfo": "SKU: {{sku}} | Type: {{type}} | Price: ${{price}}"
+    },
+    "productBundleForm": {
+        "title": {
+            "add": "Add Bundle",
+            "edit": "Edit Bundle"
+        },
+        "fields": {
+            "name": "Name",
+            "description": "Description",
+            "product": "Product",
+            "quantity": "Quantity",
+            "uom": "Unit of Measure",
+            "dimensions": "Dimensions"
+        },
+        "placeholders": {
+            "product": "Select a product",
+            "uom": "Select UOM"
+        },
+        "actions": {
+            "addProduct": "Add Product"
+        },
+        "toast": {
+            "successMessage": "Product bundle saved successfully."
+        }
+    },
+    "stockCount": {
+        "title": "Stock Count Viewer",
+        "fields": {
+            "product": "Product"
+        },
+        "placeholders": {
+            "product": "Select product"
+        },
+        "messages": {
+            "loading": "Loading stock data...",
+            "noStock": "No stock found for this product."
+        },
+        "labels": {
+            "totalQuantity": "Total Quantity: {{quantity}} {{symbol}}",
+            "quantity": "Qty: {{quantity}} ({{uom}})"
+        }
+    }
+}

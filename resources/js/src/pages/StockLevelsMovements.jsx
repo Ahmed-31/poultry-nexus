@@ -9,16 +9,20 @@ import {Badge} from '@/components/ui/badge';
 import DataTable from 'react-data-table-component';
 import {FaWarehouse, FaBoxOpen, FaHistory, FaSearch} from 'react-icons/fa';
 import {Button} from "@/Components/ui/button.jsx";
+import {useTranslation} from "react-i18next";
 
-const RefreshButton = ({onClick}) => (
-    <Button
-        onClick={onClick}
-        variant="outline"
-        className="w-36"
-    >
-        🔄 Refresh
-    </Button>
-);
+const RefreshButton = ({onClick}) => {
+    const {t} = useTranslation();
+    return (
+        <Button
+            onClick={onClick}
+            variant="outline"
+            className="w-36"
+        >
+            🔄 {t('global.refresh')}
+        </Button>
+    );
+};
 
 const Section = ({icon, title, actions = null, children}) => (
     <section className="bg-white rounded-2xl shadow-sm border p-6 mb-8">
@@ -34,6 +38,7 @@ const Section = ({icon, title, actions = null, children}) => (
 );
 
 const StockLevelsMovements = () => {
+    const {t} = useTranslation();
     const dispatch = useDispatch();
     const [search, setSearch] = useState('');
 
@@ -88,9 +93,9 @@ const StockLevelsMovements = () => {
 
     const getBadge = (type) => {
         const map = {
-            inbound: {text: 'Inbound', className: 'bg-green-100 text-green-700'},
-            outbound: {text: 'Outbound', className: 'bg-red-100 text-red-700'},
-            adjustment: {text: 'Adjustment', className: 'bg-yellow-100 text-yellow-800'},
+            inbound: {text: t('stockLevels.types.inbound'), className: 'bg-green-100 text-green-700'},
+            outbound: {text: t('stockLevels.types.outbound'), className: 'bg-red-100 text-red-700'},
+            adjustment: {text: t('stockLevels.types.adjustment'), className: 'bg-yellow-100 text-yellow-800'},
         };
         const badge = map[type] || {text: type, className: 'bg-gray-100 text-gray-700'};
         return <Badge className={badge.className}>{badge.text}</Badge>;
@@ -98,31 +103,31 @@ const StockLevelsMovements = () => {
 
     const stockColumns = [
         {
-            name: 'Product',
+            name: t('stockLevels.columns.product'),
             selector: row => getProductName(row.product_id),
             sortable: true,
             grow: 2,
         },
         {
-            name: 'Warehouse',
+            name: t('stockLevels.columns.warehouse'),
             selector: row => getWarehouseName(row.warehouse_id),
             sortable: true,
             grow: 2,
         },
         {
-            name: 'Available Stock',
+            name: t('stockLevels.columns.available'),
             selector: row => row.quantity_in_base,
             sortable: true,
             right: "true",
         },
         {
-            name: 'Reserved',
+            name: t('stockLevels.columns.reserved'),
             selector: row => row.reserved_quantity || 0,
             sortable: true,
             right: "true",
         },
         {
-            name: 'Status',
+            name: t('stockLevels.columns.status'),
             cell: row => (
                 <span
                     className={`px-2 py-1 rounded text-sm text-white font-medium ${
@@ -131,7 +136,7 @@ const StockLevelsMovements = () => {
                             : 'bg-green-500'
                     }`}
                 >
-                    {row.quantity_in_base < (row.minimum_stock_level || 0) ? 'Low Stock' : 'Sufficient'}
+                    {row.quantity_in_base < (row.minimum_stock_level || 0) ? t('stockLevels.status.low') : t('stockLevels.status.sufficient')}
                 </span>
             ),
         },
@@ -139,42 +144,42 @@ const StockLevelsMovements = () => {
 
     const historyColumns = [
         {
-            name: 'Date',
+            name: t('stockLevels.columns.date'),
             selector: row => new Date(row.movement_date).toLocaleString(),
             sortable: true,
             grow: 2,
         },
         {
-            name: 'Product',
+            name: t('stockLevels.columns.product'),
             selector: row => getProductName(row.product_id),
             sortable: true,
             grow: 2,
         },
         {
-            name: 'Warehouse',
+            name: t('stockLevels.columns.warehouse'),
             selector: row => getWarehouseName(row.warehouse_id),
             sortable: true,
             grow: 2,
         },
         {
-            name: 'Type',
+            name: t('stockLevels.columns.type'),
             cell: row => getBadge(row.movement_type),
             sortable: true,
         },
         {
-            name: 'Quantity',
+            name: t('stockLevels.columns.quantity'),
             selector: row => `${row.movement_type === 'outbound' ? '-' : '+'}${row.quantity}`,
             sortable: true,
             right: "true",
         },
         {
-            name: 'Reason',
+            name: t('stockLevels.columns.reason'),
             selector: row => row.reason || '-',
             sortable: false,
             grow: 2,
         },
         {
-            name: 'Balance',
+            name: t('stockLevels.columns.balance'),
             selector: row => row.running_balance,
             sortable: true,
             right: "true",
@@ -185,14 +190,14 @@ const StockLevelsMovements = () => {
         <div className="p-6 max-w-screen-2xl mx-auto">
             <h1 className="text-3xl font-bold mb-8 flex items-center gap-3 text-gray-800">
                 <FaBoxOpen className="text-blue-600"/>
-                Stock Levels & History
+                {t('stockLevels.title')}
             </h1>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end mb-8">
                 <div className="relative sm:col-span-2">
                     <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"/>
                     <Input
-                        placeholder="Search product, warehouse, or reason..."
+                        placeholder={t('stockLevels.searchPlaceholder')}
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         className="pl-10 w-full"
@@ -202,7 +207,7 @@ const StockLevelsMovements = () => {
 
             <Section
                 icon={<FaWarehouse className="text-gray-500"/>}
-                title="Current Stock Levels"
+                title={t('stockLevels.sections.current')}
                 actions={<RefreshButton onClick={() => dispatch(fetchStock())}/>}
             >
                 <DataTable
@@ -221,7 +226,7 @@ const StockLevelsMovements = () => {
 
             <Section
                 icon={<FaHistory className="text-gray-500"/>}
-                title="Stock Movement Ledger"
+                title={t('stockLevels.sections.ledger')}
                 actions={<RefreshButton onClick={() => dispatch(fetchStockMovementsTable())}/>}
             >
                 <DataTable

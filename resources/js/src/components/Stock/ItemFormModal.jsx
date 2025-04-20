@@ -12,8 +12,10 @@ import Modal from "@/src/components/common/Modal.jsx";
 import {toast} from "@/hooks/use-toast";
 import {fetchUomDimensions} from "@/src/store/uomDimensionsSlice.jsx";
 import {SmartSelect} from "@/src/components/common/SmartSelect.jsx";
+import {useTranslation} from "react-i18next";
 
 const ItemFormModal = ({showModal, onClose, initialData = null}) => {
+    const {t} = useTranslation();
     const dispatch = useDispatch();
 
     const uoms = useSelector(state => state.uoms?.list || []);
@@ -84,8 +86,8 @@ const ItemFormModal = ({showModal, onClose, initialData = null}) => {
             }
 
             toast({
-                title: "Success",
-                description: "Product saved successfully.",
+                title: t('global.toasts.successTitle'),
+                description: t('itemForm.toast.successMessage'),
                 variant: "default",
             });
 
@@ -94,8 +96,8 @@ const ItemFormModal = ({showModal, onClose, initialData = null}) => {
 
         } catch (err) {
             toast({
-                title: "Error",
-                description: err.message || "Something went wrong.",
+                title: t('global.toasts.errorTitle'),
+                description: err.message || t('global.toasts.errorMessage'),
                 variant: "destructive",
             });
         }
@@ -103,16 +105,16 @@ const ItemFormModal = ({showModal, onClose, initialData = null}) => {
 
     return (
         <Modal isOpen={showModal} onClose={onClose}>
-            <h2 className="text-lg font-bold mb-4">{initialData ? "Edit Product" : "Add Product"}</h2>
+            <h2 className="text-lg font-bold mb-4">{initialData ? t('itemForm.title.edit') : t('itemForm.title.add')}</h2>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div>
-                    <Label>Name</Label>
+                    <Label>{t("itemForm.fields.name")}</Label>
                     <Input {...register("name", {required: "Name is required"})} />
                     {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
                 </div>
 
                 <div>
-                    <Label>Description</Label>
+                    <Label>{t("itemForm.fields.description")}</Label>
                     <textarea
                         {...register("description")}
                         className="border p-2 w-full rounded-md"
@@ -120,24 +122,24 @@ const ItemFormModal = ({showModal, onClose, initialData = null}) => {
                 </div>
 
                 <div>
-                    <Label>Price</Label>
+                    <Label>{t("itemForm.fields.price")}</Label>
                     <Input type="number" step="0.01" {...register("price", {required: "Price is required"})} />
                     {errors.price && <p className="text-red-500 text-xs">{errors.price.message}</p>}
                 </div>
 
                 <div>
-                    <Label>Minimum Stock</Label>
+                    <Label>{t("itemForm.fields.minStock")}</Label>
                     <Input type="number" {...register("min_stock")} />
                 </div>
 
                 <div>
-                    <Label>SKU</Label>
+                    <Label>{t("itemForm.fields.sku")}</Label>
                     <Input {...register("sku", {required: "SKU is required"})} />
                     {errors.sku && <p className="text-red-500 text-xs">{errors.sku.message}</p>}
                 </div>
 
                 <div>
-                    <Label>Unit</Label>
+                    <Label>{t("itemForm.fields.defaultUom")}</Label>
                     <Controller
                         control={control}
                         name="default_uom_id"
@@ -145,7 +147,7 @@ const ItemFormModal = ({showModal, onClose, initialData = null}) => {
                         render={({field}) => (
                             <Select value={field.value} onValueChange={field.onChange}>
                                 <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select Unit"/>
+                                    <SelectValue placeholder={t("itemForm.placeholders.uom")}/>
                                 </SelectTrigger>
                                 <SelectContent>
                                     {uoms.map((uom) => (
@@ -163,7 +165,7 @@ const ItemFormModal = ({showModal, onClose, initialData = null}) => {
                 </div>
 
                 <div>
-                    <Label>Category</Label>
+                    <Label>{t("itemForm.fields.category")}</Label>
                     <Controller
                         control={control}
                         name="category_id"
@@ -171,7 +173,7 @@ const ItemFormModal = ({showModal, onClose, initialData = null}) => {
                         render={({field}) => (
                             <Select value={field.value} onValueChange={field.onChange}>
                                 <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select Category"/>
+                                    <SelectValue placeholder={t("itemForm.placeholders.category")}/>
                                 </SelectTrigger>
                                 <SelectContent>
                                     {categories.map((cat) => (
@@ -189,7 +191,7 @@ const ItemFormModal = ({showModal, onClose, initialData = null}) => {
                 </div>
 
                 <div>
-                    <Label>Type</Label>
+                    <Label>{t("itemForm.fields.type")}</Label>
                     <Controller
                         control={control}
                         name="type"
@@ -197,12 +199,12 @@ const ItemFormModal = ({showModal, onClose, initialData = null}) => {
                         render={({field}) => (
                             <Select value={field.value} onValueChange={field.onChange}>
                                 <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select Type"/>
+                                    <SelectValue placeholder={t("itemForm.placeholders.type")}/>
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="raw_material">Raw Material</SelectItem>
-                                    <SelectItem value="component">Component</SelectItem>
-                                    <SelectItem value="consumable">Consumable</SelectItem>
+                                    <SelectItem value="raw_material">{t("itemForm.types.raw")}</SelectItem>
+                                    <SelectItem value="component">{t("itemForm.types.component")}</SelectItem>
+                                    <SelectItem value="consumable">{t("itemForm.types.consumable")}</SelectItem>
                                 </SelectContent>
                             </Select>
                         )}
@@ -213,7 +215,7 @@ const ItemFormModal = ({showModal, onClose, initialData = null}) => {
                 </div>
 
                 <div className="mb-4">
-                    <label className="block text-sm font-medium mb-1">Allowed Units</label>
+                    <label className="block text-sm font-medium mb-1">{t("itemForm.fields.allowedUoms")}</label>
                     <SmartSelect
                         multiple={true}
                         options={uoms.map((uom) => ({
@@ -222,12 +224,12 @@ const ItemFormModal = ({showModal, onClose, initialData = null}) => {
                         }))}
                         selected={allowedUoms}
                         onChange={(val) => setValue("allowed_uoms", val)}
-                        placeholder="Select Allowed Units"
+                        placeholder={t("itemForm.placeholders.allowedUoms")}
                     />
                 </div>
 
                 <div className="mb-4">
-                    <label className="block text-sm font-medium mb-1">Dimensions</label>
+                    <label className="block text-sm font-medium mb-1">{t("itemForm.fields.dimensions")}</label>
                     <SmartSelect
                         multiple={true}
                         options={dimensions.map((dim) => ({
@@ -236,16 +238,16 @@ const ItemFormModal = ({showModal, onClose, initialData = null}) => {
                         }))}
                         selected={selectedDimensions}
                         onChange={(val) => setValue("dimensions", val)}
-                        placeholder="Select Dimensions"
+                        placeholder={t("itemForm.placeholders.dimensions")}
                     />
                 </div>
 
                 <div className="flex justify-end gap-2">
                     <Button type="button" onClick={onClose} className="bg-gray-500 text-white px-4 py-2 rounded-md">
-                        Cancel
+                        {t("global.cancel")}
                     </Button>
                     <Button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">
-                        {initialData ? "Update" : "Create"}
+                        {initialData ? t('global.update') : t('global.create')}
                     </Button>
                 </div>
             </form>

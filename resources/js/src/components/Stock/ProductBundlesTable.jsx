@@ -6,8 +6,10 @@ import ExpandedBundleProducts from "@/src/components/Stock/ExpandedBundleProduct
 import {useDispatch, useSelector} from "react-redux";
 import {fetchProductBundlesTable, removeProductBundle} from "@/src/store/productBundlesSlice.jsx";
 import ProductBundleFormModal from "@/src/components/Stock/ProductBundleFormModal.jsx";
+import {useTranslation} from "react-i18next";
 
 const ProductBundlesTable = () => {
+    const {t} = useTranslation();
     const dispatch = useDispatch();
 
     const bundles = useSelector((state) => state.productBundles.dataTable || []);
@@ -32,7 +34,7 @@ const ProductBundlesTable = () => {
     }, []);
 
     const handleDelete = useCallback((id) => {
-        if (window.confirm("Are you sure you want to delete this bundle?")) {
+        if (window.confirm(t('productBundles.confirmDelete'))) {
             dispatch(removeProductBundle({id: id}))
         }
     }, [dispatch]);
@@ -44,19 +46,19 @@ const ProductBundlesTable = () => {
     }, [dispatch]);
 
     const columns = useMemo(() => [
-        {name: "Bundle Name", selector: row => row.name, sortable: true},
-        {name: "Description", selector: row => row.description, sortable: true},
+        {name: t('productBundles.columns.name'), selector: row => row.name, sortable: true},
+        {name: t('productBundles.columns.description'), selector: row => row.description, sortable: true},
         {
-            name: "Created At",
+            name: t('productBundles.columns.createdAt'),
             selector: row => new Date(row.created_at).toLocaleDateString(),
             sortable: true,
         },
         {
-            name: "Actions",
+            name: t('productBundles.columns.actions'),
             cell: (row) => (
                 <div className="flex gap-2">
-                    <Button size="sm" variant="warning" onClick={() => handleEdit(row)}>Edit</Button>
-                    <Button size="sm" variant="destructive" onClick={() => handleDelete(row.id)}>Delete</Button>
+                    <Button size="sm" variant="warning" onClick={() => handleEdit(row)}>{t('global.edit')}</Button>
+                    <Button size="sm" variant="destructive" onClick={() => handleDelete(row.id)}>{t('global.delete')}</Button>
                 </div>
             ),
         },
@@ -66,16 +68,16 @@ const ProductBundlesTable = () => {
         <div className="bg-white rounded-2xl shadow-lg w-full overflow-hidden">
             {/* Header Actions */}
             <div className="flex justify-between items-center px-8 py-6 border-b">
-                <h2 className="text-xl font-semibold">Product Bundles</h2>
+                <h2 className="text-xl font-semibold">{t('productBundles.title')}</h2>
                 <div className="flex gap-3">
                     <Button onClick={() => dispatch(fetchProductBundlesTable())} variant="outline">
-                        🔄 Refresh
+                        🔄 {t('global.refresh')}
                     </Button>
                     <Button
                         onClick={() => setShowForm(true)}
                         className="px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all bg-blue-600 text-white flex items-center font-medium"
                     >
-                        <FaPlus/> Add Bundle
+                        <FaPlus/> {t('productBundles.actions.add')}
                     </Button>
                 </div>
             </div>
@@ -84,7 +86,7 @@ const ProductBundlesTable = () => {
                 <FaSearch className="text-gray-400"/>
                 <input
                     type="text"
-                    placeholder="Search bundle name..."
+                    placeholder={t('productBundles.placeholders.search')}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full p-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300 outline-none"

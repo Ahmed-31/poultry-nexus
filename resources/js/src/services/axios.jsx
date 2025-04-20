@@ -1,7 +1,15 @@
 import axios from 'axios';
+import i18n from '../i18n';
 
 const api = axios.create({
     withCredentials: true,
+    headers: {
+        'Accept-Language': i18n.language || 'en',
+    },
+});
+
+i18n.on('languageChanged', (lng) => {
+    api.defaults.headers['Accept-Language'] = lng;
 });
 
 api.interceptors.request.use(

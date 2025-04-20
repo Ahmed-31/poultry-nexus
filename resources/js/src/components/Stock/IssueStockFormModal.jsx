@@ -11,11 +11,13 @@ import {fetchWarehouses} from "@/src/store/warehouseSlice.jsx";
 import {fetchUoms} from "@/src/store/uomSlice.jsx";
 import Modal from "@/src/components/common/Modal.jsx";
 import {toast} from "@/hooks/use-toast";
+import {useTranslation} from "react-i18next";
 
 const IssueStockFormModal = ({
                                  showModal, onClose, stockItem = null, fromSelector = false, onBack = () => {
     }
                              }) => {
+    const {t} = useTranslation();
     const dispatch = useDispatch();
 
     const products = useSelector((state) => state.products.list || []);
@@ -79,8 +81,8 @@ const IssueStockFormModal = ({
     const onSubmit = async (data) => {
         if (!stockItem?.id && (!data.product_id || !data.warehouse_id)) {
             toast({
-                title: "Missing Data",
-                description: "Please select both product and warehouse.",
+                title: t('global.missingData.title'),
+                description: t('global.missingData.message'),
                 variant: "destructive",
             });
             return;
@@ -99,8 +101,8 @@ const IssueStockFormModal = ({
             })).unwrap();
 
             toast({
-                title: "Success",
-                description: "Stock issued successfully.",
+                title: t('global.toasts.successTitle'),
+                description: t('issueStock.toast.successMessage'),
                 variant: "default",
             });
 
@@ -109,8 +111,8 @@ const IssueStockFormModal = ({
 
         } catch (err) {
             toast({
-                title: "Error",
-                description: err?.message || "Failed to issue stock.",
+                title: t('global.toasts.errorTitle'),
+                description: err?.message || t('global.toasts.errorMessage'),
                 variant: "destructive",
             });
         }
@@ -126,18 +128,18 @@ const IssueStockFormModal = ({
 
     return (
         <Modal isOpen={showModal} onClose={onClose}>
-            <h2 className="text-2xl font-extrabold text-gray-800 mb-6">Issue Stock</h2>
+            <h2 className="text-2xl font-extrabold text-gray-800 mb-6">{t('issueStock.title')}</h2>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                 <div className="space-y-1">
-                    <Label>Warehouse</Label>
+                    <Label>{t('issueStock.fields.warehouse')}</Label>
                     <Select
                         value={watch("warehouse_id")}
                         onValueChange={(value) => setValue("warehouse_id", value)}
                         disabled
                     >
                         <SelectTrigger>
-                            <SelectValue placeholder="Select warehouse"/>
+                            <SelectValue placeholder={t('issueStock.placeholders.warehouse')}/>
                         </SelectTrigger>
                         <SelectContent>
                             {warehouses.map((w) => (
@@ -151,14 +153,14 @@ const IssueStockFormModal = ({
                 </div>
 
                 <div className="space-y-1">
-                    <Label>Product</Label>
+                    <Label>{t('issueStock.fields.product')}</Label>
                     <Select
                         value={watch("product_id")}
                         onValueChange={(value) => setValue("product_id", value)}
                         disabled
                     >
                         <SelectTrigger>
-                            <SelectValue placeholder="Select product"/>
+                            <SelectValue placeholder={t('issueStock.placeholders.product')}/>
                         </SelectTrigger>
                         <SelectContent>
                             {products.map((p) => (
@@ -173,7 +175,7 @@ const IssueStockFormModal = ({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1">
-                        <Label>Quantity</Label>
+                        <Label>{t('issueStock.fields.quantity')}</Label>
                         <Input
                             type="number"
                             step="any"
@@ -185,14 +187,14 @@ const IssueStockFormModal = ({
                     </div>
 
                     <div className="space-y-1">
-                        <Label>UoM</Label>
+                        <Label>{t('issueStock.fields.uom')}</Label>
                         <Select
                             onValueChange={(value) => setValue("input_uom_id", value)}
                             value={watch("input_uom_id")}
                             disabled={!allowedUoms.length}
                         >
                             <SelectTrigger>
-                                <SelectValue placeholder="Select UoM"/>
+                                <SelectValue placeholder={t('issueStock.placeholders.uom')}/>
                             </SelectTrigger>
                             <SelectContent>
                                 {allowedUoms.map((uom) => (
@@ -210,49 +212,49 @@ const IssueStockFormModal = ({
                 </div>
 
                 <div className="space-y-1">
-                    <Label>Reason</Label>
+                    <Label>{t('issueStock.fields.reason')}</Label>
                     <Select
                         onValueChange={(value) => setValue("reason", value)}
                         value={watch("reason")}
                     >
                         <SelectTrigger>
-                            <SelectValue placeholder="Select reason"/>
+                            <SelectValue placeholder={t('issueStock.placeholders.reason')}/>
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="sale">Sale</SelectItem>
-                            <SelectItem value="damage">Damage</SelectItem>
-                            <SelectItem value="expired">Expired</SelectItem>
-                            <SelectItem value="internal">Internal Use</SelectItem>
+                            <SelectItem value="sale">{t('issueStock.reasons.sale')}</SelectItem>
+                            <SelectItem value="damage">{t('issueStock.reasons.damage')}</SelectItem>
+                            <SelectItem value="expired">{t('issueStock.reasons.expired')}</SelectItem>
+                            <SelectItem value="internal">{t('issueStock.reasons.internal')}</SelectItem>
                         </SelectContent>
                     </Select>
                     <input type="hidden" {...register("reason", {required: true})} />
                     {errors.reason && (
-                        <p className="text-red-500 text-sm">Required</p>
+                        <p className="text-red-500 text-sm">{t('global.required')}</p>
                     )}
                 </div>
 
                 <div className="space-y-1">
-                    <Label>Issued To (optional)</Label>
+                    <Label>{t('issueStock.fields.issuedTo')}</Label>
                     <Input type="text" {...register("issued_to")} />
                 </div>
 
                 <div className="space-y-1">
-                    <Label>Issue Reference (optional)</Label>
+                    <Label>{t('issueStock.fields.issueReference')}</Label>
                     <Input type="text" {...register("issue_reference")} />
                 </div>
 
                 <div className="flex justify-between items-center pt-4">
                     {fromSelector && (
                         <Button type="button" variant="ghost" onClick={onBack}>
-                            ← Back
+                            ← {t('global.back')}
                         </Button>
                     )}
                     <div className="ml-auto space-x-3">
                         <Button type="button" variant="outline" onClick={onClose}>
-                            Cancel
+                            {t('global.cancel')}
                         </Button>
                         <Button type="submit" className="bg-red-600 hover:bg-red-700 text-white">
-                            Issue Stock
+                            {t('issueStock.actions.submit')}
                         </Button>
                     </div>
                 </div>

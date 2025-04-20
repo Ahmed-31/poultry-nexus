@@ -39,15 +39,15 @@ const ProductSelectorModal = ({showModal, onClose, action}) => {
         try {
             await dispatch(removeProduct({id: selectedProduct.id})).unwrap();
             toast({
-                title: "Success",
-                description: "Product deleted successfully.",
+                title: t('global.toasts.success'),
+                description: t('productSelector.success.delete'),
                 variant: "default",
             });
             closeAll();
         } catch (err) {
             toast({
-                title: "Error",
-                description: err.message || "Failed to delete the product.",
+                title: t('global.toasts.error'),
+                description: err.message || t('productSelector.error.delete'),
                 variant: "destructive",
             });
             setActiveModal(null);
@@ -63,17 +63,17 @@ const ProductSelectorModal = ({showModal, onClose, action}) => {
     return (
         <>
             <Modal isOpen={showModal && !activeModal} onClose={onClose}>
-                <h2 className="text-lg font-semibold mb-4">Select Product</h2>
+                <h2 className="text-lg font-semibold mb-4">{t('productSelector.title')}</h2>
 
-                <Label>Search by name or SKU</Label>
+                <Label>{t('productSelector.label.search')}</Label>
                 <Input
                     className="my-2"
-                    placeholder="Search products..."
+                    placeholder={t('productSelector.placeholder.search')}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
 
-                {loading && <p className="text-sm text-gray-500 my-2">Loading products...</p>}
+                {loading && <p className="text-sm text-gray-500 my-2">{t('productSelector.loading')}</p>}
 
                 {!loading && filteredProducts.length > 0 && (
                     <div className="space-y-2 max-h-64 overflow-auto">
@@ -89,8 +89,11 @@ const ProductSelectorModal = ({showModal, onClose, action}) => {
                             >
                                 <div className="text-sm font-medium">{product.name}</div>
                                 <div className="text-xs text-gray-500">
-                                    SKU: {product.sku} | Type: {product.type} | Price: ${" "}
-                                    {product.price}
+                                    {t('productSelector.productInfo', {
+                                        sku: product.sku,
+                                        type: product.type,
+                                        price: product.price
+                                    })}
                                 </div>
                             </div>
                         ))}
@@ -98,15 +101,15 @@ const ProductSelectorModal = ({showModal, onClose, action}) => {
                 )}
 
                 {!loading && filteredProducts.length === 0 && (
-                    <p className="text-sm text-gray-500 mt-4">No matching products found.</p>
+                    <p className="text-sm text-gray-500 mt-4">{t('productSelector.empty')}</p>
                 )}
 
                 <div className="flex justify-end mt-6 space-x-4">
                     <Button variant="outline" onClick={onClose}>
-                        Cancel
+                        {t('global.cancel')}
                     </Button>
                     <Button onClick={handleProceed} disabled={!selectedProduct}>
-                        Continue
+                        {t('global.continue')}
                     </Button>
                 </div>
             </Modal>

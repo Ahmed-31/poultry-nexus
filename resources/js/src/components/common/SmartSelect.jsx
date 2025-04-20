@@ -16,18 +16,20 @@ import {
 import {Button} from "@/components/ui/button"
 import {Check, ChevronsUpDown} from "lucide-react"
 import {cn} from "@/lib/utils"
+import {useTranslation} from "react-i18next";
 
 export function SmartSelect({
                                 options,
                                 selected,
                                 onChange,
-                                placeholder = "Select option(s)",
+                                placeholder = t('smartSelect.placeholder'),
                                 label,
                                 multiple = true
                             }) {
-    const [open, setOpen] = useState(false)
-    const listRef = useRef(null)
-    const scrollTopRef = useRef(0)
+    const [open, setOpen] = useState(false);
+    const listRef = useRef(null);
+    const scrollTopRef = useRef(0);
+    const {t} = useTranslation();
 
     const toggleOption = (value) => {
         if (multiple) {
@@ -77,8 +79,8 @@ export function SmartSelect({
                 </PopoverTrigger>
                 <PopoverContent className="w-[300px] p-0 max-h-[300px] overflow-y-auto">
                     <Command>
-                        <CommandInput placeholder="Search..."/>
-                        <CommandEmpty>No options found.</CommandEmpty>
+                        <CommandInput placeholder={t('smartSelect.searchPlaceholder')}/>
+                        <CommandEmpty>{t('smartSelect.noResults')}</CommandEmpty>
                         <CommandGroup>
                             <div ref={listRef} className="max-h-[240px] overflow-y-auto">
                                 {options.map((option) => (

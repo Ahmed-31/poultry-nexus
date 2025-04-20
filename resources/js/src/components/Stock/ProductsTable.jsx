@@ -52,7 +52,7 @@ const ProductManagement = () => {
     const columns = [
         {name: "SKU", selector: (row) => row.sku, sortable: true},
         {name: "Product Name", selector: (row) => row.name, sortable: true},
-        {name: "Category", selector: (row) => row.category?.name || "N/A", sortable: true},
+        {name: "Category", selector: (row) => row.category?.name || t('global.na'), sortable: true},
         {name: "Type", selector: (row) => row.type, sortable: true},
         {name: "Default Unit", selector: (row) => row.unit, sortable: true},
         {name: "Dimensions", selector: (row) => row.dimensionsString, sortable: true},

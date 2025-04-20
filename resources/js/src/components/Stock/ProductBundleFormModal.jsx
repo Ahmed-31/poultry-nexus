@@ -10,8 +10,10 @@ import {fetchProducts} from "@/src/store/productsSlice.jsx";
 import {addProductBundle, editProductBundle} from "@/src/store/productBundlesSlice.jsx";
 import {SmartSelect} from "@/src/components/common/SmartSelect.jsx";
 import {fetchUoms} from "@/src/store/uomSlice.jsx";
+import {useTranslation} from "react-i18next";
 
 const ProductBundleFormModal = ({showModal, onClose, initialData = null}) => {
+    const {t} = useTranslation();
     const dispatch = useDispatch();
     const products = useSelector(state => state.products?.list || []);
     const uoms = useSelector(state => state.uoms.list);
@@ -84,24 +86,24 @@ const ProductBundleFormModal = ({showModal, onClose, initialData = null}) => {
                 reset();
             }
 
-            toast({title: "Success", description: "Product bundle saved successfully."});
+            toast({title: t('global.toasts.success'), description: t('productBundleForm.toast.successMessage')});
         } catch (err) {
-            toast({title: "Error", description: err.message || "Something went wrong.", variant: "destructive"});
+            toast({title: t('global.toasts.error'), description: err.message || t('global.toasts.errorMessage'), variant: "destructive"});
         }
     };
 
     return (
         <Modal isOpen={showModal} onClose={onClose}>
-            <h2 className="text-lg font-bold mb-4">{initialData ? "Edit Bundle" : "Add Bundle"}</h2>
+            <h2 className="text-lg font-bold mb-4">{initialData ? t('productBundleForm.title.edit') : t('productBundleForm.title.add')}</h2>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div>
-                    <Label>Name</Label>
-                    <Input {...register("name", {required: "Name is required"})} />
+                    <Label>{t('productBundleForm.fields.name')}</Label>
+                    <Input {...register("name", {required: t('global.required')})} />
                     {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
                 </div>
 
                 <div>
-                    <Label>Description</Label>
+                    <Label>{t('productBundleForm.fields.description')}</Label>
                     <textarea
                         {...register("description")}
                         className="border p-2 w-full rounded-md"
@@ -109,7 +111,7 @@ const ProductBundleFormModal = ({showModal, onClose, initialData = null}) => {
                 </div>
 
                 <div>
-                    <Label>Products in Bundle</Label>
+                    <Label>{t('productBundleForm.sections.products')}</Label>
                     <div className="space-y-6">
                         {fields.map((item, index) => {
                             const selectedProductId = watch(`items.${index}.product_id`);
@@ -120,11 +122,11 @@ const ProductBundleFormModal = ({showModal, onClose, initialData = null}) => {
                                 <div key={item.id} className="space-y-4 border p-4 rounded-lg">
                                     {/* Product Selector */}
                                     <div>
-                                        <Label className="mb-2 block">Product</Label>
+                                        <Label className="mb-2 block">{t('productBundleForm.fields.product')}</Label>
                                         <Controller
                                             name={`items.${index}.product_id`}
                                             control={control}
-                                            rules={{required: "Product is required"}}
+                                            rules={{required: t('global.required')}}
                                             render={({field}) => (
                                                 <SmartSelect
                                                     multiple={false}
@@ -134,19 +136,19 @@ const ProductBundleFormModal = ({showModal, onClose, initialData = null}) => {
                                                     }))}
                                                     selected={field.value}
                                                     onChange={field.onChange}
-                                                    placeholder="Select a product"
+                                                    placeholder={t('productBundleForm.placeholders.product')}
                                                 />
                                             )}
                                         />
                                         {errors?.items?.[index]?.product_id && (
-                                            <p className="text-red-500 text-sm mt-1">Product is required.</p>
+                                            <p className="text-red-500 text-sm mt-1">{t('global.required')}</p>
                                         )}
                                     </div>
 
                                     {/* Quantity & UOM */}
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <Label className="mb-2 block">Quantity</Label>
+                                            <Label className="mb-2 block">{t('productBundleForm.fields.quantity')}</Label>
                                             <Input
                                                 type="number"
                                                 step="1"
@@ -154,12 +156,12 @@ const ProductBundleFormModal = ({showModal, onClose, initialData = null}) => {
                                                 {...register(`items.${index}.quantity`, {required: true, min: 1})}
                                             />
                                             {errors?.items?.[index]?.quantity && (
-                                                <p className="text-red-500 text-sm mt-1">Quantity is required.</p>
+                                                <p className="text-red-500 text-sm mt-1">{t('global.required')}</p>
                                             )}
                                         </div>
 
                                         <div>
-                                            <Label className="mb-2 block">Unit of Measure</Label>
+                                            <Label className="mb-2 block">{t('productBundleForm.fields.uom')}</Label>
                                             <Controller
                                                 name={`items.${index}.uom_id`}
                                                 control={control}
@@ -173,12 +175,12 @@ const ProductBundleFormModal = ({showModal, onClose, initialData = null}) => {
                                                         })) || []}
                                                         selected={field.value}
                                                         onChange={field.onChange}
-                                                        placeholder="Select UOM"
+                                                        placeholder={t('productBundleForm.placeholders.uom')}
                                                     />
                                                 )}
                                             />
                                             {errors?.items?.[index]?.uom_id && (
-                                                <p className="text-red-500 text-sm mt-1">Unit is required.</p>
+                                                <p className="text-red-500 text-sm mt-1">{t('global.required')}</p>
                                             )}
                                         </div>
                                     </div>
@@ -186,7 +188,7 @@ const ProductBundleFormModal = ({showModal, onClose, initialData = null}) => {
                                     {/* Dimensions */}
                                     {selectedProduct?.dimensions?.length > 0 && (
                                         <div>
-                                            <h3 className="text-md font-semibold mb-2">Dimensions</h3>
+                                            <h3 className="text-md font-semibold mb-2">{t('productBundleForm.fields.dimensions')}</h3>
                                             <div className="grid grid-cols-2 gap-4">
                                                 {selectedProduct.dimensions.map((dimension) => (
                                                     <div key={dimension.id}>
@@ -207,7 +209,7 @@ const ProductBundleFormModal = ({showModal, onClose, initialData = null}) => {
                                                         />
                                                         {errors?.items?.[index]?.dimensions?.[dimension.name] && (
                                                             <p className="text-red-500 text-sm mt-1">
-                                                                {dimension.name} is required.
+                                                                {dimension.name} {t('global.required')}
                                                             </p>
                                                         )}
                                                     </div>
@@ -222,7 +224,7 @@ const ProductBundleFormModal = ({showModal, onClose, initialData = null}) => {
                                         onClick={() => remove(index)}
                                         className="text-red-500"
                                     >
-                                        Remove
+                                        {t('global.remove')}
                                     </Button>
                                 </div>
                             );
@@ -233,17 +235,17 @@ const ProductBundleFormModal = ({showModal, onClose, initialData = null}) => {
                             variant="outline"
                             onClick={() => append({product_id: '', uom_id: '', quantity: 1, dimensions: {}})}
                         >
-                            + Add Product
+                            + {t('productBundleForm.actions.addProduct')}
                         </Button>
                     </div>
                 </div>
 
                 <div className="flex justify-end gap-2">
                     <Button type="button" onClick={onClose} className="bg-gray-500 text-white px-4 py-2 rounded-md">
-                        Cancel
+                        {t('global.cancel')}
                     </Button>
                     <Button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-md">
-                        {initialData ? "Update" : "Create"}
+                        {initialData ? t('global.update') : t('global.create')}
                     </Button>
                 </div>
             </form>

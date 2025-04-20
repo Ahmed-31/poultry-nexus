@@ -6,11 +6,13 @@ import {debounce} from 'lodash';
 import {fetchStockReservationsTable} from '@/src/store/stockReservationsSlice';
 import BackButton from '@/src/components/common/BackButton.jsx';
 import {Button} from '@/components/ui/button.jsx';
+import {useTranslation} from "react-i18next";
 
 const ReservationList = () => {
     const dispatch = useDispatch();
     const [searchParams] = useSearchParams();
     const orderId = searchParams.get('order_id');
+    const {t} = useTranslation();
 
     const {dataTable: reservations, loading, error} = useSelector(state => state.stockReservations);
 
@@ -20,39 +22,39 @@ const ReservationList = () => {
 
     const columns = useMemo(() => [
         {
-            name: 'Product',
-            selector: row => row.stock?.product?.name || 'N/A',
+            name: t('reservations.columns.product'),
+            selector: row => row.stock?.product?.name || t('global.na'),
             sortable: true,
         },
         {
-            name: 'Warehouse',
-            selector: row => row.stock?.warehouse?.name || 'N/A',
+            name: t('reservations.columns.warehouse'),
+            selector: row => row.stock?.warehouse?.name || t('global.na'),
             sortable: true,
         },
         {
-            name: 'Qty Reserved',
+            name: t('reservations.columns.qtyReserved'),
             selector: row => `${row.input_quantity ?? '-'} ${row.uom?.symbol || ''}`,
             sortable: true,
         },
         {
-            name: 'Status',
-            selector: row => row.status || 'N/A',
+            name: t('reservations.columns.status'),
+            selector: row => row.status || t('global.na'),
             sortable: true,
         },
         {
-            name: 'Order No.',
+            name: t('reservations.columns.orderNumber'),
             selector: row => row.order?.order_number || '',
             cell: row => (
                 <Link
                     to={`/orders/${row.order?.id}`}
                     className="text-blue-600 hover:underline font-medium"
                 >
-                    {row.order?.order_number || 'N/A'}
+                    {row.order?.order_number || t('global.na')}
                 </Link>
             ),
             sortable: true,
         },
-    ], []);
+    ], [t]);
 
     const handleRefresh = useMemo(() => debounce(() => {
         dispatch(fetchStockReservationsTable(orderId ? {order_id: orderId} : {}));
@@ -71,17 +73,17 @@ const ReservationList = () => {
             <div className="flex items-center justify-between mb-4">
                 <h2 className="text-2xl font-semibold text-gray-800">
                     {orderId
-                        ? `Reservations for Order #${orderId}`
-                        : 'All Stock Reservations'}
+                        ? `${t('reservations.title.order')} #${orderId}`
+                        : t('reservations.title.all')}
                 </h2>
                 <Button onClick={handleRefresh} variant="outline">
-                    🔄 Refresh
+                    🔄 {t('global.refresh')}
                 </Button>
             </div>
 
             {error && (
                 <div className="text-sm text-red-700 bg-red-100 px-4 py-3 rounded border border-red-300 mb-4">
-                    <strong>Error:</strong> {error}
+                    <strong>{t('global.error')}:</strong> {error}
                 </div>
             )}
 
@@ -95,7 +97,7 @@ const ReservationList = () => {
                 persistTableHead
                 noDataComponent={
                     <div className="text-gray-500 text-center text-sm py-4">
-                        No reservations found.
+                        {t('reservations.noResults')}
                     </div>
                 }
                 className="border rounded"

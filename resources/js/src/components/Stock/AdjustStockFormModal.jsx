@@ -9,11 +9,13 @@ import Modal from "@/src/components/common/Modal.jsx";
 import {toast} from "@/hooks/use-toast";
 import {fetchProducts} from "@/src/store/productsSlice.jsx";
 import {adjustStockItem} from "@/src/store/stockSlice";
+import {useTranslation} from "react-i18next";
 
 const AdjustStockFormModal = ({
                                   showModal, onClose, stockItem, onBack = () => {
     }
                               }) => {
+    const {t} = useTranslation();
     const dispatch = useDispatch();
     const products = useSelector((state) => state.products.list || []);
     const [submitting, setSubmitting] = useState(false);
@@ -58,8 +60,8 @@ const AdjustStockFormModal = ({
         const qty = parseFloat(data.input_quantity);
         if (qty <= 0) {
             toast({
-                title: "Invalid Quantity",
-                description: "Quantity must be greater than 0.",
+                title: t('adjustStock.toasts.invalidQtyTitle'),
+                description: t('adjustStock.toasts.invalidQtyDesc'),
                 variant: "destructive"
             });
             return;
@@ -79,8 +81,8 @@ const AdjustStockFormModal = ({
             })).unwrap();
 
             toast({
-                title: "Success",
-                description: "Stock adjusted successfully.",
+                title: t('global.toasts.successTitle'),
+                description: t('adjustStock.toasts.successDesc'),
                 variant: "default"
             });
 
@@ -88,8 +90,8 @@ const AdjustStockFormModal = ({
             onClose();
         } catch (err) {
             toast({
-                title: "Error",
-                description: err?.message || "Adjustment failed.",
+                title: t('global.toasts.errorTitle'),
+                description: err?.message || t('global.toasts.errorMessage'),
                 variant: "destructive"
             });
         } finally {
@@ -99,23 +101,23 @@ const AdjustStockFormModal = ({
 
     return (
         <Modal isOpen={showModal} onClose={onClose}>
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Adjust Stock</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">{t('adjustStock.title')}</h2>
 
             {product && (
                 <div className="mb-2">
-                    <Label>Product</Label>
+                    <Label>{t('adjustStock.fields.product')}</Label>
                     <p className="text-sm font-medium text-gray-800">{product.name}</p>
                 </div>
             )}
 
             <div className="mb-2">
-                <Label>Warehouse</Label>
+                <Label>{t('adjustStock.fields.warehouse')}</Label>
                 <p className="text-sm font-medium text-gray-800">{stockItem.warehouse_name || stockItem?.warehouse?.name}</p>
             </div>
 
             {stockItem?.dimensions?.length > 0 && (
                 <div className="mb-2">
-                    <Label>Dimensions</Label>
+                    <Label>{t('adjustStock.fields.dimensions')}</Label>
                     <p className="text-sm text-gray-600">
                         {stockItem.dimensions.map(d => `${d.name}: ${d.value} ${d.uom_symbol}`).join(", ")}
                     </p>
@@ -124,7 +126,7 @@ const AdjustStockFormModal = ({
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                 <div className="space-y-1">
-                    <Label>Current Quantity</Label>
+                    <Label>{t('adjustStock.fields.currentQty')}</Label>
                     <p className="text-sm text-gray-700">
                         {stockItem.input_quantity} {stockItem.uom?.symbol}
                     </p>
@@ -132,13 +134,13 @@ const AdjustStockFormModal = ({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1">
-                        <Label>Adjustment Type</Label>
+                        <Label>{t('adjustStock.fields.type')}</Label>
                         <Select
                             onValueChange={(val) => setValue("adjustment_type", val)}
                             value={watch("adjustment_type")}
                         >
                             <SelectTrigger>
-                                <SelectValue placeholder="Select type"/>
+                                <SelectValue placeholder={t('adjustStock.placeholders.type')}/>
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="increase">Increase</SelectItem>
@@ -149,24 +151,24 @@ const AdjustStockFormModal = ({
                     </div>
 
                     <div className="space-y-1">
-                        <Label>Quantity</Label>
+                        <Label>{t('adjustStock.fields.quantity')}</Label>
                         <Input
                             type="number"
                             step="any"
                             {...register("input_quantity", {required: true, min: 0.01})}
                         />
-                        {errors.input_quantity && <p className="text-red-500 text-sm">Required</p>}
+                        {errors.input_quantity && <p className="text-red-500 text-sm">{t('global.required')}</p>}
                     </div>
                 </div>
 
                 <div className="space-y-1">
-                    <Label>Unit of Measure</Label>
+                    <Label>{t('adjustStock.fields.uom')}</Label>
                     <Select
                         onValueChange={(val) => setValue("input_uom_id", val)}
                         value={watch("input_uom_id")}
                     >
                         <SelectTrigger>
-                            <SelectValue placeholder="Select UoM"/>
+                            <SelectValue placeholder={t('adjustStock.placeholders.uom')}/>
                         </SelectTrigger>
                         <SelectContent>
                             {allowedUoms?.map((uom) => (
@@ -177,30 +179,30 @@ const AdjustStockFormModal = ({
                         </SelectContent>
                     </Select>
                     <input type="hidden" {...register("input_uom_id", {required: true})} />
-                    {errors.input_uom_id && <p className="text-red-500 text-sm">Required</p>}
+                    {errors.input_uom_id && <p className="text-red-500 text-sm">{t('global.required')}</p>}
                 </div>
 
                 <div className="space-y-1">
-                    <Label>Reason (optional)</Label>
+                    <Label>{t('adjustStock.fields.reason')}</Label>
                     <Input type="text" {...register("reason")} />
                 </div>
 
                 <div className="space-y-1">
-                    <Label>Reference (optional)</Label>
+                    <Label>{t('adjustStock.fields.reference')}</Label>
                     <Input type="text" {...register("reference")} />
                 </div>
 
                 <div className="flex justify-between items-center pt-4">
                     <Button type="button" variant="ghost" onClick={onBack}>
-                        ← Back
+                        ← {t('global.back')}
                     </Button>
                     <div className="ml-auto space-x-3">
                         <Button type="button" variant="outline" onClick={onClose}>
-                            Cancel
+                            {t('global.cancel')}
                         </Button>
                         <Button type="submit" disabled={submitting}
                                 className="bg-yellow-600 text-white hover:bg-yellow-700">
-                            {submitting ? "Adjusting..." : "Adjust Stock"}
+                            {submitting ? t('adjustStock.actions.submitting') : t('adjustStock.actions.submit')}
                         </Button>
                     </div>
                 </div>

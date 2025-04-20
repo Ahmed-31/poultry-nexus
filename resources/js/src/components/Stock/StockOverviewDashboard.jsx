@@ -6,21 +6,38 @@ import {fetchWarehouses} from "@/src/store/warehouseSlice";
 import {BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend} from "recharts";
 import {Card, CardContent} from "@/components/ui/card";
 import ActionHandler from "@/src/components/common/ActionHandler.jsx";
+import {useTranslation} from "react-i18next";
 
 const StockOverviewDashboard = () => {
+    const {t} = useTranslation();
     const quickActions = {
         operations: [
-            {title: "Manual Stock Scan", icon: "📝", action: "Go to Scan", type: "navigate", route: "/stock/update-manual",},
+            {
+                title: "Manual Stock Scan",
+                icon: "📝",
+                action: "Go to Scan",
+                type: "navigate",
+                route: "/stock/update-manual",
+                key: "manualScan"
+            },
             {title: "Add Stock Entry", icon: "📥", action: "+ Add Stock", type: "modal", key: "addStock",},
             {title: "Remove Stock", icon: "📤", action: "- Issue Stock", type: "modal", key: "issueStock",},
             {title: "Transfer Stock", icon: "📦", action: "↔ Transfer Stock", type: "modal", key: "transferStock",},
-            {title: "Create Purchase", icon: "🛒", action: "+ Create PO", type: "navigate", route: "/purchases/create",},
+            {
+                title: "Create Purchase",
+                icon: "🛒",
+                action: "+ Create PO",
+                type: "navigate",
+                route: "/purchases/create",
+                key: "createPurchase"
+            },
             {
                 title: "Stock Report",
                 icon: "📊",
                 action: "📄 Generate Report",
                 type: "navigate",
                 route: "/stock/report",
+                key: "stockReport"
             },
             {title: "Stock Adjustment", icon: "⚙️", action: "✏ Adjust Quantity", type: "modal", key: "adjustStock",},
             {title: "Stock Count", icon: "📋", action: "📦 Start Count", type: "modal", key: "stockCount",},
@@ -30,6 +47,7 @@ const StockOverviewDashboard = () => {
                 action: "📖 View Ledger",
                 type: "navigate",
                 route: "/stock/stock-movements",
+                key: "stockHistory"
             },
         ],
         masterData: [
@@ -45,12 +63,33 @@ const StockOverviewDashboard = () => {
                 type: "modal",
                 key: "removeWarehouse",
             },
-            {title: "View All Items", icon: "📋", action: "📦 Item List", type: "navigate", route: "/stock/products",},
-            {title: "Manage UoM", icon: "📏", action: "⚖ Unit Setup", type: "navigate", route: "/uom",},
+            {
+                title: "View All Items",
+                icon: "📋",
+                action: "📦 Item List",
+                type: "navigate",
+                route: "/stock/products",
+                key: "viewItems"
+            },
+            {title: "Manage UoM", icon: "📏", action: "⚖ Unit Setup", type: "navigate", route: "/uom", key: "manageUoM"},
             {title: "Set Stock Thresholds", icon: "⚠️", action: "📉 Min/Max Levels", type: "modal", key: "thresholds",},
             {title: "Bulk Import Items", icon: "📂", action: "⬆ Upload Excel", type: "wizard", key: "bulkImportItems",},
-            {title: "Export Items", icon: "📤", action: "⬇ Download Excel", type: "navigate", route: "/items/export",},
-            {title: "Manage Categories", icon: "🗂", action: "📁 Item Groups", type: "navigate", route: "/categories",},
+            {
+                title: "Export Items",
+                icon: "📤",
+                action: "⬇ Download Excel",
+                type: "navigate",
+                route: "/items/export",
+                key: "exportItems"
+            },
+            {
+                title: "Manage Categories",
+                icon: "🗂",
+                action: "📁 Item Groups",
+                type: "navigate",
+                route: "/categories",
+                key: "manageCategories"
+            },
         ],
         alerts: [
             {
@@ -59,6 +98,7 @@ const StockOverviewDashboard = () => {
                 action: "⚠ View Alerts",
                 type: "navigate",
                 route: "/alerts/low-stock",
+                key: "lowStockAlerts"
             },
             // Future enhancement:
             // {
@@ -73,10 +113,10 @@ const StockOverviewDashboard = () => {
 
 
     const kpis = [
-        {label: "Total Items", value: "25,000"},
-        {label: "Out of Stock", value: "12"},
-        {label: "Low Stock Alerts", value: "38"},
-        {label: "Total Value", value: "$420,000"},
+        {label: t('stockDashboard.kpis.totalItems'), value: "25,000"},
+        {label: t('stockDashboard.kpis.outOfStock'), value: "12"},
+        {label: t('stockDashboard.kpis.lowStockAlerts'), value: "38"},
+        {label: t('stockDashboard.kpis.totalValue'), value: "$420,000"},
     ];
 
     const recentMovements = [
@@ -145,11 +185,11 @@ const StockOverviewDashboard = () => {
                     <div key={section}>
                         <h2 className="text-2xl font-semibold text-gray-800 mb-6 capitalize">
                             {section === "operations"
-                                ? "🚚 Operations"
+                                ? "🚚 " + t('stockDashboard.sections.operations')
                                 : section === "masterData"
-                                    ? "🗃️ Master Data"
+                                    ? "🗃️ " + t('stockDashboard.sections.masterData')
                                     : section === "alerts"
-                                        ? "🚨 Alerts & Warnings"
+                                        ? "🚨 " + t('stockDashboard.sections.alerts')
                                         : section}
                         </h2>
 
@@ -162,9 +202,12 @@ const StockOverviewDashboard = () => {
                                     <CardContent className="flex flex-col items-center justify-center p-6">
                                         <div className="text-4xl mb-3">{action.icon}</div>
                                         <div className="font-semibold text-center text-lg">
-                                            {action.title}
+                                            {t(`stockDashboard.actions.${action.key}.title`)}
                                         </div>
-                                        <ActionHandler action={action}/>
+                                        <ActionHandler action={{
+                                            ...action,
+                                            action: t(`stockDashboard.actions.${action.key}.action`)
+                                        }}/>
                                     </CardContent>
                                 </Card>
                             ))}
@@ -185,18 +228,18 @@ const StockOverviewDashboard = () => {
             </div>
 
             <div>
-                <h2 className="text-xl font-bold mb-2">Recent Stock Movements</h2>
+                <h2 className="text-xl font-bold mb-2">{t('stockDashboard.sections.recentMovements')}</h2>
                 <div className="overflow-auto">
                     <table className="min-w-full text-sm border">
                         <thead className="bg-gray-100">
                             <tr>
-                                <th className="px-4 py-2 border">Date</th>
-                                <th className="px-4 py-2 border">Product</th>
-                                <th className="px-4 py-2 border">UoM</th>
-                                <th className="px-4 py-2 border">Action</th>
-                                <th className="px-4 py-2 border">Qty</th>
-                                <th className="px-4 py-2 border">Warehouse</th>
-                                <th className="px-4 py-2 border">User</th>
+                                <th className="px-4 py-2 border">{t('stockDashboard.table.date')}</th>
+                                <th className="px-4 py-2 border">{t('stockDashboard.table.product')}</th>
+                                <th className="px-4 py-2 border">{t('stockDashboard.table.uom')}</th>
+                                <th className="px-4 py-2 border">{t('stockDashboard.table.action')}</th>
+                                <th className="px-4 py-2 border">{t('stockDashboard.table.qty')}</th>
+                                <th className="px-4 py-2 border">{t('stockDashboard.table.warehouse')}</th>
+                                <th className="px-4 py-2 border">{t('stockDashboard.table.user')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -217,14 +260,14 @@ const StockOverviewDashboard = () => {
             </div>
 
             <div>
-                <h2 className="text-xl font-bold mb-2">Warehouse Overview</h2>
+                <h2 className="text-xl font-bold mb-2">{t('stockDashboard.sections.warehouseOverview')}</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {warehouses.map((wh, idx) => (
                         <Card key={idx}>
                             <CardContent className="p-4">
                                 <div className="text-lg font-semibold">{wh.name}</div>
-                                <div>Capacity Used: {wh.capacityUsed}%</div>
-                                <div>Status: {wh.status === "Full" ? "🔴 Full" : "🟢 Normal"}</div>
+                                <div>{t('stockDashboard.warehouse.capacityUsed')}: {wh.capacityUsed}%</div>
+                                <div>{t('stockDashboard.warehouse.status')}: {wh.status === "Full" ? "🔴 " + t('stockDashboard.warehouse.full') : "🟢 " + t('stockDashboard.warehouse.normal')}</div>
                             </CardContent>
                         </Card>
                     ))}
@@ -232,14 +275,14 @@ const StockOverviewDashboard = () => {
             </div>
 
             <div>
-                <h2 className="text-xl font-bold mb-4">Stock by Category</h2>
+                <h2 className="text-xl font-bold mb-4">{t('stockDashboard.sections.stockByCategory')}</h2>
                 <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={categoryData} margin={{top: 10, right: 30, left: 0, bottom: 5}}>
                         <XAxis dataKey="category"/>
                         <YAxis/>
                         <Tooltip/>
                         <Legend/>
-                        <Bar dataKey="quantity" fill="#3b82f6" name="Quantity"/>
+                        <Bar dataKey="quantity" fill="#3b82f6" name={t('stockDashboard.charts.quantity')}/>
                     </BarChart>
                 </ResponsiveContainer>
             </div>
