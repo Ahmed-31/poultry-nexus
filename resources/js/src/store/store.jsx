@@ -9,7 +9,8 @@ import uomDimensionsReducer from './uomDimensionsSlice';
 import productBundlesReducer from './productBundlesSlice.jsx';
 import ordersReducer from './ordersSlice';
 import customersReducer from './customersSlice';
-import stockReservationsReducer from './stockReservationsSlice'
+import stockReservationsReducer from './stockReservationsSlice';
+import languageReducer from './languageSlice';
 
 const store = configureStore({
     reducer: {
@@ -24,6 +25,7 @@ const store = configureStore({
         orders: ordersReducer,
         customers: customersReducer,
         stockReservations: stockReservationsReducer,
+        language: languageReducer,
     },
 });
 

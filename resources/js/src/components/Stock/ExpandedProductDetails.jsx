@@ -1,5 +1,7 @@
 import React, {useState} from "react";
 import DataTable from "react-data-table-component";
+import {useTranslation} from "react-i18next";
+import {useSelector} from "react-redux";
 
 const Section = ({title, children}) => {
     const [isOpen, setIsOpen] = useState(true);
@@ -18,45 +20,47 @@ const Section = ({title, children}) => {
 };
 
 const ExpandedProductDetails = ({data}) => {
+    const {t} = useTranslation();
     const stockColumns = [
-        {name: "Warehouse ID", selector: row => row.warehouse_id, sortable: true},
-        {name: "Quantity", selector: row => row.input_quantity, sortable: true},
-        {name: "UOM", selector: row => data?.default_uom?.symbol || t('global.na'), sortable: false},
-        {name: "Last Updated", selector: row => new Date(row.updated_at).toLocaleString(), sortable: true},
+        {name: t('productDetails.tableHeaders.warehouseId'), selector: row => row.warehouse_id, sortable: true},
+        {name: t('productDetails.tableHeaders.quantity'), selector: row => row.input_quantity, sortable: true},
+        {name: t('productDetails.tableHeaders.uom'), selector: row => data?.default_uom?.symbol || t('global.na'), sortable: false},
+        {name: t('productDetails.tableHeaders.lastUpdated'), selector: row => new Date(row.updated_at).toLocaleString(), sortable: true},
     ];
 
     const movementColumns = [
-        {name: "Date", selector: row => new Date(row.movement_date).toLocaleString(), sortable: true},
-        {name: "Type", selector: row => row.movement_type, sortable: true},
-        {name: "Quantity", selector: row => row.quantity, sortable: true},
-        {name: "Reason", selector: row => row.reason, sortable: false},
+        {name: t('productDetails.tableHeaders.date'), selector: row => new Date(row.movement_date).toLocaleString(), sortable: true},
+        {name: t('productDetails.tableHeaders.type'), selector: row => row.movement_type, sortable: true},
+        {name: t('productDetails.tableHeaders.quantity'), selector: row => row.quantity, sortable: true},
+        {name: t('productDetails.tableHeaders.reason'), selector: row => row.reason, sortable: false},
     ];
 
     const dimensions = data?.default_uom?.dimensions || [];
+    const currentLang = useSelector((state) => state.language.current);
 
     return (
         <div className="p-4 bg-gray-50 border rounded space-y-4">
-            <h3 className="text-xl font-bold mb-4">📦 Product Details: {data.name}</h3>
+            <h3 className="text-xl font-bold mb-4">📦 {t('productDetails.title')}: {data.name}</h3>
 
-            <Section title="Product Metadata">
+            <Section title={t('productDetails.sections.metadata')}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     <div>
-                        <strong>Category:</strong> {data.category?.name || t('global.na')}
+                        <strong>{t('productDetails.category')}:</strong> {data.category?.name || t('global.na')}
                         <br/>
                         <em className="text-gray-500">{data.category?.description}</em>
                     </div>
                     <div>
-                        <strong>Type:</strong> {data.type}
+                        <strong>{t('productDetails.type')}:</strong> {data.type}
                         <br/>
-                        <strong>SKU:</strong> {data.sku}
+                        <strong>{t('productDetails.sku')}:</strong> {data.sku}
                     </div>
                     <div>
-                        <strong>Price:</strong> ${parseFloat(data.price || 0).toFixed(2)}
+                        <strong>{t('productDetails.price')}:</strong> ${parseFloat(data.price || 0).toFixed(2)}
                         <br/>
-                        <strong>Minimum Stock Level:</strong> {data.min_stock}
+                        <strong>{t('productDetails.minStock')}:</strong> {data.min_stock}
                     </div>
                     <div>
-                        <strong>Dimensions:</strong>{" "}
+                        <strong>{t('productDetails.dimensions')}:</strong>{" "}
                         {Array.isArray(data.dimensions) && data.dimensions.length > 0
                             ? data.dimensions.map(dim => dim.name).join(" x ")
                             : t('global.na')}
@@ -64,22 +68,22 @@ const ExpandedProductDetails = ({data}) => {
                 </div>
             </Section>
 
-            <Section title="Unit of Measurement (UOM)">
+            <Section title={t('productDetails.sections.uom')}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     <div>
-                        <strong>Default UOM:</strong> {data.default_uom?.name} ({data.default_uom?.symbol})
+                        <strong>{t('productDetails.defaultUom')}:</strong> {data.default_uom?.name} ({data.default_uom?.symbol})
                         <br/>
-                        <strong>Conversion Factor:</strong> {data.default_uom?.conversion_factor}
+                        <strong>{t('productDetails.conversionFactor')}:</strong> {data.default_uom?.conversion_factor}
                         <br/>
-                        <strong>Is Base Unit:</strong> {data.default_uom?.is_base ? "Yes" : "No"}
+                        <strong>{t('productDetails.isBase')}:</strong> {data.default_uom?.is_base ? t('global.yes') : t('global.no')}
                     </div>
                     <div>
-                        <strong>UOM Group:</strong> {data.default_uom?.group?.name || t('global.na')}
+                        <strong>{t('productDetails.uomGroup')}:</strong> {data.default_uom?.group?.name || t('global.na')}
                     </div>
                 </div>
                 {dimensions.length > 0 && (
                     <div className="mt-4">
-                        <strong>Defined Dimensions:</strong>
+                        <strong>{t('productDetails.definedDimensions')}:</strong>
                         <ul className="list-disc pl-5 mt-1 text-gray-700">
                             {dimensions.map((dim) => (
                                 <li key={dim.id}>{dim.name}</li>
@@ -90,7 +94,7 @@ const ExpandedProductDetails = ({data}) => {
             </Section>
 
             {data.allowed_uoms && data.allowed_uoms.length > 0 && (
-                <Section title="Allowed UOMs">
+                <Section title={t('productDetails.sections.allowedUoms')}>
                     <ul className="list-disc pl-5 text-sm text-gray-800">
                         {data.allowed_uoms.map((uom) => (
                             <li key={uom.id}>
@@ -102,8 +106,9 @@ const ExpandedProductDetails = ({data}) => {
             )}
 
             {data.stock && (
-                <Section title="Current Stock Info">
+                <Section title={t('productDetails.sections.stockInfo')}>
                     <DataTable
+                        key={currentLang}
                         columns={stockColumns}
                         data={[data.stock]}
                         noHeader
@@ -115,8 +120,9 @@ const ExpandedProductDetails = ({data}) => {
             )}
 
             {data.stock_movements?.length > 0 && (
-                <Section title="Stock Movement History">
+                <Section title={t('productDetails.sections.stockMovements')}>
                     <DataTable
+                        key={currentLang}
                         columns={movementColumns}
                         data={data.stock_movements}
                         noHeader

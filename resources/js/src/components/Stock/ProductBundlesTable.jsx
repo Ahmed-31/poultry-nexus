@@ -14,6 +14,7 @@ const ProductBundlesTable = () => {
 
     const bundles = useSelector((state) => state.productBundles.dataTable || []);
     const loading = useSelector((state) => state.productBundles.loading);
+    const currentLang = useSelector((state) => state.language.current);
     const [searchTerm, setSearchTerm] = useState("");
     const [showForm, setShowForm] = useState(false);
     const [editBundle, setEditBundle] = useState(null);
@@ -96,6 +97,7 @@ const ProductBundlesTable = () => {
             {/* DataTable */}
             <div className="px-8 pb-8">
                 <DataTable
+                    key={currentLang}
                     columns={columns}
                     data={filteredBundles}
                     progressPending={loading}

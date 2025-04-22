@@ -111,7 +111,7 @@ const ProductBundleFormModal = ({showModal, onClose, initialData = null}) => {
                 </div>
 
                 <div>
-                    <Label>{t('productBundleForm.sections.products')}</Label>
+                    <Label>{t('productBundleForm.label')}</Label>
                     <div className="space-y-6">
                         {fields.map((item, index) => {
                             const selectedProductId = watch(`items.${index}.product_id`);

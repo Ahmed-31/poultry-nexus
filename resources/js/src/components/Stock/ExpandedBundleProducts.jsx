@@ -1,5 +1,7 @@
 import React, {useState} from "react";
 import DataTable from "react-data-table-component";
+import {useTranslation} from "react-i18next";
+import {useSelector} from "react-redux";
 
 const Section = ({title, children}) => {
     const [isOpen, setIsOpen] = useState(true);
@@ -18,6 +20,8 @@ const Section = ({title, children}) => {
 };
 
 const ExpandedBundleProducts = ({data}) => {
+    const {t} = useTranslation();
+    const currentLang = useSelector((state) => state.language.current);
     const productColumns = [
         {name: t('expandedBundle.columns.sku'), selector: row => row.sku, sortable: true},
         {name: t('expandedBundle.columns.name'), selector: row => row.name, sortable: true},
@@ -67,6 +71,7 @@ const ExpandedBundleProducts = ({data}) => {
 
             <Section title={t('expandedBundle.sections.products')}>
                 <DataTable
+                    key={currentLang}
                     keyField="unique_key"
                     columns={productColumns}
                     data={data.products || []}

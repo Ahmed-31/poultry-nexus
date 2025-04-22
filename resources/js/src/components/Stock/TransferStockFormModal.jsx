@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useMemo} from 'react';
 import {useForm} from 'react-hook-form';
 import {useDispatch, useSelector} from 'react-redux';
 import {Label} from "@/components/ui/label";
@@ -10,11 +10,13 @@ import {toast} from "@/hooks/use-toast";
 import {fetchWarehouses} from "@/src/store/warehouseSlice.jsx";
 import {fetchProducts} from "@/src/store/productsSlice.jsx";
 import {transferStockItem} from "@/src/store/stockSlice";
+import {useTranslation} from "react-i18next";
 
 const TransferStockFormModal = ({
                                     showModal, onClose, stockItem, onBack = () => {
     }
                                 }) => {
+    const {t} = useTranslation();
     const dispatch = useDispatch();
     const warehouses = useSelector((state) => state.warehouses.list || []);
     const products = useSelector((state) => state.products.list || []);
@@ -42,11 +44,16 @@ const TransferStockFormModal = ({
         dispatch(fetchProducts());
     }, [dispatch]);
 
-    const product = products.find(p => p.id === stockItem?.product_id);
+    const product = useMemo(() => {
+        return products.find(p => p.id === stockItem?.product_id);
+    }, [products, stockItem]);
     const sourceWarehouse = warehouses.find(w => w.id === stockItem?.warehouse_id);
     const availableWarehouses = warehouses.filter(w => w.id !== stockItem?.warehouse_id);
 
-    const allowedUoms = product?.allowed_uoms?.length ? product.allowed_uoms : [product?.default_uom];
+    const allowedUoms = useMemo(() => {
+        if (!product) return [];
+        return product.allowed_uoms?.length ? product.allowed_uoms : [product.default_uom];
+    }, [product]);
 
     useEffect(() => {
         if (stockItem && allowedUoms?.length) {
@@ -65,8 +72,8 @@ const TransferStockFormModal = ({
 
         if (qty <= 0) {
             toast({
-                title: "Invalid Quantity",
-                description: "Quantity must be greater than 0.",
+                title: t('global.toasts.invalidQtyTitle'),
+                description: t('global.toasts.invalidQtyDesc'),
                 variant: "destructive"
             });
             return;
@@ -86,17 +93,17 @@ const TransferStockFormModal = ({
             })).unwrap();
 
             toast({
-                title: "Success",
-                description: "Stock transferred successfully.",
-                variant: "default"
+                title: t('global.toasts.successTitle'),
+                description: t('transferStock.toast.successMessage'),
+                variant: "default",
             });
             reset();
             onClose();
         } catch (err) {
             toast({
-                title: "Error",
-                description: err?.message || "Transfer failed.",
-                variant: "destructive"
+                title: t('global.toasts.errorTitle'),
+                description: err.message || t('global.toasts.errorMessage'),
+                variant: "destructive",
             });
         } finally {
             setSubmitting(false);
@@ -105,25 +112,25 @@ const TransferStockFormModal = ({
 
     return (
         <Modal isOpen={showModal} onClose={onClose}>
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Transfer Stock</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">{t('transferStock.title')}</h2>
 
             {product && (
                 <div className="mb-2">
-                    <Label>Product</Label>
+                    <Label>{t('transferStock.product')}</Label>
                     <p className="text-sm font-medium text-gray-800">{product.name}</p>
                 </div>
             )}
 
             {sourceWarehouse && (
                 <div className="mb-2">
-                    <Label>Source Warehouse</Label>
+                    <Label>{t('transferStock.sourceWarehouse')}</Label>
                     <p className="text-sm font-medium text-gray-800">{sourceWarehouse.name}</p>
                 </div>
             )}
 
             {stockItem?.dimensions?.length > 0 && (
                 <div className="mb-2">
-                    <Label>Dimensions</Label>
+                    <Label>{t('transferStock.dimensions')}</Label>
                     <p className="text-sm text-gray-600">
                         {stockItem.dimensions
                             .map(d => `${d.name}: ${d.value} ${d.uom_symbol}`)
@@ -134,7 +141,7 @@ const TransferStockFormModal = ({
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                 <div className="space-y-1">
-                    <Label>Available Quantity</Label>
+                    <Label>{t('transferStock.availableQty')}</Label>
                     <p className="text-sm text-gray-700">
                         {stockItem.input_quantity} {stockItem.uom?.symbol}
                     </p>
@@ -142,23 +149,23 @@ const TransferStockFormModal = ({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1">
-                        <Label>Quantity to Transfer</Label>
+                        <Label>{t('transferStock.qtyToTransfer')}</Label>
                         <Input
                             type="number"
                             step="any"
                             {...register("input_quantity", {required: true, min: 0.01})}
                         />
-                        {errors.input_quantity && <p className="text-red-500 text-sm">Required</p>}
+                        {errors.input_quantity && <p className="text-red-500 text-sm">{t('global.required')}</p>}
                     </div>
 
                     <div className="space-y-1">
-                        <Label>Unit of Measure</Label>
+                        <Label>{t('transferStock.uom')}</Label>
                         <Select
                             onValueChange={(val) => setValue("input_uom_id", val)}
                             value={watch("input_uom_id")}
                         >
                             <SelectTrigger>
-                                <SelectValue placeholder="Select UoM"/>
+                                <SelectValue placeholder={t('transferStock.selectUom')}/>
                             </SelectTrigger>
                             <SelectContent>
                                 {allowedUoms?.map((uom) => (
@@ -169,18 +176,18 @@ const TransferStockFormModal = ({
                             </SelectContent>
                         </Select>
                         <input type="hidden" {...register("input_uom_id", {required: true})} />
-                        {errors.input_uom_id && <p className="text-red-500 text-sm">Required</p>}
+                        {errors.input_uom_id && <p className="text-red-500 text-sm">{t('global.required')}</p>}
                     </div>
                 </div>
 
                 <div className="space-y-1">
-                    <Label>Destination Warehouse</Label>
+                    <Label>{t('transferStock.destinationWarehouse')}</Label>
                     <Select
                         onValueChange={(val) => setValue("destination_warehouse_id", val)}
                         value={watch("destination_warehouse_id")}
                     >
                         <SelectTrigger>
-                            <SelectValue placeholder="Select warehouse"/>
+                            <SelectValue placeholder={t('transferStock.selectWarehouse')}/>
                         </SelectTrigger>
                         <SelectContent>
                             {availableWarehouses.map((w) => (
@@ -191,44 +198,44 @@ const TransferStockFormModal = ({
                         </SelectContent>
                     </Select>
                     <input type="hidden" {...register("destination_warehouse_id", {required: true})} />
-                    {errors.destination_warehouse_id && <p className="text-red-500 text-sm">Required</p>}
+                    {errors.destination_warehouse_id && <p className="text-red-500 text-sm">{t('global.required')}</p>}
                 </div>
 
                 <div className="space-y-1">
-                    <Label>Reason</Label>
+                    <Label>{t('transferStock.reason')}</Label>
                     <Select
                         onValueChange={(val) => setValue("reason", val)}
                         value={watch("reason")}
                     >
                         <SelectTrigger>
-                            <SelectValue placeholder="Select reason"/>
+                            <SelectValue placeholder={t('transferStock.selectReason')}/>
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="rebalancing">Rebalancing</SelectItem>
-                            <SelectItem value="overstock">Overstock</SelectItem>
-                            <SelectItem value="maintenance">Maintenance</SelectItem>
+                            <SelectItem value="rebalancing">{t('transferStock.reason.rebalancing')}</SelectItem>
+                            <SelectItem value="overstock">{t('transferStock.reason.overstock')}</SelectItem>
+                            <SelectItem value="maintenance">{t('transferStock.reason.maintenance')}</SelectItem>
                         </SelectContent>
                     </Select>
                     <input type="hidden" {...register("reason", {required: true})} />
-                    {errors.reason && <p className="text-red-500 text-sm">Required</p>}
+                    {errors.reason && <p className="text-red-500 text-sm">{t('global.required')}</p>}
                 </div>
 
                 <div className="space-y-1">
-                    <Label>Transfer Reference (optional)</Label>
+                    <Label>{t('transferStock.referenceOptional')}</Label>
                     <Input type="text" {...register("transfer_reference")} />
                 </div>
 
                 <div className="flex justify-between items-center pt-4">
                     <Button type="button" variant="ghost" onClick={onBack}>
-                        ← Back
+                        ← {t('global.back')}
                     </Button>
                     <div className="ml-auto space-x-3">
                         <Button type="button" variant="outline" onClick={onClose}>
-                            Cancel
+                            {t('global.cancel')}
                         </Button>
                         <Button type="submit" disabled={submitting}
                                 className="bg-blue-600 text-white hover:bg-blue-700">
-                            {submitting ? "Transferring..." : "Transfer Stock"}
+                            {submitting ? t('transferStock.transferring') : t('transferStock.submit')}
                         </Button>
                     </div>
                 </div>

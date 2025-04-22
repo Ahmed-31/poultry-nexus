@@ -2,6 +2,7 @@ import React, {useContext, lazy, Suspense, useMemo, useEffect} from "react";
 import {NavLink, useLocation} from "react-router-dom";
 import {ChevronDown, ChevronUp, Menu as DefaultIcon} from "lucide-react";
 import {MenuContext} from "@/src/context/MenuContext";
+import {useTranslation} from "react-i18next";
 
 const DynamicIcon = ({name, size = 20}) => {
     const IconComponent = useMemo(() => {
@@ -26,6 +27,7 @@ const DynamicIcon = ({name, size = 20}) => {
 const Sidebar = ({isSidebarOpen}) => {
     const location = useLocation();
     const {menuItems, openMenus, toggleMenu, setOpenMenus} = useContext(MenuContext);
+    const {t} = useTranslation();
 
     useEffect(() => {
         const expandedMenus = {};
@@ -59,7 +61,7 @@ const Sidebar = ({isSidebarOpen}) => {
                         >
               <span className="flex items-center">
                 <DynamicIcon name={item.icon}/>
-                <span className="whitespace-nowrap">{item.title}</span>
+                <span className="whitespace-nowrap">{t(item.title)}</span>
               </span>
                             {openMenus[item.title.toLowerCase()] ? <ChevronUp size={18}/> : <ChevronDown size={18}/>}
                         </button>
@@ -77,7 +79,7 @@ const Sidebar = ({isSidebarOpen}) => {
                         }
                     >
                         <DynamicIcon name={item.icon}/>
-                        <span className="whitespace-nowrap">{item.title}</span>
+                        <span className="whitespace-nowrap">{t(item.title)}</span>
                     </NavLink>
                 )}
             </li>

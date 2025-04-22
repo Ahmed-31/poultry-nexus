@@ -14,6 +14,7 @@ const StockList = () => {
     const stock = useSelector((state) => state.stock.dataTable || []);
     const warehouses = useSelector((state) => state.warehouses.list || []);
     const loading = useSelector((state) => state.stock.loading);
+    const currentLang = useSelector((state) => state.language.current);
 
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedWarehouse, setSelectedWarehouse] = useState("");
@@ -159,6 +160,7 @@ const StockList = () => {
             {/* Table */}
             <div className="px-8 pb-8">
                 <DataTable
+                    key={currentLang}
                     columns={columns}
                     data={filteredStock}
                     progressPending={loading}

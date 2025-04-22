@@ -11,8 +11,10 @@ import {fetchWarehouses} from "@/src/store/warehouseSlice.jsx";
 import {fetchUoms} from "@/src/store/uomSlice.jsx";
 import Modal from "@/src/components/common/Modal.jsx";
 import {toast} from "@/hooks/use-toast";
+import {useTranslation} from "react-i18next";
 
 const StockFormModal = ({showModal, onClose, initialData = null}) => {
+    const {t} = useTranslation();
     const dispatch = useDispatch();
 
     const products = useSelector((state) => state.products.list || []);
@@ -104,8 +106,8 @@ const StockFormModal = ({showModal, onClose, initialData = null}) => {
             }
 
             toast({
-                title: "Success",
-                description: "Stock item saved successfully.",
+                title: t('global.toasts.successTitle'),
+                description: t('stockForm.toast.successMessage'),
                 variant: "default",
             });
 
@@ -119,8 +121,8 @@ const StockFormModal = ({showModal, onClose, initialData = null}) => {
 
         } catch (err) {
             toast({
-                title: "Error",
-                description: err.message || "Something went wrong.",
+                title: t('global.toasts.errorTitle'),
+                description: err.message || t('global.toasts.errorMessage'),
                 variant: "destructive",
             });
         }
@@ -129,18 +131,18 @@ const StockFormModal = ({showModal, onClose, initialData = null}) => {
     return (
         <Modal isOpen={showModal} onClose={onClose}>
             <h2 className="text-2xl font-extrabold text-gray-800 mb-6">
-                {initialData ? 'Edit Stock Item' : 'Add New Stock Item'}
+                {initialData ? t('stockForm.editTitle') : t('stockForm.addTitle')}
             </h2>
 
             {!selectedWarehouse ? (
                 <div>
-                    <Label>Select Warehouse to Start</Label>
+                    <Label>{t('stockForm.selectWarehousePrompt')}</Label>
                     <Select onValueChange={(value) => {
                         setSelectedWarehouse(value);
                         setValue("warehouse_id", value);
                     }}>
                         <SelectTrigger>
-                            <SelectValue placeholder="Select a warehouse"/>
+                            <SelectValue placeholder={t('stockForm.selectWarehouse')}/>
                         </SelectTrigger>
                         <SelectContent>
                             {warehouses.map((w) => (
@@ -153,7 +155,7 @@ const StockFormModal = ({showModal, onClose, initialData = null}) => {
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                     <div className="flex justify-between items-center">
                         <div className="w-full">
-                            <Label>Warehouse</Label>
+                            <Label>{t('stockForm.warehouse')}</Label>
                             <Input value={warehouses.find(w => w.id.toString() === selectedWarehouse)?.name || ''}
                                    disabled
                                    className="w-full"
@@ -169,13 +171,13 @@ const StockFormModal = ({showModal, onClose, initialData = null}) => {
                                     reset();
                                 }}
                             >
-                                Change Warehouse
+                                {t('stockForm.changeWarehouse')}
                             </Button>
                         </div>
                     </div>
 
                     <div>
-                        <Label className="mb-2 block">Product</Label>
+                        <Label className="mb-2 block">{t('stockForm.product')}</Label>
                         <Select onValueChange={(value) => {
                             setValue("product_id", value);
                             setValue("input_uom_id", '');
@@ -183,7 +185,7 @@ const StockFormModal = ({showModal, onClose, initialData = null}) => {
                                 value={watch("product_id")}
                         >
                             <SelectTrigger className="w-full p-3 border rounded-lg">
-                                <SelectValue placeholder="Select Product"/>
+                                <SelectValue placeholder={t('stockForm.selectProduct')}/>
                             </SelectTrigger>
                             <SelectContent>
                                 {products.length > 0 ? (
@@ -194,33 +196,33 @@ const StockFormModal = ({showModal, onClose, initialData = null}) => {
                                     ))
                                 ) : (
                                     <SelectItem value="nan" disabled>
-                                        No products available
+                                        {t('stockForm.noProducts')}
                                     </SelectItem>
                                 )}
                             </SelectContent>
                         </Select>
-                        {errors.product_id && <p className="text-red-500 text-sm">Product is required.</p>}
+                        {errors.product_id && <p className="text-red-500 text-sm">{t('stockForm.productRequired')}</p>}
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <Label className="mb-2 block">Quantity</Label>
+                            <Label className="mb-2 block">{t('stockForm.quantity')}</Label>
                             <Input
                                 type="number"
                                 {...register("input_quantity", {required: true})}
                             />
-                            {errors.input_quantity && <p className="text-red-500 text-sm">Quantity is required.</p>}
+                            {errors.input_quantity && <p className="text-red-500 text-sm">{t('stockForm.quantityRequired')}</p>}
                         </div>
 
                         <div>
-                            <Label className="mb-2 block">Unit of Measure</Label>
+                            <Label className="mb-2 block">{t('stockForm.unitOfMeasure')}</Label>
                             <Select
                                 onValueChange={(value) => setValue("input_uom_id", value)}
                                 value={watch("input_uom_id")}
                                 disabled={!productId || selectedProductUoms.length === 0}
                             >
                                 <SelectTrigger className="w-full p-3 border rounded-lg">
-                                    <SelectValue placeholder="Select UOM"/>
+                                    <SelectValue placeholder={t('stockForm.selectUom')}/>
                                 </SelectTrigger>
                                 <SelectContent>
                                     {selectedProductUoms.map((uom) => (
@@ -231,13 +233,13 @@ const StockFormModal = ({showModal, onClose, initialData = null}) => {
                                 </SelectContent>
                             </Select>
                             <input type="hidden" {...register("input_uom_id", {required: true})} />
-                            {errors.input_uom_id && <p className="text-red-500 text-sm">Unit is required.</p>}
+                            {errors.input_uom_id && <p className="text-red-500 text-sm">{t('stockForm.unitRequired')}</p>}
                         </div>
                     </div>
 
                     {selectedProduct?.dimensions?.length > 0 && (
                         <div>
-                            <h3 className="text-lg font-semibold mb-2">Dimensions</h3>
+                            <h3 className="text-lg font-semibold mb-2">{t('stockForm.dimensions')}</h3>
                             <div className="grid grid-cols-2 gap-4">
                                 {selectedProduct.dimensions.map((dimension) => (
                                     <div key={dimension.id}>
@@ -250,7 +252,7 @@ const StockFormModal = ({showModal, onClose, initialData = null}) => {
                                         <Input
                                             type="number"
                                             step="any"
-                                            placeholder={`Enter ${dimension.name}`}
+                                            placeholder={t('stockForm.enterDimension', {dimension: dimension.name})}
                                             {...register(`dimensions.${dimension.id}.value`, {required: true})}
                                         />
                                         <input
@@ -265,7 +267,7 @@ const StockFormModal = ({showModal, onClose, initialData = null}) => {
                                         />
                                         {errors?.dimensions?.[dimension.id]?.value && (
                                             <p className="text-red-500 text-sm mt-1">
-                                                {dimension.name} is required.
+                                                {t('stockForm.dimensionRequired', {dimension: dimension.name})}
                                             </p>
                                         )}
                                     </div>
@@ -275,8 +277,8 @@ const StockFormModal = ({showModal, onClose, initialData = null}) => {
                     )}
 
                     <div className="flex justify-end space-x-4">
-                        <Button type="button" onClick={onClose} variant="outline">Cancel</Button>
-                        <Button type="submit">{initialData ? 'Update' : 'Add'}</Button>
+                        <Button type="button" onClick={onClose} variant="outline">{t('global.cancel')}</Button>
+                        <Button type="submit">{initialData ? t('global.update') : t('global.add')}</Button>
                     </div>
                 </form>
             )}

@@ -8,8 +8,10 @@ import {fetchProducts, removeProduct} from "@/src/store/productsSlice.jsx";
 import ItemFormModal from "@/src/components/Stock/ItemFormModal.jsx";
 import DeleteConfirmationModal from "@/src/components/common/DeleteConfirmationModal.jsx";
 import {toast} from "@/hooks/use-toast";
+import {useTranslation} from "react-i18next";
 
 const ProductSelectorModal = ({showModal, onClose, action}) => {
+    const {t} = useTranslation();
     const dispatch = useDispatch();
     const products = useSelector((state) => state.products.list);
     const loading = useSelector((state) => state.products.loading);

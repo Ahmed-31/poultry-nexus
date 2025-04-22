@@ -18,8 +18,10 @@ import IssueStockFormModal from "@/src/components/Stock/IssueStockFormModal";
 import TransferStockFormModal from "@/src/components/Stock/TransferStockFormModal";
 import AdjustStockFormModal from "@/src/components/Stock/AdjustStockFormModal";
 import StockCountModal from "@/src/components/Stock/StockCountModal.jsx";
+import {useTranslation} from "react-i18next";
 
 const StockSelectorModal = ({showModal, onClose, action}) => {
+    const {t} = useTranslation();
     const dispatch = useDispatch();
     const products = useSelector((state) => state.products.list);
     const warehouses = useSelector((state) => state.warehouses.list);
@@ -45,8 +47,8 @@ const StockSelectorModal = ({showModal, onClose, action}) => {
                 .then((res) => setMatchingStocks(res))
                 .catch(() => {
                     toast({
-                        title: "Error",
-                        description: "Failed to load stock items",
+                        title: t('global.toasts.errorTitle'),
+                        description: t('stockSelector.toast.stockLoadError'),
                         variant: "destructive",
                     });
                 })
@@ -74,18 +76,18 @@ const StockSelectorModal = ({showModal, onClose, action}) => {
     return (
         <>
             <Modal isOpen={showModal && !activeModal} onClose={onClose}>
-                <h2 className="text-lg font-semibold mb-4">Select Product and Warehouse</h2>
+                <h2 className="text-lg font-semibold mb-4">{t('stockSelector.title')}</h2>
 
-                <Label className="mt-4">Warehouse</Label>
+                <Label className="mt-4">{t('stockSelector.warehouseLabel')}</Label>
                 {warehouseLoading ? (
-                    <p className="text-sm text-gray-500 my-2">Loading warehouses...</p>
+                    <p className="text-sm text-gray-500 my-2">{t('stockSelector.loadingWarehouses')}</p>
                 ) : (
                     <Select
                         value={warehouseId}
                         onValueChange={(val) => setWarehouseId(val)}
                     >
                         <SelectTrigger>
-                            <SelectValue placeholder="Select warehouse"/>
+                            <SelectValue placeholder={t('stockSelector.selectWarehouse')}/>
                         </SelectTrigger>
                         <SelectContent>
                             {warehouses.map((w) => (
@@ -97,16 +99,16 @@ const StockSelectorModal = ({showModal, onClose, action}) => {
                     </Select>
                 )}
 
-                <Label>Product</Label>
+                <Label>{t('stockSelector.productLabel')}</Label>
                 {productLoading ? (
-                    <p className="text-sm text-gray-500 my-2">Loading products...</p>
+                    <p className="text-sm text-gray-500 my-2">{t('stockSelector.loadingProducts')}</p>
                 ) : (
                     <Select
                         value={productId}
                         onValueChange={(val) => setProductId(val)}
                     >
                         <SelectTrigger>
-                            <SelectValue placeholder="Select product"/>
+                            <SelectValue placeholder={t('stockSelector.selectProduct')}/>
                         </SelectTrigger>
                         <SelectContent>
                             {products.map((p) => (
@@ -118,12 +120,12 @@ const StockSelectorModal = ({showModal, onClose, action}) => {
                     </Select>
                 )}
 
-                {loadingStocks && <p className="text-sm text-gray-500 mt-4">Loading stock batches...</p>}
+                {loadingStocks && <p className="text-sm text-gray-500 mt-4">{t('stockSelector.loadingStocks')}</p>}
 
                 {!loadingStocks && matchingStocks.length > 0 && (
                     <>
                         <h3 className="mt-4 text-sm font-medium text-gray-700">
-                            Select Stock Batch
+                            {t('stockSelector.selectBatch')}
                         </h3>
                         <div className="space-y-2 max-h-48 overflow-auto">
                             {matchingStocks.map((stock) => (
@@ -137,13 +139,20 @@ const StockSelectorModal = ({showModal, onClose, action}) => {
                                     }`}
                                 >
                                     <div className="text-sm font-medium">
-                                        Qty: {stock.input_quantity} ({stock.uom?.symbol})
+                                        {t('stockSelector.quantityWithUom', {
+                                            quantity: stock.input_quantity,
+                                            uom: stock.uom?.symbol
+                                        })}
                                     </div>
                                     {stock.dimensions?.length > 0 && (
                                         <div className="text-xs text-gray-500">
                                             {stock.dimensions
                                                 .map(
-                                                    (d) => `${d.name}: ${d.value} ${d.uom_symbol}`
+                                                    (d) => t('stockSelector.dimensionLine', {
+                                                        name: d.name,
+                                                        value: d.value,
+                                                        unit: d.uom_symbol
+                                                    })
                                                 )
                                                 .join(", ")}
                                         </div>
@@ -155,15 +164,15 @@ const StockSelectorModal = ({showModal, onClose, action}) => {
                 )}
 
                 {!loadingStocks && matchingStocks.length === 0 && (
-                    <p className="text-sm text-gray-500 mt-4">No matching stock found.</p>
+                    <p className="text-sm text-gray-500 mt-4">{t('stockSelector.noMatch')}</p>
                 )}
 
                 <div className="flex justify-end mt-6 space-x-4">
                     <Button variant="outline" onClick={onClose}>
-                        Cancel
+                        {t('global.cancel')}
                     </Button>
                     <Button onClick={handleProceed} disabled={!selectedStock || loadingStocks}>
-                        Continue
+                        {t('global.continue')}
                     </Button>
                 </div>
             </Modal>

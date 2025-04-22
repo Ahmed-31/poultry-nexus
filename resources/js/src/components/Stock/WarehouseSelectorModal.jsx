@@ -37,15 +37,15 @@ const WarehouseSelectorModal = ({showModal, onClose, action}) => {
         try {
             await dispatch(removeWarehouse({id: selectedWarehouse.id})).unwrap();
             toast({
-                title: "Success",
-                description: "Warehouse deleted successfully.",
+                title: t('global.toasts.successTitle'),
+                description: t('warehouseSelector.toast.successMessage'),
                 variant: "default",
             });
             closeAll();
         } catch (err) {
             toast({
-                title: "Error",
-                description: err.message || "Failed to delete the warehouse.",
+                title: t('global.toasts.errorTitle'),
+                description: err.message || t('global.toasts.errorMessage'),
                 variant: "destructive",
             });
             setActiveModal(null);
@@ -61,17 +61,17 @@ const WarehouseSelectorModal = ({showModal, onClose, action}) => {
     return (
         <>
             <Modal isOpen={showModal && !activeModal} onClose={onClose}>
-                <h2 className="text-lg font-semibold mb-4">Select Warehouse</h2>
+                <h2 className="text-lg font-semibold mb-4">{t('warehouseSelector.title')}</h2>
 
-                <Label>Search by name</Label>
+                <Label>{t('warehouseSelector.searchLabel')}</Label>
                 <Input
                     className="my-2"
-                    placeholder="Search warehouses..."
+                    placeholder={t('warehouseSelector.searchPlaceholder')}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
 
-                {loading && <p className="text-sm text-gray-500 my-2">Loading warehouses...</p>}
+                {loading && <p className="text-sm text-gray-500 my-2">{t('warehouseSelector.loading')}</p>}
 
                 {!loading && filteredWarehouses.length > 0 && (
                     <div className="space-y-2 max-h-64 overflow-auto">
@@ -87,7 +87,7 @@ const WarehouseSelectorModal = ({showModal, onClose, action}) => {
                             >
                                 <div className="text-sm font-medium">{warehouse.name}</div>
                                 <div className="text-xs text-gray-500">
-                                    Location: {warehouse.location || t('global.na')}
+                                    {t('warehouseSelector.location')}: {warehouse.location || t('global.na')}
                                 </div>
                             </div>
                         ))}
@@ -95,15 +95,15 @@ const WarehouseSelectorModal = ({showModal, onClose, action}) => {
                 )}
 
                 {!loading && filteredWarehouses.length === 0 && (
-                    <p className="text-sm text-gray-500 mt-4">No matching warehouses found.</p>
+                    <p className="text-sm text-gray-500 mt-4">{t('warehouseSelector.noMatch')}</p>
                 )}
 
                 <div className="flex justify-end mt-6 space-x-4">
                     <Button variant="outline" onClick={onClose}>
-                        Cancel
+                        {t('global.cancel')}
                     </Button>
                     <Button onClick={handleProceed} disabled={!selectedWarehouse}>
-                        {action === "editWarehouse" ? "Edit" : "Delete"}
+                        {action === "editWarehouse" ? t('global.edit') : t('global.delete')}
                     </Button>
                 </div>
             </Modal>

@@ -5,12 +5,15 @@ import {FaPlus} from "react-icons/fa";
 import {Button} from "@/Components/ui/button";
 import DataTable from "react-data-table-component";
 import WarehouseFormModal from "@/src/components/Stock/WarehouseFormModal.jsx";
+import {useTranslation} from "react-i18next";
 
 const WarehouseManagement = () => {
+    const {t} = useTranslation();
     const dispatch = useDispatch();
 
     const warehouses = useSelector((state) => state.warehouses.dataTable || []);
     const loading = useSelector((state) => state.warehouses.loading);
+    const currentLang = useSelector((state) => state.language.current);
 
     const [searchTerm, setSearchTerm] = useState("");
     const [showForm, setShowForm] = useState(false);
@@ -43,13 +46,13 @@ const WarehouseManagement = () => {
     };
 
     const handleDelete = (id) => {
-        if (window.confirm("Are you sure you want to delete this warehouse?")) {
+        if (window.confirm(t('warehouseManagement.confirmDelete'))) {
             dispatch(removeWarehouse({id}))
                 .unwrap()
                 .then(() => dispatch(fetchWarehousesTable()))
                 .catch((err) => {
                     console.error("Delete failed:", err);
-                    alert("Something went wrong while deleting.");
+                    alert(t('warehouseManagement.deleteFailed'));
                 });
         }
     };
@@ -61,24 +64,30 @@ const WarehouseManagement = () => {
     };
 
     const columns = [
-        {name: "Warehouse Name", selector: (row) => row.name, sortable: true},
-        {name: "Location", selector: (row) => row.location || t('global.na'), sortable: true},
+        {name: t('warehouseManagement.tableHeaders.name'), selector: (row) => row.name, sortable: true},
         {
-            name: "Total Stock",
+            name: t('warehouseManagement.tableHeaders.location'),
+            selector: (row) => row.location || t('global.na'),
+            sortable: true
+        },
+        {
+            name: t('warehouseManagement.tableHeaders.stock'),
             selector: (row) => row.totalQuantity,
             sortable: true,
             cell: (row) => (
                 <div className="text-sm font-medium text-gray-700">
-                    {row.totalQuantity} units
+                    {t('warehouseManagement.unitsLabel', {
+                        count: row.totalQuantity
+                    })}
                 </div>
             ),
         },
         {
-            name: "Actions",
+            name: t('warehouseManagement.tableHeaders.actions'),
             cell: (row) => (
                 <div className="flex space-x-2">
-                    <Button variant="warning" onClick={() => handleEdit(row)}>Edit</Button>
-                    <Button variant="destructive" onClick={() => handleDelete(row.id)}>Delete</Button>
+                    <Button variant="warning" onClick={() => handleEdit(row)}>{t('global.edit')}</Button>
+                    <Button variant="destructive" onClick={() => handleDelete(row.id)}>{t('global.delete')}</Button>
                 </div>
             ),
         },
@@ -87,16 +96,16 @@ const WarehouseManagement = () => {
     return (
         <div className="bg-white rounded-2xl shadow-lg w-full max-w-none overflow-x-hidden">
             <div className="flex justify-between items-center px-8 py-6 gap-4 flex-wrap">
-                <h2 className="text-3xl font-bold text-gray-800">🏢 Warehouse Management</h2>
+                <h2 className="text-3xl font-bold text-gray-800">🏢 {t('warehouseManagement.title')}</h2>
                 <div className="flex gap-3">
                     <Button onClick={() => dispatch(fetchWarehousesTable())} variant="outline">
-                        🔄 Refresh
+                        🔄 {t('global.refresh')}
                     </Button>
                     <Button
                         onClick={() => setShowForm(true)}
                         className="px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all bg-blue-600 text-white flex items-center font-medium"
                     >
-                        <FaPlus className="mr-2"/> Add Warehouse
+                        <FaPlus className="mr-2"/> {t('warehouseManagement.addWarehouse')}
                     </Button>
                 </div>
             </div>
@@ -104,7 +113,7 @@ const WarehouseManagement = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-gray-50 p-5 rounded-xl shadow mx-8">
                 <input
                     type="text"
-                    placeholder="🔍 Search by name or location..."
+                    placeholder={"🔍 " + t('warehouseManagement.searchPlaceholder')}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition w-full"
@@ -112,11 +121,15 @@ const WarehouseManagement = () => {
             </div>
 
             <div className="text-right text-sm text-gray-500 px-8 pb-2">
-                Showing {filteredWarehouses.length} of {warehouses.length} warehouses
+                {t('warehouseManagement.showingResults', {
+                    count: filteredWarehouses.length,
+                    total: warehouses.length
+                })}
             </div>
 
             <div className="w-full overflow-x-auto">
                 <DataTable
+                    key={currentLang}
                     columns={columns}
                     data={filteredWarehouses}
                     progressPending={loading}
@@ -127,7 +140,7 @@ const WarehouseManagement = () => {
                 />
                 {!loading && filteredWarehouses.length === 0 && (
                     <div className="text-center text-gray-500 py-8">
-                        No warehouses found matching your search.
+                        {t('warehouseManagement.noMatch')}
                     </div>
                 )}
             </div>

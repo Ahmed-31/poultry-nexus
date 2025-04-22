@@ -15,21 +15,25 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 import {useToast} from "@/hooks/use-toast.js";
-// todo rerender all datatables to change columns' titles language
+import {useDispatch} from 'react-redux';
+import {setLanguage} from '@/src/store/languageSlice';
+
 const LanguageSwitcher = () => {
-    const {i18n} = useTranslation();
+    const dispatch = useDispatch();
+    const {i18n, t} = useTranslation();
     const [animate, setAnimate] = useState(false);
     const languages = [
         {code: 'en', label: 'English', flag: '🇺🇸'},
         {code: 'ar', label: 'العربية', flag: '🇪🇬'},
     ];
     const {toast} = useToast();
-    const {t} = useTranslation();
 
     const changeLang = (lng) => {
         i18n.changeLanguage(lng).then(() => {
             localStorage.setItem('lang', lng);
             document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr';
+
+            dispatch(setLanguage(lng));
 
             toast({
                 title: '✅ ' + t('languageChangedTitle'),

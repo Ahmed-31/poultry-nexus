@@ -1,6 +1,7 @@
 import React, {useState, useMemo} from 'react';
 import DataTable from 'react-data-table-component';
 import {useTranslation} from "react-i18next";
+import {useSelector} from "react-redux";
 
 const Section = ({title, children}) => {
     const [isOpen, setIsOpen] = useState(true);
@@ -20,6 +21,7 @@ const Section = ({title, children}) => {
 const ExpandedOrderDetails = ({data}) => {
 
     const {t} = useTranslation();
+    const currentLang = useSelector((state) => state.language.current);
     const itemColumns = useMemo(() => [
         {name: t('orderDetails.columns.product'), selector: row => row.product?.name || t('global.na'), sortable: true},
         {name: t('orderDetails.columns.quantity'), selector: row => row.quantity, sortable: true},
@@ -93,6 +95,7 @@ const ExpandedOrderDetails = ({data}) => {
 
             <Section title={t('orderDetails.sections.items')}>
                 <DataTable
+                    key={currentLang}
                     columns={itemColumns}
                     data={data?.order_items || []}
                     noHeader
@@ -105,6 +108,7 @@ const ExpandedOrderDetails = ({data}) => {
             {data?.bundles?.length > 0 && (
                 <Section title={t('orderDetails.sections.bundles')}>
                     <DataTable
+                        key={currentLang}
                         columns={bundleColumns}
                         data={data.bundles}
                         noHeader
@@ -118,6 +122,7 @@ const ExpandedOrderDetails = ({data}) => {
             {data?.payments?.length > 0 && (
                 <Section title={t('orderDetails.sections.payments')}>
                     <DataTable
+                        key={currentLang}
                         columns={paymentColumns}
                         data={data.payments}
                         noHeader
@@ -131,6 +136,7 @@ const ExpandedOrderDetails = ({data}) => {
             {data?.shipments?.length > 0 && (
                 <Section title={t('orderDetails.sections.shipments')}>
                     <DataTable
+                        key={currentLang}
                         columns={shipmentColumns}
                         data={data.shipments}
                         noHeader

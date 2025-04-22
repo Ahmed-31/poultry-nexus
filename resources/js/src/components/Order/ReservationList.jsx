@@ -15,6 +15,7 @@ const ReservationList = () => {
     const {t} = useTranslation();
 
     const {dataTable: reservations, loading, error} = useSelector(state => state.stockReservations);
+    const currentLang = useSelector((state) => state.language.current);
 
     useEffect(() => {
         dispatch(fetchStockReservationsTable(orderId ? {order_id: orderId} : {}));
@@ -88,6 +89,7 @@ const ReservationList = () => {
             )}
 
             <DataTable
+                key={currentLang}
                 columns={columns}
                 data={reservations}
                 progressPending={loading}

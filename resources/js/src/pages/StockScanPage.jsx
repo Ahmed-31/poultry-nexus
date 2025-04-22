@@ -18,6 +18,7 @@ import {fetchUoms} from "@/src/store/uomSlice";
 import BackButton from '@/src/components/common/BackButton';
 import {addStockItem} from "@/src/store/stockSlice.jsx";
 import {toast} from "@/hooks/use-toast.js";
+import {useTranslation} from "react-i18next";
 
 export default function ManualStockScan() {
     const {
@@ -37,6 +38,7 @@ export default function ManualStockScan() {
         }
     });
 
+    const {t} = useTranslation();
     const dispatch = useDispatch();
     const products = useSelector((state) => state.products.list || []);
     const warehouses = useSelector((state) => state.warehouses.list || []);

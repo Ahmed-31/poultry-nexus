@@ -45,6 +45,7 @@ const OrderList = () => {
     const dispatch = useDispatch();
     const orders = useSelector(state => state.orders.dataTable || []);
     const loading = useSelector(state => state.orders.loading);
+    const currentLang = useSelector((state) => state.language.current);
 
     const error = useSelector(state => state.orders.error);
     const [searchTerm, setSearchTerm] = useState('');
@@ -178,6 +179,7 @@ const OrderList = () => {
             {error && <p className="text-red-500 text-center">{error}</p>}
 
             <DataTable
+                key={currentLang}
                 columns={columns}
                 data={filteredOrders}
                 progressPending={loading}

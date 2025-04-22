@@ -14,6 +14,7 @@ const OrderDetails = () => {
     const {t} = useTranslation();
 
     const {order: currentOrder, loading, error} = useSelector((state) => state.orders);
+    const currentLang = useSelector((state) => state.language.current);
 
     useEffect(() => {
         if (orderId) {
@@ -122,6 +123,7 @@ const OrderDetails = () => {
             {/* Order Items Table */}
             <div className="bg-white shadow-md rounded-lg p-6 mb-6">
                 <DataTable
+                    key={currentLang}
                     title={t('orderDetailsPage.tables.items')}
                     columns={orderItemColumns}
                     data={currentOrder.order_items || []}
@@ -134,6 +136,7 @@ const OrderDetails = () => {
             {/* Bundles Table */}
             <div className="bg-white shadow-md rounded-lg p-6 mb-6">
                 <DataTable
+                    key={currentLang}
                     title={t('orderDetailsPage.tables.bundles')}
                     columns={bundleColumns}
                     data={currentOrder.bundles || []}
@@ -146,6 +149,7 @@ const OrderDetails = () => {
             {/* Payments Table */}
             <div className="bg-white shadow-md rounded-lg p-6 mb-6">
                 <DataTable
+                    key={currentLang}
                     title={t('orderDetailsPage.tables.payments')}
                     columns={paymentColumns}
                     data={currentOrder.payments || []}
@@ -159,6 +163,7 @@ const OrderDetails = () => {
             {/* Shipments Table */}
             <div className="bg-white shadow-md rounded-lg p-6 mb-6">
                 <DataTable
+                    key={currentLang}
                     title={t('orderDetailsPage.tables.shipments')}
                     columns={shipmentColumns}
                     data={currentOrder.shipments || []}

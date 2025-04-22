@@ -121,7 +121,7 @@ const IssueStockFormModal = ({
     if (!products.length || !warehouses.length || !uoms.length) {
         return (
             <Modal isOpen={showModal} onClose={onClose}>
-                <div className="p-4">Loading form data...</div>
+                <div className="p-4">{t('issueStock.formLoading')}</div>
             </Modal>
         );
     }

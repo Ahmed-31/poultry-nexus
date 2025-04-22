@@ -60,8 +60,8 @@ const AdjustStockFormModal = ({
         const qty = parseFloat(data.input_quantity);
         if (qty <= 0) {
             toast({
-                title: t('adjustStock.toasts.invalidQtyTitle'),
-                description: t('adjustStock.toasts.invalidQtyDesc'),
+                title: t('global.toasts.invalidQtyTitle'),
+                description: t('global.toasts.invalidQtyDesc'),
                 variant: "destructive"
             });
             return;

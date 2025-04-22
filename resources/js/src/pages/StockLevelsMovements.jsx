@@ -48,6 +48,7 @@ const StockLevelsMovements = () => {
     const movementsTableLoading = useSelector((state) => state.stockMovements.loading);
     const products = useSelector((state) => state.products.list || []);
     const warehouses = useSelector((state) => state.warehouses.list || []);
+    const currentLang = useSelector((state) => state.language.current);
 
     useEffect(() => {
         dispatch(fetchStock());
@@ -211,6 +212,7 @@ const StockLevelsMovements = () => {
                 actions={<RefreshButton onClick={() => dispatch(fetchStock())}/>}
             >
                 <DataTable
+                    key={currentLang}
                     columns={stockColumns}
                     data={filteredStock}
                     progressPending={stockLoading}
@@ -230,6 +232,7 @@ const StockLevelsMovements = () => {
                 actions={<RefreshButton onClick={() => dispatch(fetchStockMovementsTable())}/>}
             >
                 <DataTable
+                    key={currentLang}
                     columns={historyColumns}
                     data={movementsWithBalance}
                     progressPending={movementsTableLoading}
