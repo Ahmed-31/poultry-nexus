@@ -174,12 +174,7 @@ const StockList = () => {
             </div>
 
             {showForm && (
-                <div
-                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center backdrop-blur-sm">
-                    <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg">
-                        <StockFormModal showModal={showForm} onClose={handleCloseForm} initialData={editItem}/>
-                    </div>
-                </div>
+                <StockFormModal showModal={showForm} onClose={handleCloseForm} initialData={editItem}/>
             )}
         </div>
     );

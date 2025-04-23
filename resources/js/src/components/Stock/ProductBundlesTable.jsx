@@ -59,7 +59,8 @@ const ProductBundlesTable = () => {
             cell: (row) => (
                 <div className="flex gap-2">
                     <Button size="sm" variant="warning" onClick={() => handleEdit(row)}>{t('global.edit')}</Button>
-                    <Button size="sm" variant="destructive" onClick={() => handleDelete(row.id)}>{t('global.delete')}</Button>
+                    <Button size="sm" variant="destructive"
+                            onClick={() => handleDelete(row.id)}>{t('global.delete')}</Button>
                 </div>
             ),
         },
@@ -95,29 +96,26 @@ const ProductBundlesTable = () => {
             </div>
 
             {/* DataTable */}
-            <div className="px-8 pb-8">
-                <DataTable
-                    key={currentLang}
-                    columns={columns}
-                    data={filteredBundles}
-                    progressPending={loading}
-                    pagination
-                    highlightOnHover
-                    striped
-                    className="rounded-xl overflow-hidden"
-                    expandableRows
-                    expandableRowsComponent={ExpandedBundleProducts}
-                />
+            <div className="w-full overflow-x-auto">
+                <div className="w-full">
+                    <DataTable
+                        key={currentLang}
+                        columns={columns}
+                        data={filteredBundles}
+                        progressPending={loading}
+                        pagination
+                        highlightOnHover
+                        striped
+                        className="border rounded-none shadow-sm w-full"
+                        expandableRows
+                        expandableRowsComponent={ExpandedBundleProducts}
+                    />
+                </div>
             </div>
 
             {showForm && (
-                <div
-                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center backdrop-blur-sm z-50">
-                    <div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-lg border border-gray-200">
-                        <ProductBundleFormModal showModal={showForm} onClose={handleCloseForm}
-                                                initialData={editBundle}/>
-                    </div>
-                </div>
+                <ProductBundleFormModal showModal={showForm} onClose={handleCloseForm}
+                                        initialData={editBundle}/>
             )}
         </div>
     );

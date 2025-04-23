@@ -55,7 +55,11 @@ const ProductManagement = () => {
     const columns = [
         {name: t('productManagement.tableHeaders.sku'), selector: (row) => row.sku, sortable: true},
         {name: t('productManagement.tableHeaders.name'), selector: (row) => row.name, sortable: true},
-        {name: t('productManagement.tableHeaders.category'), selector: (row) => row.category?.name || t('global.na'), sortable: true},
+        {
+            name: t('productManagement.tableHeaders.category'),
+            selector: (row) => row.category?.name || t('global.na'),
+            sortable: true
+        },
         {name: t('productManagement.tableHeaders.type'), selector: (row) => row.type, sortable: true},
         {name: t('productManagement.tableHeaders.unit'), selector: (row) => row.unit, sortable: true},
         {name: t('productManagement.tableHeaders.dimensions'), selector: (row) => row.dimensionsString, sortable: true},
@@ -137,13 +141,7 @@ const ProductManagement = () => {
             </div>
 
             {showForm && (
-                <div
-                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center backdrop-blur-sm transition-opacity duration-300">
-                    <div
-                        className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg border border-gray-200 transform transition-all">
-                        <ItemFormModal showModal={showForm} onClose={handleCloseForm} initialData={editOrder}/>
-                    </div>
-                </div>
+                <ItemFormModal showModal={showForm} onClose={handleCloseForm} initialData={editOrder}/>
             )}
         </div>
     );
