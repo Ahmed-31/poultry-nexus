@@ -11,6 +11,7 @@ import ordersReducer from './ordersSlice';
 import customersReducer from './customersSlice';
 import stockReservationsReducer from './stockReservationsSlice';
 import languageReducer from './languageSlice';
+import uomGroupsReducer from './uomGroupSlice'
 
 const store = configureStore({
     reducer: {
@@ -26,6 +27,7 @@ const store = configureStore({
         customers: customersReducer,
         stockReservations: stockReservationsReducer,
         language: languageReducer,
+        uomGroups: uomGroupsReducer,
     },
 });
 

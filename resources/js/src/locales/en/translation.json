@@ -985,5 +985,124 @@
         "component": "Component",
         "rawMaterial": "Raw Material",
         "consumable": "Consumable"
+    },
+    "uomTable": {
+        "title": "Units of Measurement",
+        "addUom": "Add UOM",
+        "searchPlaceholder": "Search units...",
+        "confirmDelete": "Are you sure you want to delete this unit?",
+        "tableHeaders": {
+            "name": "Name",
+            "symbol": "Symbol",
+            "group": "Group",
+            "isBase": "Is Base Unit",
+            "conversionFactor": "Conversion Factor",
+            "dimensions": "Dimensions",
+            "products": "Products",
+            "actions": "Actions"
+        }
+    },
+    "uomDetails": {
+        "title": "Unit Details",
+        "sections": {
+            "metadata": "Metadata",
+            "products": "Associated Products",
+            "dimensions": "Dimensions"
+        },
+        "groupName": "Group Name",
+        "tableHeaders": {
+            "productName": "Product Name",
+            "description": "Description",
+            "price": "Price",
+            "sku": "SKU",
+            "type": "Type",
+            "dimensionName": "Dimension Name"
+        }
+    },
+    "uomForm": {
+        "title": {
+            "add": "Add UOM",
+            "edit": "Edit UOM"
+        },
+        "fields": {
+            "name": "Name",
+            "symbol": "Symbol",
+            "group": "Group",
+            "conversionFactor": "Conversion Factor",
+            "isBase": "Is Base Unit",
+            "dimensions": "Dimensions"
+        },
+        "placeholders": {
+            "group": "Select a group",
+            "dimensions": "Select related dimensions"
+        },
+        "validation": {
+            "name": "Name is required",
+            "symbol": "Symbol is required",
+            "group": "Group is required",
+            "conversionFactor": "Conversion factor is required"
+        },
+        "toast": {
+            "successMessage": "Unit of measurement saved successfully."
+        }
+    },
+    "uomGroupTable": {
+        "title": "UoM Groups",
+        "addGroup": "Add Group",
+        "searchPlaceholder": "Search UoM Groups...",
+        "confirmDelete": "Are you sure you want to delete this UoM group?",
+        "tableHeaders": {
+            "name": "Group Name",
+            "createdAt": "Created At",
+            "actions": "Actions"
+        }
+    },
+    "uomGroupForm": {
+        "title": {
+            "add": "Add UoM Group",
+            "edit": "Edit UoM Group"
+        },
+        "fields": {
+            "name": "Group Name"
+        },
+        "validation": {
+            "name": "Group name is required"
+        },
+        "toast": {
+            "successMessage": "UoM group saved successfully"
+        }
+    },
+    "dimensionTable": {
+        "title": "Dimensions",
+        "addDimension": "Add Dimension",
+        "searchPlaceholder": "Search dimensions...",
+        "confirmDelete": "Are you sure you want to delete this dimension?",
+        "tableHeaders": {
+            "name": "Name",
+            "uom": "Unit of Measure",
+            "products": "Products",
+            "createdAt": "Created At",
+            "actions": "Actions"
+        }
+    },
+    "dimensionForm": {
+        "title": {
+            "add": "Add Dimension",
+            "edit": "Edit Dimension"
+        },
+        "fields": {
+            "name": "Dimension Name",
+            "uom": "Unit of Measure"
+        },
+        "placeholders": {
+            "uom": "Select Unit of Measure"
+        },
+        "validation": {
+            "name": "Dimension name is required",
+            "uom": "Unit of measure is required"
+        },
+        "toast": {
+            "successMessage": "Dimension saved successfully"
+        }
     }
 }

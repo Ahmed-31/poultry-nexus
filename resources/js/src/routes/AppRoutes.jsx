@@ -20,6 +20,7 @@ import WarehousesPage from "@/src/pages/WarehousesPage.jsx";
 import ProductsPage from "@/src/pages/ProductsPage.jsx";
 import StockScanPage from "@/src/pages/StockScanPage.jsx";
 import ReservationList from "@/src/components/Order/ReservationList.jsx";
+import UomPage from "@/src/pages/UomPage.jsx"
 
 const AppRoutes = () => (
     <Provider store={store}>
@@ -70,6 +71,10 @@ const AppRoutes = () => (
                             <Route
                                 path="/stock/reservations"
                                 element={<ReservationList />}
+                            />
+                            <Route
+                                path="/uom"
+                                element={<UomPage />}
                             />
                         </Route>
                     </Route>

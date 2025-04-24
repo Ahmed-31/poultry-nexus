@@ -81,7 +81,7 @@ const StockList = () => {
         },
         {
             name: t('stockList.columns.unit'),
-            selector: (row) => row.unit ?? "-",
+            selector: (row) => t(`uoms.${row.unit}`) ?? "-",
             sortable: true,
         },
         {

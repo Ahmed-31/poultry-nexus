@@ -879,7 +879,7 @@
             "rawMaterials": "مواد خام",
             "allTypes": "كل الأنواع",
             "rawMaterial": "مادة خام",
-            "component": "عنصر",
+            "component": "مكوّن",
             "consumable": "مستهلك"
         },
         "tableHeaders": {
@@ -992,5 +992,124 @@
         "component": "عنصر",
         "rawMaterial": "المواد الخام",
         "consumable": "المستهلكات"
+    },
+    "uomTable": {
+        "title": "وحدات القياس",
+        "addUom": "إضافة وحدة",
+        "searchPlaceholder": "ابحث عن الوحدات...",
+        "confirmDelete": "هل أنت متأكد أنك تريد حذف هذه الوحدة؟",
+        "tableHeaders": {
+            "name": "الاسم",
+            "symbol": "الرمز",
+            "group": "المجموعة",
+            "isBase": "وحدة أساسية",
+            "conversionFactor": "عامل التحويل",
+            "dimensions": "الأبعاد",
+            "products": "المنتجات",
+            "actions": "الإجراءات"
+        }
+    },
+    "uomDetails": {
+        "title": "تفاصيل الوحدة",
+        "sections": {
+            "metadata": "البيانات الوصفية",
+            "products": "المنتجات المرتبطة",
+            "dimensions": "الأبعاد"
+        },
+        "groupName": "اسم المجموعة",
+        "tableHeaders": {
+            "productName": "اسم المنتج",
+            "description": "الوصف",
+            "price": "السعر",
+            "sku": "رمز التخزين (SKU)",
+            "type": "النوع",
+            "dimensionName": "اسم البُعد"
+        }
+    },
+    "uomForm": {
+        "title": {
+            "add": "إضافة وحدة",
+            "edit": "تعديل وحدة"
+        },
+        "fields": {
+            "name": "الاسم",
+            "symbol": "الرمز",
+            "group": "المجموعة",
+            "conversionFactor": "عامل التحويل",
+            "isBase": "وحدة أساسية",
+            "dimensions": "الابعاد"
+        },
+        "placeholders": {
+            "group": "اختر مجموعة",
+            "dimensions": "اختر الابعاد"
+        },
+        "validation": {
+            "name": "الاسم مطلوب",
+            "symbol": "الرمز مطلوب",
+            "group": "المجموعة مطلوبة",
+            "conversionFactor": "عامل التحويل مطلوب"
+        },
+        "toast": {
+            "successMessage": "تم حفظ وحدة القياس بنجاح."
+        }
+    },
+    "uomGroupTable": {
+        "title": "مجموعات وحدات القياس",
+        "addGroup": "إضافة مجموعة",
+        "searchPlaceholder": "ابحث عن مجموعات وحدات القياس...",
+        "confirmDelete": "هل أنت متأكد أنك تريد حذف مجموعة وحدات القياس هذه؟",
+        "tableHeaders": {
+            "name": "اسم المجموعة",
+            "createdAt": "تاريخ الإنشاء",
+            "actions": "الإجراءات"
+        }
+    },
+    "uomGroupForm": {
+        "title": {
+            "add": "إضافة مجموعة وحدات قياس",
+            "edit": "تعديل مجموعة وحدات قياس"
+        },
+        "fields": {
+            "name": "اسم المجموعة"
+        },
+        "validation": {
+            "name": "اسم المجموعة مطلوب"
+        },
+        "toast": {
+            "successMessage": "تم حفظ مجموعة وحدات القياس بنجاح"
+        }
+    },
+    "dimensionTable": {
+        "title": "الأبعاد",
+        "addDimension": "إضافة بُعد",
+        "searchPlaceholder": "ابحث عن الأبعاد...",
+        "confirmDelete": "هل أنت متأكد أنك تريد حذف هذا البُعد؟",
+        "tableHeaders": {
+            "name": "الاسم",
+            "uom": "وحدة القياس",
+            "products": "المنتجات",
+            "createdAt": "تاريخ الإنشاء",
+            "actions": "الإجراءات"
+        }
+    },
+    "dimensionForm": {
+        "title": {
+            "add": "إضافة بُعد",
+            "edit": "تعديل البُعد"
+        },
+        "fields": {
+            "name": "اسم البُعد",
+            "uom": "وحدة القياس"
+        },
+        "placeholders": {
+            "uom": "اختر وحدة القياس"
+        },
+        "validation": {
+            "name": "اسم البُعد مطلوب",
+            "uom": "وحدة القياس مطلوبة"
+        },
+        "toast": {
+            "successMessage": "تم حفظ البُعد بنجاح"
+        }
     }
 }

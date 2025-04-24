@@ -10,6 +10,7 @@ use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\StockReservationController;
 use App\Http\Controllers\UomController;
 use App\Http\Controllers\UomDimensionController;
+use App\Http\Controllers\UomGroupController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StockController;
@@ -50,8 +51,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', [MenuController::class, 'index']);
     });
     Route::prefix('settings')->group(function () {
+        Route::get('uoms/all', [UomController::class, 'all']);
+        Route::get('uom/dimensions/all', [UomDimensionController::class, 'all']);
+        Route::get('uom/groups/all', [UomGroupController::class, 'all']);
         Route::apiResource('uoms', UomController::class);
-        Route::apiResource('uomDimensions', UomDimensionController::class);
+        Route::apiResource('uom/dimensions', UomDimensionController::class);
+        Route::apiResource('uom/groups', UomGroupController::class);
     });
 });
 

@@ -8,6 +8,11 @@ class Uom extends Model
 {
     protected $fillable = ['name', 'symbol', 'group_id', 'is_base', 'conversion_factor'];
 
+    public function scopeWithAllRelations($query)
+    {
+        return $query->with(['group', 'products', 'dimensions']);
+    }
+
     public function group()
     {
         return $this->belongsTo(UomGroup::class, 'group_id');

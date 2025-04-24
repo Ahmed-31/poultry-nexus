@@ -25,7 +25,7 @@ const ExpandedBundleProducts = ({data}) => {
     const productColumns = [
         {name: t('expandedBundle.columns.sku'), selector: row => row.sku, sortable: true},
         {name: t('expandedBundle.columns.name'), selector: row => row.name, sortable: true},
-        {name: t('expandedBundle.columns.type'), selector: row => row.type, sortable: true},
+        {name: t('expandedBundle.columns.type'), selector: row => t(`categoriesNames.${row.type}`), sortable: true},
         {
             name: t('expandedBundle.columns.quantity'),
             selector: row => row.quantity

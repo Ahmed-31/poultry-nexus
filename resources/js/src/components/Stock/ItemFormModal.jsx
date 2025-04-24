@@ -5,7 +5,7 @@ import {Label} from "@/components/ui/label";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {useForm, Controller} from "react-hook-form";
 import {useSelector, useDispatch} from 'react-redux';
-import {addProduct, editProduct} from '../../store/productsSlice.jsx';
+import {addProduct, editProduct} from "@/src/store/productsSlice.jsx"
 import {fetchUoms} from "@/src/store/uomSlice.jsx";
 import {fetchCategories} from "@/src/store/categorySlice.jsx";
 import Modal from "@/src/components/common/Modal.jsx";
