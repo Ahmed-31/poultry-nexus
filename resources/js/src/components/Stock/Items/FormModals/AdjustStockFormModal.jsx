@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useForm} from 'react-hook-form';
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
-import {Button} from "@/components/ui/button";
-import {Select, SelectTrigger, SelectValue, SelectContent, SelectItem} from "@/components/ui/select";
+import {Label} from "@/Components/ui/label.jsx";
+import {Input} from "@/Components/ui/input.jsx";
+import {Button} from "@/Components/ui/button.jsx";
+import {Select, SelectTrigger, SelectValue, SelectContent, SelectItem} from "@/Components/ui/select.jsx";
 import Modal from "@/src/components/common/Modal.jsx";
-import {toast} from "@/hooks/use-toast";
+import {toast} from "@/hooks/use-toast.js";
 import {fetchProducts} from "@/src/store/productsSlice.jsx";
-import {adjustStockItem} from "@/src/store/stockSlice";
+import {adjustStockItem} from "@/src/store/stockSlice.jsx";
 import {useTranslation} from "react-i18next";
 
 const AdjustStockFormModal = ({

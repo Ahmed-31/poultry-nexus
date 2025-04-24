@@ -1,7 +1,7 @@
 import React from "react";
-import ProductsTable from "@/src/components/Stock/ProductsTable";
-import ProductBundlesTable from "@/src/components/Stock/ProductBundlesTable";
-import CategoriesTable from "@/src/components/Stock/CategoriesTable";
+import ProductsTable from "@/src/components/Stock/Product/ProductsTable.jsx";
+import ProductBundlesTable from "@/src/components/Stock/Product/ProductBundlesTable.jsx";
+import CategoriesTable from "@/src/components/Stock/Category/CategoriesTable.jsx";
 import {useTranslation} from "react-i18next";
 
 const ProductsPage = () => {

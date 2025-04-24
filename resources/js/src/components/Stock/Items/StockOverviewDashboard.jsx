@@ -1,10 +1,10 @@
 import React, {useEffect, useMemo} from "react";
 import {useSelector, useDispatch} from "react-redux";
-import {fetchStock} from "@/src/store/stockSlice";
-import {fetchStockMovements} from "@/src/store/stockMovementsSlice";
-import {fetchWarehouses} from "@/src/store/warehouseSlice";
+import {fetchStock} from "@/src/store/stockSlice.jsx";
+import {fetchStockMovements} from "@/src/store/stockMovementsSlice.jsx";
+import {fetchWarehouses} from "@/src/store/warehouseSlice.jsx";
 import {BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend} from "recharts";
-import {Card, CardContent} from "@/components/ui/card";
+import {Card, CardContent} from "@/Components/ui/card.jsx";
 import ActionHandler from "@/src/components/common/ActionHandler.jsx";
 import {useTranslation} from "react-i18next";
 

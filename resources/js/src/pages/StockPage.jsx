@@ -1,5 +1,5 @@
 import React from 'react';
-import StockOverviewDashboard from '../components/Stock/StockOverviewDashboard.jsx';
+import StockOverviewDashboard from '../components/Stock/Items/StockOverviewDashboard.jsx';
 import {useTranslation} from "react-i18next";
 
 const StockPage = () => {

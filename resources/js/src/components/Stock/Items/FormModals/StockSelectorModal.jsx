@@ -6,18 +6,18 @@ import {
     SelectValue,
     SelectContent,
     SelectItem,
-} from "@/components/ui/select";
-import {Button} from "@/components/ui/button";
-import {Label} from "@/components/ui/label";
+} from "@/Components/ui/select.jsx";
+import {Button} from "@/Components/ui/button.jsx";
+import {Label} from "@/Components/ui/label.jsx";
 import Modal from "@/src/components/common/Modal.jsx";
-import {fetchMatchingStocks} from "@/src/services/stockService";
-import {toast} from "@/hooks/use-toast";
+import {fetchMatchingStocks} from "@/src/services/stockService.jsx";
+import {toast} from "@/hooks/use-toast.js";
 import {fetchProducts} from "@/src/store/productsSlice.jsx";
 import {fetchWarehouses} from "@/src/store/warehouseSlice.jsx";
-import IssueStockFormModal from "@/src/components/Stock/IssueStockFormModal";
-import TransferStockFormModal from "@/src/components/Stock/TransferStockFormModal";
-import AdjustStockFormModal from "@/src/components/Stock/AdjustStockFormModal";
-import StockCountModal from "@/src/components/Stock/StockCountModal.jsx";
+import IssueStockFormModal from "@/src/components/Stock/Items/FormModals/IssueStockFormModal.jsx";
+import TransferStockFormModal from "@/src/components/Stock/Items/FormModals/TransferStockFormModal.jsx";
+import AdjustStockFormModal from "@/src/components/Stock/Items/FormModals/AdjustStockFormModal.jsx";
+import StockCountModal from "@/src/components/Stock/Items/FormModals/StockCountModal.jsx";
 import {useTranslation} from "react-i18next";
 
 const StockSelectorModal = ({showModal, onClose, action}) => {

@@ -1,13 +1,13 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {useSelector, useDispatch} from "react-redux";
 import Modal from "@/src/components/common/Modal.jsx";
-import {Input} from "@/components/ui/input";
-import {Button} from "@/components/ui/button";
-import {Label} from "@/components/ui/label";
+import {Input} from "@/Components/ui/input.jsx";
+import {Button} from "@/Components/ui/button.jsx";
+import {Label} from "@/Components/ui/label.jsx";
 import {fetchWarehouses, removeWarehouse} from "@/src/store/warehouseSlice.jsx";
-import WarehouseFormModal from "@/src/components/Stock/WarehouseFormModal.jsx";
+import WarehouseFormModal from "@/src/components/Stock/Warehouse/FormModals/WarehouseFormModal.jsx";
 import DeleteConfirmationModal from "@/src/components/common/DeleteConfirmationModal.jsx";
-import {toast} from "@/hooks/use-toast";
+import {toast} from "@/hooks/use-toast.js";
 
 const WarehouseSelectorModal = ({showModal, onClose, action}) => {
     const dispatch = useDispatch();

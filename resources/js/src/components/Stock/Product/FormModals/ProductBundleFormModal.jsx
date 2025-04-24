@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react';
 import {useForm, Controller, useFieldArray} from "react-hook-form";
 import {useDispatch, useSelector} from 'react-redux';
-import {Button} from "@/components/ui/button";
-import {Input} from "@/components/ui/input";
-import {Label} from "@/components/ui/label";
+import {Button} from "@/Components/ui/button.jsx";
+import {Input} from "@/Components/ui/input.jsx";
+import {Label} from "@/Components/ui/label.jsx";
 import Modal from "@/src/components/common/Modal.jsx";
-import {toast} from "@/hooks/use-toast";
+import {toast} from "@/hooks/use-toast.js";
 import {fetchProducts} from "@/src/store/productsSlice.jsx";
 import {addProductBundle, editProductBundle} from "@/src/store/productBundlesSlice.jsx";
 import {SmartSelect} from "@/src/components/common/SmartSelect.jsx";

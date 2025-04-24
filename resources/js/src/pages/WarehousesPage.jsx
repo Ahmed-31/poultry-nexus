@@ -4,7 +4,7 @@ import {fetchWarehousesTable, removeWarehouse} from "../store/warehouseSlice";
 import {FaPlus} from "react-icons/fa";
 import {Button} from "@/Components/ui/button";
 import DataTable from "react-data-table-component";
-import WarehouseFormModal from "@/src/components/Stock/WarehouseFormModal.jsx";
+import WarehouseFormModal from "@/src/components/Stock/Warehouse/FormModals/WarehouseFormModal.jsx";
 import {useTranslation} from "react-i18next";
 
 const WarehouseManagement = () => {

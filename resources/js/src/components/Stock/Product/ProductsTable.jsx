@@ -1,11 +1,11 @@
 import React, {useEffect, useState, useMemo} from "react";
 import {useSelector, useDispatch} from "react-redux";
-import {fetchProductsTable, removeProduct} from "@/src/store/productsSlice";
+import {fetchProductsTable, removeProduct} from "@/src/store/productsSlice.jsx";
 import DataTable from "react-data-table-component";
-import {Button} from "@/Components/ui/button";
+import {Button} from "@/Components/ui/button.jsx";
 import {FaPlus} from "react-icons/fa";
-import ItemFormModal from "@/src/components/Stock/ItemFormModal.jsx";
-import ExpandedProductDetails from "@/src/components/Stock/ExpandedProductDetails.jsx";
+import ItemFormModal from "@/src/components/Stock/Product/FormModals/ItemFormModal.jsx";
+import ExpandedProductDetails from "@/src/components/Stock/Product/Expanded/ExpandedProductDetails.jsx";
 import {useTranslation} from "react-i18next";
 
 const ProductManagement = () => {

@@ -1,13 +1,13 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Button} from "@/components/ui/button";
-import StockFormModal from "@/src/components/Stock/StockFormModal";
-import StockSelectorModal from "@/src/components/Stock/StockSelectorModal.jsx";
-import StockCountModal from "@/src/components/Stock/StockCountModal.jsx";
-import ItemFormModal from "@/src/components/Stock/ItemFormModal.jsx";
-import ItemSelectorModal from "@/src/components/Stock/ItemSelectorModal.jsx";
-import WarehouseFormModal from "@/src/components/Stock/WarehouseFormModal.jsx";
-import WarehouseSelectorModal from "@/src/components/Stock/WarehouseSelectorModal.jsx";
+import StockFormModal from "@/src/components/Stock/Items/FormModals/StockFormModal.jsx";
+import StockSelectorModal from "@/src/components/Stock/Items/FormModals/StockSelectorModal.jsx";
+import StockCountModal from "@/src/components/Stock/Items/FormModals/StockCountModal.jsx";
+import ItemFormModal from "@/src/components/Stock/Product/FormModals/ItemFormModal.jsx";
+import ItemSelectorModal from "@/src/components/Stock/Product/FormModals/ItemSelectorModal.jsx";
+import WarehouseFormModal from "@/src/components/Stock/Warehouse/FormModals/WarehouseFormModal.jsx";
+import WarehouseSelectorModal from "@/src/components/Stock/Warehouse/FormModals/WarehouseSelectorModal.jsx";
 
 const ActionHandler = ({action}) => {
     const navigate = useNavigate();

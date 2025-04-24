@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {fetchProducts} from '@/src/store/productsSlice';
-import {fetchStock} from '@/src/store/stockSlice';
-import {Label} from '@/components/ui/label';
-import Modal from '@/src/components/common/Modal';
-import {ScrollArea} from '@/components/ui/scroll-area';
-import {SmartSelect} from "@/src/components/common/SmartSelect";
+import {fetchProducts} from '@/src/store/productsSlice.jsx';
+import {fetchStock} from '@/src/store/stockSlice.jsx';
+import {Label} from '@/Components/ui/label.jsx';
+import Modal from '@/src/components/common/Modal.jsx';
+import {ScrollArea} from '@/Components/ui/scroll-area.jsx';
+import {SmartSelect} from "@/src/components/common/SmartSelect.jsx";
 import {useTranslation} from "react-i18next";
 
 const StockCountModal = ({showModal, onClose}) => {

@@ -1,15 +1,15 @@
 import React, {useEffect} from 'react';
-import {Button} from "@/components/ui/button";
-import {Input} from "@/components/ui/input";
-import {Label} from "@/components/ui/label";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {Button} from "@/Components/ui/button.jsx";
+import {Input} from "@/Components/ui/input.jsx";
+import {Label} from "@/Components/ui/label.jsx";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/Components/ui/select.jsx";
 import {useForm, Controller} from "react-hook-form";
 import {useSelector, useDispatch} from 'react-redux';
 import {addProduct, editProduct} from "@/src/store/productsSlice.jsx"
 import {fetchUoms} from "@/src/store/uomSlice.jsx";
 import {fetchCategories} from "@/src/store/categorySlice.jsx";
 import Modal from "@/src/components/common/Modal.jsx";
-import {toast} from "@/hooks/use-toast";
+import {toast} from "@/hooks/use-toast.js";
 import {fetchUomDimensions} from "@/src/store/uomDimensionsSlice.jsx";
 import {SmartSelect} from "@/src/components/common/SmartSelect.jsx";
 import {useTranslation} from "react-i18next";

@@ -1,12 +1,12 @@
 import React, {useEffect} from 'react';
-import {Button} from "@/components/ui/button";
-import {Input} from "@/components/ui/input";
-import {Label} from "@/components/ui/label";
+import {Button} from "@/Components/ui/button.jsx";
+import {Input} from "@/Components/ui/input.jsx";
+import {Label} from "@/Components/ui/label.jsx";
 import {useForm} from "react-hook-form";
 import {useDispatch} from 'react-redux';
 import {addWarehouse, editWarehouse} from '@/src/store/warehouseSlice.jsx';
 import Modal from "@/src/components/common/Modal.jsx";
-import {toast} from "@/hooks/use-toast";
+import {toast} from "@/hooks/use-toast.js";
 import {useTranslation} from "react-i18next";
 
 const WarehouseFormModal = ({showModal, onClose, initialData}) => {

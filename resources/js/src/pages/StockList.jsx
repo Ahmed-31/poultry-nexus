@@ -5,7 +5,7 @@ import {fetchWarehouses} from "@/src/store/warehouseSlice";
 import DataTable from "react-data-table-component";
 import {Button} from "@/Components/ui/button";
 import {FaPlus, FaEdit} from "react-icons/fa";
-import StockFormModal from "@/src/components/Stock/StockFormModal.jsx";
+import StockFormModal from "@/src/components/Stock/Items/FormModals/StockFormModal.jsx";
 import {useTranslation} from "react-i18next";
 
 const StockList = () => {
