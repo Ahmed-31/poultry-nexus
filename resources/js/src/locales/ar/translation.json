@@ -879,7 +879,7 @@
             "rawMaterials": "مواد خام",
             "allTypes": "كل الأنواع",
             "rawMaterial": "مادة خام",
-            "component": "مكون",
+            "component": "عنصر",
             "consumable": "مستهلك"
         },
         "tableHeaders": {
@@ -987,5 +987,10 @@
         "width": "العرض",
         "volume": "الحجم",
         "weight": "الوزن"
+    },
+    "categoriesNames": {
+        "component": "عنصر",
+        "rawMaterial": "المواد الخام",
+        "consumable": "المستهلكات"
     }
 }

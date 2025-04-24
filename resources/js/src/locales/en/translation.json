@@ -980,5 +980,10 @@
         "width": "Width",
         "volume": "Volume",
         "weight": "Weight"
+    },
+    "categoriesNames": {
+        "component": "Component",
+        "rawMaterial": "Raw Material",
+        "consumable": "Consumable"
     }
 }

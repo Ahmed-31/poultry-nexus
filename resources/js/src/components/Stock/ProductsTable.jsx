@@ -60,9 +60,9 @@ const ProductManagement = () => {
             selector: (row) => row.category?.name || t('global.na'),
             sortable: true
         },
-        {name: t('productManagement.tableHeaders.type'), selector: (row) => row.type, sortable: true},
-        {name: t('productManagement.tableHeaders.unit'), selector: (row) => row.unit, sortable: true},
-        {name: t('productManagement.tableHeaders.dimensions'), selector: (row) => row.dimensionsString, sortable: true},
+        {name: t('productManagement.tableHeaders.type'), selector: (row) => t(`categoriesNames.${row.type}`), sortable: true},
+        {name: t('productManagement.tableHeaders.unit'), selector: (row) => t(`uoms.${row.unit}`), sortable: true},
+        {name: t('productManagement.tableHeaders.dimensions'), selector: (row) => t(`dimensions.${row.dimensionsString}`), sortable: true},
         {name: t('productManagement.tableHeaders.price'), selector: (row) => row.price, sortable: true},
         {
             name: t('productManagement.tableHeaders.actions'),
