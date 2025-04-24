@@ -919,5 +919,40 @@
     "menu.reports.production": "أداء الإنتاج",
     "menu.reports.turnover": "دوران المخزون",
     "menu.reports.sales": "تقارير المبيعات والإيرادات",
-    "menu.reports.compliance": "تقارير الجودة والامتثال"
+    "menu.reports.compliance": "تقارير الجودة والامتثال",
+    "uoms": {
+        "-": "-",
+        "piece": "قطعة",
+        "box": "علبة",
+        "carton": "كرتونة",
+        "pallet": "باليت",
+        "bag": "كيس",
+        "kilogram": "كيلو جرام",
+        "gram": "جرام",
+        "ton": "طن",
+        "pound": "رطل",
+        "ounce": "أونصة",
+        "liter": "لتر",
+        "milliliter": "مليلتر",
+        "gallon": "جالون",
+        "cubic_meter": "متر مكعب",
+        "meter": "متر",
+        "centimeter": "سنتيمتر",
+        "millimeter": "مليمتر",
+        "foot": "قدم",
+        "inch": "بوصة"
+    },
+    "uomGroups": {
+        "count": "عدد",
+        "weight": "وزن",
+        "volume": "حجم",
+        "length": "طول"
+    },
+    "dimensions": {
+        "length": "الطول",
+        "thickness": "السُمك",
+        "width": "العرض",
+        "volume": "الحجم",
+        "weight": "الوزن"
+    }
 }

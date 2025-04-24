@@ -152,7 +152,7 @@ const ItemFormModal = ({showModal, onClose, initialData = null}) => {
                                 <SelectContent>
                                     {uoms.map((uom) => (
                                         <SelectItem key={uom.id} value={uom.id.toString()}>
-                                            {uom.name}
+                                            {t(`uoms.${uom.name}`)}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
@@ -220,7 +220,7 @@ const ItemFormModal = ({showModal, onClose, initialData = null}) => {
                         multiple={true}
                         options={uoms.map((uom) => ({
                             value: uom.id,
-                            label: uom.name,
+                            label: t(`uoms.${uom.name}`),
                         }))}
                         selected={allowedUoms}
                         onChange={(val) => setValue("allowed_uoms", val)}
@@ -234,7 +234,7 @@ const ItemFormModal = ({showModal, onClose, initialData = null}) => {
                         multiple={true}
                         options={dimensions.map((dim) => ({
                             value: dim.id,
-                            label: `${dim.name} (${dim.uom?.name || "-"})`,
+                            label: `${t(`dimensions.${dim.name}`)} (${t(`uoms.${dim.uom?.name || '-'}`)})`,
                         }))}
                         selected={selectedDimensions}
                         onChange={(val) => setValue("dimensions", val)}

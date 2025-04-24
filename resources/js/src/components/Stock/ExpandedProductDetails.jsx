@@ -62,7 +62,7 @@ const ExpandedProductDetails = ({data}) => {
                     <div>
                         <strong>{t('productDetails.dimensions')}:</strong>{" "}
                         {Array.isArray(data.dimensions) && data.dimensions.length > 0
-                            ? data.dimensions.map(dim => dim.name).join(" x ")
+                            ? data.dimensions.map(dim => t(`dimensions.${dim.name}`)).join(" x ")
                             : t('global.na')}
                     </div>
                 </div>
@@ -86,7 +86,7 @@ const ExpandedProductDetails = ({data}) => {
                         <strong>{t('productDetails.definedDimensions')}:</strong>
                         <ul className="list-disc pl-5 mt-1 text-gray-700">
                             {dimensions.map((dim) => (
-                                <li key={dim.id}>{dim.name}</li>
+                                <li key={dim.id}>{t(`dimensions.${dim.name}`)}</li>
                             ))}
                         </ul>
                     </div>
@@ -98,7 +98,7 @@ const ExpandedProductDetails = ({data}) => {
                     <ul className="list-disc pl-5 text-sm text-gray-800">
                         {data.allowed_uoms.map((uom) => (
                             <li key={uom.id}>
-                                {uom.name} ({uom.symbol}) - Conversion: {uom.conversion_factor}
+                                {t(`uoms.${uom.name}`)} ({uom.symbol}) - Conversion: {uom.conversion_factor}
                             </li>
                         ))}
                     </ul>

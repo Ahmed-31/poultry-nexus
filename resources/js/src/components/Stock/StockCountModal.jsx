@@ -83,7 +83,7 @@ const StockCountModal = ({showModal, onClose}) => {
                                             </div>
                                             {stock.dimension_values?.length > 0 && (
                                                 <div className="text-xs text-gray-600">
-                                                    {stock.dimension_values.map(dv => `${dv.dimension.name}: ${dv.value} ${dv.dimension.uom.symbol}`).join(', ')}
+                                                    {stock.dimension_values.map(dv => `${dv.t(`dimensions.${dimension.name}`)}: ${dv.value} ${dv.dimension.uom.symbol}`).join(', ')}
                                                 </div>
                                             )}
                                         </div>

@@ -210,7 +210,7 @@ export default function ManualStockScan() {
                                             <SelectContent>
                                                 {selectedProductUoms.map((uom) => (
                                                     <SelectItem key={uom.id} value={uom.id.toString()}>
-                                                        {uom.name} ({uom.symbol})
+                                                        {t(`uoms.${uom.name}`)} ({uom.symbol})
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
@@ -228,7 +228,7 @@ export default function ManualStockScan() {
                                             {selectedProduct.dimensions.map((dimension) => (
                                                 <div key={dimension.id}>
                                                     <Label>
-                                                        {dimension.name}
+                                                        {t(`dimensions.${dimension.name}`)}
                                                         <span className="ml-1 text-sm text-gray-500">
                                                             {getUomSymbol(dimension.uom_id)}
                                                         </span>
@@ -236,7 +236,7 @@ export default function ManualStockScan() {
                                                     <Input
                                                         type="number"
                                                         step="any"
-                                                        placeholder={t('manualScan.placeholders.dimension', {name: dimension.name})}
+                                                        placeholder={t('manualScan.placeholders.dimension', {name: t(`dimensions.${dimension.name}`)})}
                                                         {...register(`dimensions.${dimension.id}.value`, {required: true})}
                                                     />
                                                     <input
@@ -251,7 +251,7 @@ export default function ManualStockScan() {
                                                     />
                                                     {errors?.dimensions?.[dimension.id]?.value && (
                                                         <p className="text-red-500 text-sm mt-1">
-                                                            {t('manualScan.errors.dimensionRequired', {name: dimension.name})}
+                                                            {t('manualScan.errors.dimensionRequired', {name: t(`dimensions.${dimension.name}`)})}
                                                         </p>
                                                     )}
                                                 </div>

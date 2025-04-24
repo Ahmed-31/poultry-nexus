@@ -22,45 +22,45 @@ class UomSeeder extends Seeder
         UomGroup::truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $groups = [
-            'Count',
-            'Weight',
-            'Volume',
-            'Length',
+            'count',
+            'weight',
+            'volume',
+            'length',
         ];
         $groupMap = [];
-        foreach ($groups as $groupName) {
-            $groupMap[$groupName] = UomGroup::create(['name' => $groupName]);
+        foreach ($groups as $groupKey) {
+            $groupMap[$groupKey] = UomGroup::create(['name' => $groupKey]);
         }
         $uoms = [
             // Count
-            ['Piece', 'pc', 'Count', true, 1],
-            ['Box', 'box', 'Count', false, 10],
-            ['Carton', 'ctn', 'Count', false, 20],
-            ['Pallet', 'plt', 'Count', false, 100],
-            ['Bag', 'bag', 'Count', false, 5],
+            ['piece', 'pc', 'count', true, 1],
+            ['box', 'box', 'count', false, 10],
+            ['carton', 'ctn', 'count', false, 20],
+            ['pallet', 'plt', 'count', false, 100],
+            ['bag', 'bag', 'count', false, 5],
             // Weight
-            ['Kilogram', 'kg', 'Weight', true, 1],
-            ['Gram', 'g', 'Weight', false, 0.001],
-            ['Ton', 't', 'Weight', false, 1000],
-            ['Pound', 'lb', 'Weight', false, 0.4536],
-            ['Ounce', 'oz', 'Weight', false, 0.0283],
+            ['kilogram', 'kg', 'weight', true, 1],
+            ['gram', 'g', 'weight', false, 0.001],
+            ['ton', 't', 'weight', false, 1000],
+            ['pound', 'lb', 'weight', false, 0.4536],
+            ['ounce', 'oz', 'weight', false, 0.0283],
             // Volume
-            ['Liter', 'L', 'Volume', true, 1],
-            ['Milliliter', 'mL', 'Volume', false, 0.001],
-            ['Gallon', 'gal', 'Volume', false, 3.785],
-            ['Cubic Meter', 'm³', 'Volume', false, 1000],
+            ['liter', 'L', 'volume', true, 1],
+            ['milliliter', 'mL', 'volume', false, 0.001],
+            ['gallon', 'gal', 'volume', false, 3.785],
+            ['cubic_meter', 'm³', 'volume', false, 1000],
             // Length
-            ['Meter', 'm', 'Length', true, 1],
-            ['Centimeter', 'cm', 'Length', false, 0.01],
-            ['Millimeter', 'mm', 'Length', false, 0.001],
-            ['Foot', 'ft', 'Length', false, 0.3048],
-            ['Inch', 'in', 'Length', false, 0.0254],
+            ['meter', 'm', 'length', true, 1],
+            ['centimeter', 'cm', 'length', false, 0.01],
+            ['millimeter', 'mm', 'length', false, 0.001],
+            ['foot', 'ft', 'length', false, 0.3048],
+            ['inch', 'in', 'length', false, 0.0254],
         ];
         $uomMap = [];
-        foreach ($uoms as [$name, $symbol, $groupName, $isBase, $factor]) {
-            $group = $groupMap[$groupName];
+        foreach ($uoms as [$nameKey, $symbol, $groupKey, $isBase, $factor]) {
+            $group = $groupMap[$groupKey];
             $uom = Uom::create([
-                'name'              => $name,
+                'name'              => $nameKey,
                 'symbol'            => $symbol,
                 'group_id'          => $group->id,
                 'is_base'           => $isBase,
@@ -69,19 +69,19 @@ class UomSeeder extends Seeder
             $uomMap[strtolower($symbol)] = $uom;
         }
         $dimensions = [
-            ['Length', 'm'],
-            ['Thickness', 'mm'],
-            ['Width', 'cm'],
-            ['Volume', 'L'],
-            ['Weight', 'kg'],
+            ['length', 'm'],
+            ['thickness', 'mm'],
+            ['width', 'cm'],
+            ['volume', 'L'],
+            ['weight', 'kg'],
         ];
-        foreach ($dimensions as [$name, $symbol]) {
+        foreach ($dimensions as [$nameKey, $symbol]) {
             $key = strtolower($symbol);
             if (!isset($uomMap[$key])) {
-                throw new \Exception("UOM with symbol '{$symbol}' not found for dimension '{$name}'");
+                throw new \Exception("UOM with symbol '{$symbol}' not found for dimension '{$nameKey}'");
             }
             UomDimension::create([
-                'name'   => $name,
+                'name'   => $nameKey,
                 'uom_id' => $uomMap[$key]->id,
             ]);
         }

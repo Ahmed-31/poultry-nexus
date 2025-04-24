@@ -227,7 +227,7 @@ const StockFormModal = ({showModal, onClose, initialData = null}) => {
                                 <SelectContent>
                                     {selectedProductUoms.map((uom) => (
                                         <SelectItem key={uom.id} value={uom.id.toString()}>
-                                            {uom.name} ({uom.symbol})
+                                            {t(`uoms.${uom.name}`)} ({uom.symbol})
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
@@ -244,7 +244,7 @@ const StockFormModal = ({showModal, onClose, initialData = null}) => {
                                 {selectedProduct.dimensions.map((dimension) => (
                                     <div key={dimension.id}>
                                         <Label className="mb-1 block">
-                                            {dimension.name}
+                                            {t(`dimensions.${dimension.name}`)}
                                             <span className="ml-1 text-sm text-gray-500">
                                               {getUomSymbol(dimension.uom_id)}
                                             </span>
@@ -252,7 +252,7 @@ const StockFormModal = ({showModal, onClose, initialData = null}) => {
                                         <Input
                                             type="number"
                                             step="any"
-                                            placeholder={t('stockForm.enterDimension', {dimension: dimension.name})}
+                                            placeholder={t('stockForm.enterDimension', {dimension: t(`dimensions.${dimension.name}`)})}
                                             {...register(`dimensions.${dimension.id}.value`, {required: true})}
                                         />
                                         <input
@@ -267,7 +267,7 @@ const StockFormModal = ({showModal, onClose, initialData = null}) => {
                                         />
                                         {errors?.dimensions?.[dimension.id]?.value && (
                                             <p className="text-red-500 text-sm mt-1">
-                                                {t('stockForm.dimensionRequired', {dimension: dimension.name})}
+                                                {t('stockForm.dimensionRequired', {dimension: t(`dimensions.${dimension.name}`)})}
                                             </p>
                                         )}
                                     </div>

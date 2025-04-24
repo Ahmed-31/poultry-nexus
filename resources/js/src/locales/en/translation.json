@@ -912,5 +912,40 @@
     "menu.reports.production": "Production Performance",
     "menu.reports.turnover": "Stock Turnover",
     "menu.reports.sales": "Sales & Revenue Reports",
-    "menu.reports.compliance": "Quality & Compliance Reports"
+    "menu.reports.compliance": "Quality & Compliance Reports",
+    "uoms": {
+        "-": "-",
+        "piece": "Piece",
+        "box": "Box",
+        "carton": "Carton",
+        "pallet": "Pallet",
+        "bag": "Bag",
+        "kilogram": "Kilogram",
+        "gram": "Gram",
+        "ton": "Ton",
+        "pound": "Pound",
+        "ounce": "Ounce",
+        "liter": "Liter",
+        "milliliter": "Milliliter",
+        "gallon": "Gallon",
+        "cubic_meter": "Cubic Meter",
+        "meter": "Meter",
+        "centimeter": "Centimeter",
+        "millimeter": "Millimeter",
+        "foot": "Foot",
+        "inch": "Inch"
+    },
+    "uomGroups": {
+        "count": "Count",
+        "weight": "Weight",
+        "volume": "Volume",
+        "length": "Length"
+    },
+    "dimensions": {
+        "length": "Length",
+        "thickness": "Thickness",
+        "width": "Width",
+        "volume": "Volume",
+        "weight": "Weight"
+    }
 }

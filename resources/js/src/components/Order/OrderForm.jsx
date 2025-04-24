@@ -240,7 +240,7 @@ const OrderForm = ({onClose, initialData, showModal}) => {
                                                     label={t('orderForm.fields.uom.label')}
                                                     placeholder={t('orderForm.fields.uom.placeholder')}
                                                     options={uoms.map((uom) => ({
-                                                        label: `${uom.name} (${uom.symbol})`,
+                                                        label: `${t(`uoms.${uom.name}`)} (${uom.symbol})`,
                                                         value: uom.id.toString(),
                                                     }))}
                                                     selected={field.value?.toString() || ""}
@@ -261,7 +261,7 @@ const OrderForm = ({onClose, initialData, showModal}) => {
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                 {selectedProduct.dimensions.map(dimension => (
                                                     <div key={dimension.id}>
-                                                        <Label>{dimension.name} ({dimension.uom?.symbol})</Label>
+                                                        <Label>{t(`dimensions.${dimension.name}`)} ({dimension.uom?.symbol})</Label>
                                                         <Input
                                                             type="number"
                                                             step="any"

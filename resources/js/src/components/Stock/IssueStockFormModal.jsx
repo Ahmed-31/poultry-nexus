@@ -199,7 +199,7 @@ const IssueStockFormModal = ({
                             <SelectContent>
                                 {allowedUoms.map((uom) => (
                                     <SelectItem key={uom.id} value={uom.id.toString()}>
-                                        {uom.name} ({uom.symbol})
+                                        {t(`uoms.${uom.name}`)} ({uom.symbol})
                                     </SelectItem>
                                 ))}
                             </SelectContent>

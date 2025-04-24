@@ -56,7 +56,7 @@ const ProductBundleFormModal = ({showModal, onClose, initialData = null}) => {
                 const dimensionDefs = matchedProduct?.dimensions || [];
 
                 const dimensions = dimensionDefs.reduce((acc, dim) => {
-                    const dimName = dim.name;
+                    const dimName = t(`dimensions.${dim.name}`);
                     acc[dimName] = p.dimension_values?.[dimName] || '';
                     return acc;
                 }, {});
@@ -193,7 +193,7 @@ const ProductBundleFormModal = ({showModal, onClose, initialData = null}) => {
                                                 {selectedProduct.dimensions.map((dimension) => (
                                                     <div key={dimension.id}>
                                                         <Label className="mb-1 block">
-                                                            {dimension.name}
+                                                            {t(`dimensions.${dimension.name}`)}
                                                             <span className="ml-1 text-sm text-gray-500">
                                                                 {getUomSymbol(dimension.uom_id)}
                                                             </span>
@@ -201,15 +201,15 @@ const ProductBundleFormModal = ({showModal, onClose, initialData = null}) => {
                                                         <Input
                                                             type="number"
                                                             step="any"
-                                                            placeholder={`Enter ${dimension.name}`}
-                                                            value={currentDimensions?.[dimension.name] || ""}
+                                                            placeholder={`Enter ${t(`dimensions.${dimension.name}`)}`}
+                                                            value={currentDimensions?.[t(`dimensions.${dimension.name}`)] || ""}
                                                             onChange={(e) =>
-                                                                setValue(`items.${index}.dimensions.${dimension.name}`, e.target.value)
+                                                                setValue(`items.${index}.dimensions.${t(`dimensions.${dimension.name}`)}`, e.target.value)
                                                             }
                                                         />
-                                                        {errors?.items?.[index]?.dimensions?.[dimension.name] && (
+                                                        {errors?.items?.[index]?.dimensions?.[t(`dimensions.${dimension.name}`)] && (
                                                             <p className="text-red-500 text-sm mt-1">
-                                                                {dimension.name} {t('global.required')}
+                                                                {t(`dimensions.${dimension.name}`)} {t('global.required')}
                                                             </p>
                                                         )}
                                                     </div>
