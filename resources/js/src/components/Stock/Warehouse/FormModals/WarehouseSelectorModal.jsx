@@ -8,8 +8,10 @@ import {fetchWarehouses, removeWarehouse} from "@/src/store/warehouseSlice.jsx";
 import WarehouseFormModal from "@/src/components/Stock/Warehouse/FormModals/WarehouseFormModal.jsx";
 import DeleteConfirmationModal from "@/src/components/common/DeleteConfirmationModal.jsx";
 import {toast} from "@/hooks/use-toast.js";
+import {useTranslation} from "react-i18next";
 
 const WarehouseSelectorModal = ({showModal, onClose, action}) => {
+    const {t} = useTranslation();
     const dispatch = useDispatch();
     const warehouses = useSelector((state) => state.warehouses.list || []);
     const loading = useSelector((state) => state.warehouses.loading);
