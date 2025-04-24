@@ -41,7 +41,7 @@ const ProductSelectorModal = ({showModal, onClose, action}) => {
         try {
             await dispatch(removeProduct({id: selectedProduct.id})).unwrap();
             toast({
-                title: t('global.toasts.success'),
+                title: t('global.toasts.successTitle'),
                 description: t('productSelector.success.delete'),
                 variant: "default",
             });

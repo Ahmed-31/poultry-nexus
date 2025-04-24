@@ -86,7 +86,7 @@ const ProductBundleFormModal = ({showModal, onClose, initialData = null}) => {
                 reset();
             }
 
-            toast({title: t('global.toasts.success'), description: t('productBundleForm.toast.successMessage')});
+            toast({title: t('global.toasts.successTitle'), description: t('productBundleForm.toast.successMessage')});
         } catch (err) {
             toast({title: t('global.toasts.error'), description: err.message || t('global.toasts.errorMessage'), variant: "destructive"});
         }
