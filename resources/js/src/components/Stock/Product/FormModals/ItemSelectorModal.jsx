@@ -25,11 +25,13 @@ const ProductSelectorModal = ({showModal, onClose, action}) => {
     }, [dispatch]);
 
     const filteredProducts = useMemo(() => {
-        return products.filter(
-            (p) =>
-                p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                p.sku.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+        return products
+            .filter(p => p?.name && p?.sku)
+            .filter(
+                (p) =>
+                    p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    p.sku.toLowerCase().includes(searchTerm.toLowerCase())
+            );
     }, [products, searchTerm]);
 
     const handleProceed = () => {
@@ -79,26 +81,31 @@ const ProductSelectorModal = ({showModal, onClose, action}) => {
 
                 {!loading && filteredProducts.length > 0 && (
                     <div className="space-y-2 max-h-64 overflow-auto">
-                        {filteredProducts.map((product) => (
-                            <div
-                                key={product.id}
-                                onClick={() => setSelectedProduct(product)}
-                                className={`p-2 border rounded cursor-pointer ${
-                                    selectedProduct?.id === product.id
-                                        ? "border-blue-500 bg-blue-50"
-                                        : ""
-                                }`}
-                            >
-                                <div className="text-sm font-medium">{product.name}</div>
-                                <div className="text-xs text-gray-500">
-                                    {t('productSelector.productInfo', {
-                                        sku: product.sku,
-                                        type: product.type,
-                                        price: product.price
-                                    })}
+                        {filteredProducts.map((product) => {
+                            if (!product?.id) return null;
+
+                            return (
+                                <div
+                                    key={product.id}
+                                    onClick={() => setSelectedProduct(product)}
+                                    className={`p-2 border rounded cursor-pointer ${
+                                        selectedProduct?.id === product.id
+                                            ? "border-blue-500 bg-blue-50"
+                                            : ""
+                                    }`}
+                                >
+                                    <div className="text-sm font-medium">{product.name}</div>
+                                    <div className="text-xs text-gray-500">
+                                        {t('productSelector.productInfo', {
+                                            sku: product.sku,
+                                            type: product.type,
+                                            price: product.price
+                                        })}
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
+
                     </div>
                 )}
 

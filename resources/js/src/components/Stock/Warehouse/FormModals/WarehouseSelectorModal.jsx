@@ -26,7 +26,7 @@ const WarehouseSelectorModal = ({showModal, onClose, action}) => {
 
     const filteredWarehouses = useMemo(() => {
         return warehouses.filter((w) =>
-            w.name.toLowerCase().includes(searchTerm.toLowerCase())
+            (w.name || "").toLowerCase().includes(searchTerm.toLowerCase())
         );
     }, [warehouses, searchTerm]);
 
@@ -77,22 +77,26 @@ const WarehouseSelectorModal = ({showModal, onClose, action}) => {
 
                 {!loading && filteredWarehouses.length > 0 && (
                     <div className="space-y-2 max-h-64 overflow-auto">
-                        {filteredWarehouses.map((warehouse) => (
-                            <div
-                                key={warehouse.id}
-                                onClick={() => setSelectedWarehouse(warehouse)}
-                                className={`p-2 border rounded cursor-pointer ${
-                                    selectedWarehouse?.id === warehouse.id
-                                        ? "border-blue-500 bg-blue-50"
-                                        : ""
-                                }`}
-                            >
-                                <div className="text-sm font-medium">{warehouse.name}</div>
-                                <div className="text-xs text-gray-500">
-                                    {t('warehouseSelector.location')}: {warehouse.location || t('global.na')}
+                        {filteredWarehouses.map((warehouse) => {
+                            if (!warehouse?.id) return null;
+
+                            return (
+                                <div
+                                    key={warehouse.id}
+                                    onClick={() => setSelectedWarehouse(warehouse)}
+                                    className={`p-2 border rounded cursor-pointer ${
+                                        selectedWarehouse?.id === warehouse.id
+                                            ? "border-blue-500 bg-blue-50"
+                                            : ""
+                                    }`}
+                                >
+                                    <div className="text-sm font-medium">{warehouse.name}</div>
+                                    <div className="text-xs text-gray-500">
+                                        {t('warehouseSelector.location')}: {warehouse.location || t('global.na')}
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
 
