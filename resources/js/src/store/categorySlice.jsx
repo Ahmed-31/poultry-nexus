@@ -1,25 +1,51 @@
 import {createSlice, createAsyncThunk, createSelector} from '@reduxjs/toolkit';
-import {getCategories, createCategory, updateCategory, deleteCategory, getCategoriesTable} from '../services/categoryService.jsx';
+import {
+    getCategories,
+    createCategory,
+    updateCategory,
+    deleteCategory,
+    getCategoriesTable
+} from '../services/categoryService.jsx';
 
-export const fetchCategories = createAsyncThunk('categories/fetchCategories', async () => {
-    return await getCategories();
+export const fetchCategories = createAsyncThunk('categories/fetchCategories', async (_, {rejectWithValue}) => {
+    try {
+        return await getCategories();
+    } catch (e) {
+        return rejectWithValue(e.response?.data || e.message);
+    }
 });
 
-export const fetchCategoriesTable = createAsyncThunk('categories/fetchCategoriesTable', async () => {
-    return await getCategoriesTable();
+export const fetchCategoriesTable = createAsyncThunk('categories/fetchCategoriesTable', async (_, {rejectWithValue}) => {
+    try {
+        return await getCategoriesTable();
+    } catch (e) {
+        return rejectWithValue(e.response?.data || e.message);
+    }
 });
 
-export const addProduct = createAsyncThunk('categories/addProduct', async (category) => {
-    return await createCategory(category);
+export const addCategory = createAsyncThunk('categories/addCategory', async ({category}, {rejectWithValue}) => {
+    try {
+        return await createCategory(category);
+    } catch (e) {
+        return rejectWithValue(e.response?.data || e.message);
+    }
 });
 
-export const editProduct = createAsyncThunk('categories/editProduct', async ({id, category}) => {
-    return await updateCategory(id, category);
+export const editCategory = createAsyncThunk('categories/editCategory', async ({id, category}, {rejectWithValue}) => {
+    try {
+        return await updateCategory(id, category);
+    } catch (e) {
+        return rejectWithValue(e.response?.data || e.message);
+    }
 });
 
-export const removeProduct = createAsyncThunk('categories/removeProduct', async (id) => {
-    await deleteCategory(id);
-    return id;
+export const removeCategory = createAsyncThunk('categories/removeCategory', async ({id}, {rejectWithValue}) => {
+    try {
+        await deleteCategory(id);
+        return id;
+    } catch (e) {
+        return rejectWithValue(e.response?.data || e.message);
+    }
 });
 
 // Slice definition
@@ -56,15 +82,15 @@ const categoriesSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message;
             })
-            .addCase(addProduct.fulfilled, (state, action) => {
+            .addCase(addCategory.fulfilled, (state, action) => {
                 state.list.push(action.payload);
             })
-            .addCase(editProduct.fulfilled, (state, action) => {
+            .addCase(editCategory.fulfilled, (state, action) => {
                 state.list = state.list.map((category) =>
                     category.id === action.payload.id ? action.payload : category
                 );
             })
-            .addCase(removeProduct.fulfilled, (state, action) => {
+            .addCase(removeCategory.fulfilled, (state, action) => {
                 state.list = state.list.filter((category) => category.id !== action.payload);
             });
     },

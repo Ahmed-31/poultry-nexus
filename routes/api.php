@@ -33,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('reservations', [StockReservationController::class, 'index']);
         Route::get('reservations/all', [StockReservationController::class, 'all']);
         Route::get('reservations/{id}', [StockReservationController::class, 'show']);
+        Route::get('categories/all', [CategoryController::class, 'all']);
         Route::apiResource('products/bundles', ProductBundleController::class);
         Route::apiResource('products', ProductController::class);
         Route::apiResource('categories', CategoryController::class);
