@@ -7,6 +7,7 @@ import {Select, SelectTrigger, SelectContent, SelectValue, SelectItem} from '@/C
 import Modal from '@/src/components/common/Modal.jsx';
 import {toast} from '@/hooks/use-toast.js';
 import {useTranslation} from 'react-i18next';
+import * as XLSX from 'xlsx';
 
 const ProductImportFormModal = ({showModal, onClose}) => {
     const {t} = useTranslation();
@@ -52,9 +53,71 @@ const ProductImportFormModal = ({showModal, onClose}) => {
         }
     };
 
+    const handleDownloadSample = () => {
+        const isArabic = lang === 'ar';
+
+        const sampleData = [
+            {
+                [isArabic ? 'الاسم' : 'Name']: isArabic ? 'منتج تجريبي' : 'Sample product',
+                [isArabic ? 'وحدة القياس' : 'Unit of Measure']: isArabic ? 'قطعة' : 'Piece',
+                [isArabic ? 'الابعاد' : 'Dimensions']: isArabic ? 'طول * عرض' : 'length * width',
+            },
+            {
+                [isArabic ? 'الاسم' : 'Name']: isArabic ? 'منتج ثاني' : 'Second product',
+                [isArabic ? 'وحدة القياس' : 'Unit of Measure']: isArabic ? 'علبة' : 'Box',
+                [isArabic ? 'الابعاد' : 'Dimensions']: isArabic ? 'عرض * ارتفاع' : 'width * height',
+            },
+            {
+                [isArabic ? 'الاسم' : 'Name']: isArabic ? 'منتج ثالث' : 'Third product',
+                [isArabic ? 'وحدة القياس' : 'Unit of Measure']: isArabic ? 'علبة' : 'Box',
+                [isArabic ? 'الابعاد' : 'Dimensions']: '',
+            },
+        ];
+
+        const worksheet = XLSX.utils.json_to_sheet(sampleData);
+
+        if (isArabic) {
+            worksheet['!rtl'] = true;
+        }
+
+        const headerRange = XLSX.utils.decode_range(worksheet['!ref']);
+        for (let C = headerRange.s.c; C <= headerRange.e.c; ++C) {
+            const cellAddress = XLSX.utils.encode_cell({r: 0, c: C});
+            if (!worksheet[cellAddress]) continue;
+            worksheet[cellAddress].s = {
+                font: {bold: true},
+                fill: {
+                    patternType: "solid",
+                    fgColor: {rgb: "D9D9D9"},
+                },
+                alignment: {
+                    horizontal: "center",
+                    vertical: "center",
+                }
+            };
+        }
+
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Products');
+
+        const excelBuffer = XLSX.write(workbook, {bookType: 'xlsx', type: 'array', cellStyles: true});
+
+        const data = new Blob([excelBuffer], {type: 'application/octet-stream'});
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(data);
+        link.download = isArabic ? 'منتج_تجريبي.xlsx' : 'sample_products.xlsx';
+        link.click();
+    };
+
     return (
         <Modal isOpen={showModal} onClose={onClose}>
-            <h2 className="text-lg font-bold mb-4">{t('productImport.title')}</h2>
+            <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-bold">{t('productImport.title')}</h2>
+                <Button type="button" onClick={handleDownloadSample}
+                        className="bg-green-500 text-white px-3 py-1 rounded-md">
+                    {t('productImport.downloadSample')}
+                </Button>
+            </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div>

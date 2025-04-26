@@ -1148,6 +1148,7 @@
             "language": "Select Language"
         },
         "uploadButton": "Upload",
+        "downloadSample": "Download Sample",
         "toast": {
             "successMessage": "Products imported successfully.",
             "noFile": "Please select a file first."

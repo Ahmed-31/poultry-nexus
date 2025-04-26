@@ -1154,6 +1154,7 @@
             "language": "اختر اللغة"
         },
         "uploadButton": "رفع الملف",
+        "downloadSample": "تحميل نموذج بالعربية",
         "toast": {
             "successMessage": "تم استيراد المنتجات بنجاح.",
             "noFile": "يرجى اختيار ملف أولاً."
