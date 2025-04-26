@@ -18,6 +18,9 @@
         "required": "Required",
         "yes": "Yes",
         "no": "No",
+        "english": "English",
+        "arabic": "Arabic",
+        "uploading": "Uploading",
         "missingData": {
             "title": "Missing Data",
             "message": "Please select both product and warehouse."
@@ -872,6 +875,7 @@
     },
     "productManagement": {
         "title": "Product Management",
+        "importProducts": "Import Products",
         "addProduct": "Add Product",
         "searchPlaceholder": "Search product name...",
         "confirmDelete": "Are you sure you want to delete this product?",
@@ -953,8 +957,10 @@
         "carton": "Carton",
         "pallet": "Pallet",
         "bag": "Bag",
+        "roll": "Roll",
         "kilogram": "Kilogram",
         "gram": "Gram",
+        "milligram": "Milligram",
         "ton": "Ton",
         "pound": "Pound",
         "ounce": "Ounce",
@@ -962,24 +968,51 @@
         "milliliter": "Milliliter",
         "gallon": "Gallon",
         "cubic_meter": "Cubic Meter",
+        "barrel": "Barrel",
         "meter": "Meter",
         "centimeter": "Centimeter",
         "millimeter": "Millimeter",
+        "kilometer": "Kilometer",
         "foot": "Foot",
-        "inch": "Inch"
+        "inch": "Inch",
+        "yard": "Yard",
+        "square_meter": "Square Meter",
+        "hectare": "Hectare",
+        "acre": "Acre",
+        "second": "Second",
+        "minute": "Minute",
+        "hour": "Hour",
+        "day": "Day",
+        "celsius": "Celsius",
+        "fahrenheit": "Fahrenheit",
+        "pascal": "Pascal",
+        "bar": "Bar",
+        "atmosphere": "Atmosphere"
     },
     "uomGroups": {
+        "-": "-",
         "count": "Count",
         "weight": "Weight",
         "volume": "Volume",
-        "length": "Length"
+        "length": "Length",
+        "area": "Area",
+        "time": "Time",
+        "temperature": "Temperature",
+        "pressure": "Pressure"
     },
     "dimensions": {
+        "-": "-",
         "length": "Length",
         "thickness": "Thickness",
         "width": "Width",
+        "height": "Height",
+        "diameter": "Diameter",
         "volume": "Volume",
-        "weight": "Weight"
+        "weight": "Weight",
+        "area": "Area",
+        "pressure": "Pressure",
+        "temperature": "Temperature",
+        "time": "Time"
     },
     "categoriesNames": {
         "component": "Component",
@@ -1103,6 +1136,21 @@
         },
         "toast": {
             "successMessage": "Dimension saved successfully"
+        }
+    },
+    "productImport": {
+        "title": "Import Products",
+        "fields": {
+            "file": "Excel File",
+            "language": "Language"
+        },
+        "placeholders": {
+            "language": "Select Language"
+        },
+        "uploadButton": "Upload",
+        "toast": {
+            "successMessage": "Products imported successfully.",
+            "noFile": "Please select a file first."
         }
     }
 }

@@ -18,6 +18,9 @@
         "required": "مطلوب",
         "yes": "نعم",
         "no": "لا",
+        "english": "انجليزي",
+        "arabic": "عربي",
+        "uploading": "جاري التحميل",
         "missingData": {
             "title": "بيانات ناقصة",
             "message": "يرجى اختيار المنتج والمخزن."
@@ -560,7 +563,6 @@
         },
         "toasts": {
             "successDesc": "تم تعديل المخزون بنجاح."
-
         }
     },
     "productBundles": {
@@ -871,6 +873,7 @@
     "productManagement": {
         "title": "إدارة المنتجات",
         "addProduct": "إضافة منتج",
+        "importProducts": "استيراد المنتجات",
         "searchPlaceholder": "ابحث باسم المنتج...",
         "confirmDelete": "هل أنت متأكد أنك تريد حذف هذا المنتج؟",
         "filters": {
@@ -960,8 +963,10 @@
         "carton": "كرتونة",
         "pallet": "باليت",
         "bag": "كيس",
-        "kilogram": "كيلو جرام",
+        "roll": "لفة",
+        "kilogram": "كيلوجرام",
         "gram": "جرام",
+        "milligram": "مليجرام",
         "ton": "طن",
         "pound": "رطل",
         "ounce": "أونصة",
@@ -969,27 +974,54 @@
         "milliliter": "مليلتر",
         "gallon": "جالون",
         "cubic_meter": "متر مكعب",
+        "barrel": "برميل",
         "meter": "متر",
         "centimeter": "سنتيمتر",
         "millimeter": "مليمتر",
+        "kilometer": "كيلومتر",
         "foot": "قدم",
-        "inch": "بوصة"
+        "inch": "بوصة",
+        "yard": "ياردة",
+        "square_meter": "متر مربع",
+        "hectare": "هكتار",
+        "acre": "فدان",
+        "second": "ثانية",
+        "minute": "دقيقة",
+        "hour": "ساعة",
+        "day": "يوم",
+        "celsius": "درجة مئوية",
+        "fahrenheit": "فهرنهايت",
+        "pascal": "باسكال",
+        "bar": "بار",
+        "atmosphere": "جو"
     },
     "uomGroups": {
+        "-": "-",
         "count": "عدد",
         "weight": "وزن",
         "volume": "حجم",
-        "length": "طول"
+        "length": "طول",
+        "area": "مساحة",
+        "time": "وقت",
+        "temperature": "درجة حرارة",
+        "pressure": "ضغط"
     },
     "dimensions": {
+        "-": "-",
         "length": "الطول",
         "thickness": "السُمك",
         "width": "العرض",
+        "height": "الارتفاع",
+        "diameter": "القطر",
         "volume": "الحجم",
-        "weight": "الوزن"
+        "weight": "الوزن",
+        "area": "المساحة",
+        "pressure": "الضغط",
+        "temperature": "درجة الحرارة",
+        "time": "الزمن"
     },
     "categoriesNames": {
-        "component": "عنصر",
+        "component": "مكوّن",
         "rawMaterial": "المواد الخام",
         "consumable": "المستهلكات"
     },
@@ -1110,6 +1142,21 @@
         },
         "toast": {
             "successMessage": "تم حفظ البُعد بنجاح"
+        }
+    },
+    "productImport": {
+        "title": "استيراد المنتجات",
+        "fields": {
+            "file": "ملف Excel",
+            "language": "اللغة"
+        },
+        "placeholders": {
+            "language": "اختر اللغة"
+        },
+        "uploadButton": "رفع الملف",
+        "toast": {
+            "successMessage": "تم استيراد المنتجات بنجاح.",
+            "noFile": "يرجى اختيار ملف أولاً."
         }
     }
 }
