@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Uom;
+use App\Services\Products\ProductExcelParser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\DataTables;
 
 class ProductController extends Controller
@@ -128,5 +132,49 @@ class ProductController extends Controller
         $product->stock()?->delete();
         $product->delete();
         return response()->json(['message' => 'Product deleted successfully.']);
+    }
+
+    public function import(Request $request, ProductExcelParser $parser)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls',
+            'lang' => 'nullable|string|in:en,ar',
+        ]);
+        if ($request->filled('lang')) {
+            $parser->setLocale($request->input('lang'));
+        }
+        $path = $request->file('file')->store('temp');
+        try {
+            $products = $parser->parse(Storage::path($path));
+            $lastSku = Product::where('sku', 'like', 'SKU%')
+                ->orderByDesc('id')
+                ->value('sku');
+            $lastNumber = 0;
+            if ($lastSku) {
+                $lastNumber = (int)str_replace('SKU', '', $lastSku);
+            }
+            DB::transaction(function () use ($products, &$lastNumber) {
+                foreach ($products as $data) {
+                    $lastNumber++;
+                    /** @var Product $product */
+                    $product = Product::create(array_merge(
+                        Arr::except($data, ['dimension_ids']),
+                        [
+                            'sku' => 'SKU' . str_pad($lastNumber, 5, '0', STR_PAD_LEFT),
+                        ]
+                    ));
+                    $product->allowedUoms()->attach($product->default_uom_id);
+                    if (!empty($data['dimension_ids'])) {
+                        $product->dimensions()->attach($data['dimension_ids']);
+                    }
+                }
+            });
+            return response()->json([
+                'message' => 'Products imported successfully.',
+                'count'   => $products->count(),
+            ]);
+        } finally {
+            Storage::delete($path);
+        }
     }
 }

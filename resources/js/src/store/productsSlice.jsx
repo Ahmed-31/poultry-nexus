@@ -4,7 +4,8 @@ import {
     createProduct,
     updateProduct,
     deleteProduct,
-    getProductsTable
+    getProductsTable,
+    importProducts
 } from '../services/productService';
 
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async (_, {rejectWithValue}) => {
@@ -48,11 +49,24 @@ export const removeProduct = createAsyncThunk('products/removeProduct', async ({
     }
 });
 
+export const uploadProducts = createAsyncThunk(
+    'products/uploadProducts',
+    async (formData, {rejectWithValue}) => {
+        try {
+            const response = await importProducts(formData);
+            return response.data;
+        } catch (err) {
+            return rejectWithValue(err.response?.data || 'Upload failed.');
+        }
+    }
+);
+
 const productsSlice = createSlice({
     name: 'products',
     initialState: {
         list: [],
         dataTable: [],
+        uploading: false,
         loading: false,
         error: null
     },
@@ -91,6 +105,16 @@ const productsSlice = createSlice({
             })
             .addCase(removeProduct.fulfilled, (state, action) => {
                 state.list = state.list.filter((product) => product.id !== action.payload);
+            })
+            .addCase(uploadProducts.pending, (state) => {
+                state.uploading = true;
+            })
+            .addCase(uploadProducts.fulfilled, (state) => {
+                state.uploading = false;
+            })
+            .addCase(uploadProducts.rejected, (state, action) => {
+                state.uploading = false;
+                state.error = action.payload || 'Upload failed.';
             });
     },
 });

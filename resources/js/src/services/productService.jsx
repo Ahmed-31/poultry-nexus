@@ -49,3 +49,16 @@ export const deleteProduct = async (id) => {
         throw e;
     }
 };
+
+export const importProducts = async (formData) => {
+    try {
+        return await API.post('/api/stock/products/import', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+    } catch (e) {
+        console.error(e);
+        throw e;
+    }
+};

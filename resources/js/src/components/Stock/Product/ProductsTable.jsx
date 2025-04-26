@@ -7,6 +7,7 @@ import {FaPlus} from "react-icons/fa";
 import ItemFormModal from "@/src/components/Stock/Product/FormModals/ItemFormModal.jsx";
 import ExpandedProductDetails from "@/src/components/Stock/Product/Expanded/ExpandedProductDetails.jsx";
 import {useTranslation} from "react-i18next";
+import ProductImportFormModal from "@/src/components/Stock/Product/FormModals/ProductImportFormModal.jsx";
 
 const ProductManagement = () => {
     const {t} = useTranslation();
@@ -19,6 +20,7 @@ const ProductManagement = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
     const [showForm, setShowForm] = useState(false);
+    const [showImportForm, setShowImportForm] = useState(false);
     const [editOrder, setEditOrder] = useState(null);
     const [selectedType, setSelectedType] = useState("");
 
@@ -62,7 +64,20 @@ const ProductManagement = () => {
         },
         {name: t('productManagement.tableHeaders.type'), selector: (row) => t(`categoriesNames.${row.type}`), sortable: true},
         {name: t('productManagement.tableHeaders.unit'), selector: (row) => t(`uoms.${row.unit}`), sortable: true},
-        {name: t('productManagement.tableHeaders.dimensions'), selector: (row) => t(`dimensions.${row.dimensionsString}`), sortable: true},
+        {
+            name: t('productManagement.tableHeaders.dimensions'),
+            selector: (row) => {
+                if (!row.dimensionsString || row.dimensionsString === '-') {
+                    return t('dimensions.-');
+                }
+
+                return row.dimensionsString
+                    .split(' x ')
+                    .map(dim => t(`dimensions.${dim.trim()}`))
+                    .join(' × ');
+            },
+            sortable: true,
+        },
         {name: t('productManagement.tableHeaders.price'), selector: (row) => row.price, sortable: true},
         {
             name: t('productManagement.tableHeaders.actions'),
@@ -88,6 +103,12 @@ const ProductManagement = () => {
                         className="px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all bg-blue-600 text-white flex items-center font-medium"
                     >
                         <FaPlus className="mr-2"/> {t('productManagement.addProduct')}
+                    </Button>
+                    <Button
+                        onClick={() => setShowImportForm(true)}
+                        className="px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all bg-green-600 text-white flex items-center font-medium"
+                    >
+                        📥 {t('productManagement.importProducts')}
                     </Button>
                 </div>
             </div>
@@ -142,6 +163,10 @@ const ProductManagement = () => {
 
             {showForm && (
                 <ItemFormModal showModal={showForm} onClose={handleCloseForm} initialData={editOrder}/>
+            )}
+
+            {showImportForm && (
+                <ProductImportFormModal showModal={showImportForm} onClose={() => setShowImportForm(false)}/>
             )}
         </div>
     );

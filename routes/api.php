@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('stock')->group(function () {
         Route::get('products/bundles/all', [ProductBundleController::class, 'all']);
         Route::get('products/all', [ProductController::class, 'all']);
+        Route::post('products/import', [ProductController::class, 'import']);
         Route::get('warehouses/all', [WarehouseController::class, 'all']);
         Route::get('items/all', [StockController::class, 'all']);
         Route::get('items/fetch', [StockController::class, 'fetchMatchingStocks']);
