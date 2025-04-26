@@ -27,4 +27,17 @@ class Uom extends Model
     {
         return $this->hasMany(UomDimension::class);
     }
+
+    public function translations()
+    {
+        return $this->hasMany(UomTranslation::class);
+    }
+
+    public function translatedName($locale = null)
+    {
+        $locale = $locale ?? app()->getLocale();
+        return $this->translations
+            ->firstWhere('locale', $locale)
+            ?->name ?? $this->symbol;
+    }
 }

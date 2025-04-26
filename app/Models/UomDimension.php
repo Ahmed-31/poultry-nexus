@@ -17,4 +17,17 @@ class UomDimension extends Model
     {
         return $this->belongsToMany(Product::class, 'product_dimensions', 'dimension_id', 'product_id');
     }
+
+    public function translations()
+    {
+        return $this->hasMany(UomDimensionTranslation::class);
+    }
+
+    public function translatedName($locale = null)
+    {
+        $locale = $locale ?? app()->getLocale();
+        return $this->translations
+            ->firstWhere('locale', $locale)
+            ?->name ?? $this->name;
+    }
 }

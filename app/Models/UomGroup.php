@@ -12,4 +12,17 @@ class UomGroup extends Model
     {
         return $this->hasMany(Uom::class, 'group_id');
     }
+
+    public function translations()
+    {
+        return $this->hasMany(UomGroupTranslation::class);
+    }
+
+    public function translatedName($locale = null)
+    {
+        $locale = $locale ?? app()->getLocale();
+        return $this->translations
+            ->firstWhere('locale', $locale)
+            ?->name ?? $this->name;
+    }
 }
