@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BundleParameterController;
+use App\Http\Controllers\BundleProductFormulaController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MenuController;
@@ -59,5 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('uom/dimensions', UomDimensionController::class);
         Route::apiResource('uom/groups', UomGroupController::class);
     });
+    Route::post('/bundle-parameters', [BundleParameterController::class, 'store']);
+    Route::post('/bundle-product-formulas', [BundleProductFormulaController::class, 'store']);
 });
 

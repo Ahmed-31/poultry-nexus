@@ -613,7 +613,8 @@
             "quantity": "Quantity",
             "unit": "Unit",
             "dimensions": "Dimensions",
-            "price": "Price"
+            "price": "Price",
+            "formula": "Qty Formula"
         },
         "descriptionFallback": "No description provided."
     },
@@ -709,20 +710,47 @@
             "name": "Name",
             "description": "Description",
             "product": "Product",
+            "products": "Products",
             "quantity": "Quantity",
             "uom": "Unit of Measure",
-            "dimensions": "Dimensions"
+            "dimensions": "Dimensions",
+            "parameters": "Parameters",
+            "formula": "Formula",
+            "dimension_formulas": "Dimension Formulas",
+            "available_parameters": "Available Parameters"
         },
         "placeholders": {
             "product": "Select a product",
-            "uom": "Select UOM"
+            "uom": "Select UOM",
+            "dimension_formula": "Formula for",
+            "parameter_variable": "Variable (e.g. width)",
+            "parameter_label": "Label (e.g. Cage Width)",
+            "parameter_default_value": "Default Value"
         },
         "actions": {
             "addProduct": "Add Product"
         },
         "toast": {
             "successMessage": "Product bundle saved successfully."
+        },
+        "selectType": "Select Type",
+        "types": {
+            "number": "Number",
+            "text": "Text",
+            "select": "Select"
         }
+    },
+    "formulaBuilder": {
+        "title": "Build Formula",
+        "addParameter": "Add Parameter",
+        "addProduct": "Add Product",
+        "addConstant": "Add Constant",
+        "addOperator": "Add Operator",
+        "selectParameter": "Select Parameter",
+        "selectProduct": "Select Product",
+        "selectOperator": "Select Operator",
+        "enterConstant": "Enter Constant",
+        "noBlocks": "No formula elements added yet."
     },
     "categoryForm": {
         "title": {

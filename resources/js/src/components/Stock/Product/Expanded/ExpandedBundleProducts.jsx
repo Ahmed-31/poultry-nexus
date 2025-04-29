@@ -27,29 +27,33 @@ const ExpandedBundleProducts = ({data}) => {
         {name: t('expandedBundle.columns.name'), selector: row => row.name, sortable: true},
         {name: t('expandedBundle.columns.type'), selector: row => t(`categoriesNames.${row.type}`), sortable: true},
         {
-            name: t('expandedBundle.columns.quantity'),
-            selector: row => row.quantity
-        },
-        {
             name: t('expandedBundle.columns.unit'),
             selector: row => row.uom_id,
             sortable: true,
-            cell: row => <span>{row.uom_name || "-"}</span>,
+            cell: row => <span>{t(`uoms.${row.uom_name}`) || "-"}</span>,
         },
         {
             name: t('expandedBundle.columns.dimensions'),
             cell: row => {
-                const dims = row.dimension_values;
-                return dims && Object.keys(dims).length > 0
+                const dims = row.dimensions || [];
+                return dims.length > 0
                     ? (
                         <div className="text-xs text-gray-700 space-y-1">
-                            {Object.entries(dims).map(([key, val]) => (
-                                <div key={key}><strong>{key}</strong>: {val}</div>
+                            {dims.map((dim) => (
+                                <div key={dim.id}><strong>{t(`dimensions.${dim.name}`)}</strong></div>
                             ))}
                         </div>
                     )
                     : <span className="text-gray-400 italic">{t('global.none')}</span>;
             }
+        },
+        {
+            name: t('expandedBundle.columns.formula'),
+            cell: row => (
+                <div className="text-xs text-blue-700">
+                    {row.formula_ar || <span className="text-gray-400 italic">{t('global.none')}</span>}
+                </div>
+            )
         },
         {
             name: t('expandedBundle.columns.price'),

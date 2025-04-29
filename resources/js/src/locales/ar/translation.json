@@ -610,7 +610,8 @@
             "quantity": "الكمية",
             "unit": "الوحدة",
             "dimensions": "الأبعاد",
-            "price": "السعر"
+            "price": "السعر",
+            "formula": "معادلة الكمية"
         },
         "descriptionFallback": "لا يوجد وصف متاح."
     },
@@ -706,20 +707,47 @@
             "name": "الاسم",
             "description": "الوصف",
             "product": "المنتج",
+            "products": "المنتجات",
             "quantity": "الكمية",
             "uom": "وحدة القياس",
-            "dimensions": "الأبعاد"
+            "dimensions": "الأبعاد",
+            "parameters": "العوامل المتغيرة",
+            "formula": "المعادلة",
+            "dimension_formulas": "معادلات الابعاد",
+            "available_parameters": "العوامل المتغيرة المتاحة"
         },
         "placeholders": {
             "product": "اختر المنتج",
-            "uom": "اختر الوحدة"
+            "uom": "اختر الوحدة",
+            "dimension_formula": "معادلة",
+            "parameter_variable": "متغير (مثال: العرض)",
+            "parameter_label": "التسمية (مثال: عرض القفص)",
+            "parameter_default_value": "القيمة الافتراضية"
         },
         "actions": {
             "addProduct": "إضافة منتج"
         },
         "toast": {
             "successMessage": "تم حفظ البطارية بنجاح."
+        },
+        "selectType": "اختر النوع",
+        "types": {
+            "number": "رقم",
+            "text": "نص",
+            "select": "اختيار"
         }
+    },
+    "formulaBuilder": {
+        "title": "بناء المعادلة",
+        "addParameter": "إضافة متغير",
+        "addProduct": "إضافة منتج",
+        "addConstant": "إضافة رقم ثابت",
+        "addOperator": "إضافة عامل حسابي",
+        "selectParameter": "اختر متغير",
+        "selectProduct": "اختر منتج",
+        "selectOperator": "اختر عامل حسابي",
+        "enterConstant": "أدخل رقم ثابت",
+        "noBlocks": "لم تتم إضافة أي عناصر للمعادلة بعد."
     },
     "categoryForm": {
         "title": {

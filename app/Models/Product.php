@@ -31,7 +31,6 @@ class Product extends Model
     public function bundles()
     {
         return $this->belongsToMany(ProductBundle::class, 'product_bundle_items')
-            ->withPivot('quantity')
             ->withTimestamps();
     }
 

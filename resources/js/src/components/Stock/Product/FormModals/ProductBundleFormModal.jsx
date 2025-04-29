@@ -1,48 +1,48 @@
 import React, {useEffect} from 'react';
-import {useForm, Controller, useFieldArray} from "react-hook-form";
+import {useForm, useFieldArray, Controller} from 'react-hook-form';
+import {Button} from '@/Components/ui/button.jsx';
+import {Input} from '@/Components/ui/input.jsx';
+import {Label} from '@/Components/ui/label.jsx';
+import Modal from '@/src/components/common/Modal.jsx';
+import {SmartSelect} from '@/src/components/common/SmartSelect.jsx';
 import {useDispatch, useSelector} from 'react-redux';
-import {Button} from "@/Components/ui/button.jsx";
-import {Input} from "@/Components/ui/input.jsx";
-import {Label} from "@/Components/ui/label.jsx";
-import Modal from "@/src/components/common/Modal.jsx";
-import {toast} from "@/hooks/use-toast.js";
-import {fetchProducts} from "@/src/store/productsSlice.jsx";
-import {addProductBundle, editProductBundle} from "@/src/store/productBundlesSlice.jsx";
-import {SmartSelect} from "@/src/components/common/SmartSelect.jsx";
-import {fetchUoms} from "@/src/store/uomSlice.jsx";
-import {useTranslation} from "react-i18next";
+import {fetchProducts} from '@/src/store/productsSlice.jsx';
+import {fetchUoms} from '@/src/store/uomSlice.jsx';
+import {addProductBundle, editProductBundle} from '@/src/store/productBundlesSlice.jsx';
+import {useTranslation} from 'react-i18next';
+import {toast} from '@/hooks/use-toast.js';
+import VisualFormulaBuilder from "@/src/components/common/VisualFormulaBuilder.jsx";
 
 const ProductBundleFormModal = ({showModal, onClose, initialData = null}) => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
-    const products = useSelector(state => state.products?.list || []);
-    const uoms = useSelector(state => state.uoms.list);
+    const products = useSelector(state => state.products.list || []);
 
     const {
         register,
-        handleSubmit,
         control,
-        formState: {errors},
+        handleSubmit,
         reset,
-        setValue,
-        watch
+        watch,
+        formState: {errors},
     } = useForm({
         defaultValues: {
             name: '',
             description: '',
-            items: []
+            parameters: [],
+            products: []
         }
     });
 
-    const {fields, append, remove} = useFieldArray({
+    const {fields: parameterFields, append: appendParameter, remove: removeParameter} = useFieldArray({
         control,
-        name: "items"
+        name: 'parameters'
     });
 
-    const getUomSymbol = (uom_id) => {
-        const match = uoms.find(u => u.id === uom_id);
-        return match ? `(${match.symbol})` : '';
-    };
+    const {fields: productFields, append: appendProduct, remove: removeProduct} = useFieldArray({
+        control,
+        name: 'products'
+    });
 
     useEffect(() => {
         dispatch(fetchProducts());
@@ -50,32 +50,12 @@ const ProductBundleFormModal = ({showModal, onClose, initialData = null}) => {
     }, [dispatch]);
 
     useEffect(() => {
-        if (initialData && products.length) {
-            const items = initialData.products?.map(p => {
-                const matchedProduct = products.find(prod => prod.id === p.id);
-                const dimensionDefs = matchedProduct?.dimensions || [];
-
-                const dimensions = dimensionDefs.reduce((acc, dim) => {
-                    const dimName = t(`dimensions.${dim.name}`);
-                    acc[dimName] = p.dimension_values?.[dimName] || '';
-                    return acc;
-                }, {});
-
-                return {
-                    product_id: p.id,
-                    uom_id: p.uom_id || p.pivot?.uom_id || '',
-                    quantity: p.quantity || p.pivot?.quantity || 1,
-                    dimensions
-                };
-            }) || [];
-
-            reset({
-                name: initialData.name || '',
-                description: initialData.description || '',
-                items
-            });
+        if (initialData) {
+            reset(initialData);
         }
-    }, [initialData, products, reset]);
+    }, [initialData, reset]);
+
+    const availableParameterNames = watch('parameters')?.map(p => p.name) || [];
 
     const onSubmit = async (data) => {
         try {
@@ -85,162 +65,165 @@ const ProductBundleFormModal = ({showModal, onClose, initialData = null}) => {
                 await dispatch(addProductBundle({productBundle: data})).unwrap();
                 reset();
             }
-
             toast({title: t('global.toasts.successTitle'), description: t('productBundleForm.toast.successMessage')});
+            onClose();
         } catch (err) {
-            toast({title: t('global.toasts.error'), description: err.message || t('global.toasts.errorMessage'), variant: "destructive"});
+            toast({
+                title: t('global.toasts.errorTitle'),
+                description: err.message || t('global.toasts.errorMessage'),
+                variant: "destructive"
+            });
         }
     };
 
     return (
         <Modal isOpen={showModal} onClose={onClose}>
             <h2 className="text-lg font-bold mb-4">{initialData ? t('productBundleForm.title.edit') : t('productBundleForm.title.add')}</h2>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                <div>
-                    <Label>{t('productBundleForm.fields.name')}</Label>
-                    <Input {...register("name", {required: t('global.required')})} />
-                    {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
-                </div>
 
-                <div>
-                    <Label>{t('productBundleForm.fields.description')}</Label>
-                    <textarea
-                        {...register("description")}
-                        className="border p-2 w-full rounded-md"
-                    />
-                </div>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
 
-                <div>
-                    <Label>{t('productBundleForm.label')}</Label>
-                    <div className="space-y-6">
-                        {fields.map((item, index) => {
-                            const selectedProductId = watch(`items.${index}.product_id`);
-                            const selectedProduct = products.find(p => p.id === selectedProductId);
-                            const currentDimensions = watch(`items.${index}.dimensions`);
+                {/* General Info */}
+                <div className="space-y-4">
+                    <div>
+                        <Label>{t('productBundleForm.fields.name')}</Label>
+                        <Input {...register('name', {required: t('global.required')})} />
+                        {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+                    </div>
 
-                            return (
-                                <div key={item.id} className="space-y-4 border p-4 rounded-lg">
-                                    {/* Product Selector */}
-                                    <div>
-                                        <Label className="mb-2 block">{t('productBundleForm.fields.product')}</Label>
-                                        <Controller
-                                            name={`items.${index}.product_id`}
-                                            control={control}
-                                            rules={{required: t('global.required')}}
-                                            render={({field}) => (
-                                                <SmartSelect
-                                                    multiple={false}
-                                                    options={products.map(p => ({
-                                                        value: p.id,
-                                                        label: p.name,
-                                                    }))}
-                                                    selected={field.value}
-                                                    onChange={field.onChange}
-                                                    placeholder={t('productBundleForm.placeholders.product')}
-                                                />
-                                            )}
-                                        />
-                                        {errors?.items?.[index]?.product_id && (
-                                            <p className="text-red-500 text-sm mt-1">{t('global.required')}</p>
-                                        )}
-                                    </div>
-
-                                    {/* Quantity & UOM */}
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <Label className="mb-2 block">{t('productBundleForm.fields.quantity')}</Label>
-                                            <Input
-                                                type="number"
-                                                step="1"
-                                                min="1"
-                                                {...register(`items.${index}.quantity`, {required: true, min: 1})}
-                                            />
-                                            {errors?.items?.[index]?.quantity && (
-                                                <p className="text-red-500 text-sm mt-1">{t('global.required')}</p>
-                                            )}
-                                        </div>
-
-                                        <div>
-                                            <Label className="mb-2 block">{t('productBundleForm.fields.uom')}</Label>
-                                            <Controller
-                                                name={`items.${index}.uom_id`}
-                                                control={control}
-                                                rules={{required: true}}
-                                                render={({field}) => (
-                                                    <SmartSelect
-                                                        multiple={false}
-                                                        options={selectedProduct?.allowed_uoms?.map(u => ({
-                                                            value: u.id,
-                                                            label: `${u.name} (${u.symbol})`,
-                                                        })) || []}
-                                                        selected={field.value}
-                                                        onChange={field.onChange}
-                                                        placeholder={t('productBundleForm.placeholders.uom')}
-                                                    />
-                                                )}
-                                            />
-                                            {errors?.items?.[index]?.uom_id && (
-                                                <p className="text-red-500 text-sm mt-1">{t('global.required')}</p>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {/* Dimensions */}
-                                    {selectedProduct?.dimensions?.length > 0 && (
-                                        <div>
-                                            <h3 className="text-md font-semibold mb-2">{t('productBundleForm.fields.dimensions')}</h3>
-                                            <div className="grid grid-cols-2 gap-4">
-                                                {selectedProduct.dimensions.map((dimension) => (
-                                                    <div key={dimension.id}>
-                                                        <Label className="mb-1 block">
-                                                            {t(`dimensions.${dimension.name}`)}
-                                                            <span className="ml-1 text-sm text-gray-500">
-                                                                {getUomSymbol(dimension.uom_id)}
-                                                            </span>
-                                                        </Label>
-                                                        <Input
-                                                            type="number"
-                                                            step="any"
-                                                            placeholder={`Enter ${t(`dimensions.${dimension.name}`)}`}
-                                                            value={currentDimensions?.[t(`dimensions.${dimension.name}`)] || ""}
-                                                            onChange={(e) =>
-                                                                setValue(`items.${index}.dimensions.${t(`dimensions.${dimension.name}`)}`, e.target.value)
-                                                            }
-                                                        />
-                                                        {errors?.items?.[index]?.dimensions?.[t(`dimensions.${dimension.name}`)] && (
-                                                            <p className="text-red-500 text-sm mt-1">
-                                                                {t(`dimensions.${dimension.name}`)} {t('global.required')}
-                                                            </p>
-                                                        )}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    <Button
-                                        type="button"
-                                        variant="ghost"
-                                        onClick={() => remove(index)}
-                                        className="text-red-500"
-                                    >
-                                        {t('global.remove')}
-                                    </Button>
-                                </div>
-                            );
-                        })}
-
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => append({product_id: '', uom_id: '', quantity: 1, dimensions: {}})}
-                        >
-                            + {t('productBundleForm.actions.addProduct')}
-                        </Button>
+                    <div>
+                        <Label>{t('productBundleForm.fields.description')}</Label>
+                        <textarea
+                            {...register('description')}
+                            className="border p-2 w-full rounded-md"
+                        />
                     </div>
                 </div>
 
-                <div className="flex justify-end gap-2">
+                {/* Bundle Parameters */}
+                <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                        <h3 className="text-md font-semibold">{t('productBundleForm.fields.parameters')}</h3>
+                        <Button type="button" onClick={() => appendParameter({
+                            name: '',
+                            label: '',
+                            type: 'number',
+                            default_value: ''
+                        })}>
+                            + {t('global.add')}
+                        </Button>
+                    </div>
+
+                    {parameterFields.map((param, index) => (
+                        <div key={param.id} className="grid grid-cols-4 gap-4 items-center">
+
+                            {/* Parameter Name */}
+                            <Input
+                                placeholder={t('productBundleForm.placeholders.parameter_variable')}
+                                {...register(`parameters.${index}.name`, {required: true})}
+                            />
+
+                            {/* Parameter Type (select number/text/select) */}
+                            <Controller
+                                name={`parameters.${index}.type`}
+                                control={control}
+                                defaultValue="number"
+                                render={({field}) => (
+                                    <SmartSelect
+                                        multiple={false}
+                                        options={[
+                                            {value: 'number', label: t('productBundleForm.types.number')},
+                                            {value: 'text', label: t('productBundleForm.types.text')},
+                                            {value: 'select', label: t('productBundleForm.types.select')},
+                                        ]}
+                                        selected={field.value}
+                                        onChange={field.onChange}
+                                        placeholder={t('productBundleForm.selectType')}
+                                    />
+                                )}
+                            />
+
+                            {/* Default Value */}
+                            <Input
+                                placeholder={t('productBundleForm.placeholders.parameter_default_value')}
+                                {...register(`parameters.${index}.default_value`)}
+                            />
+
+                            {/* Remove Parameter Button */}
+                            <Button
+                                variant="ghost"
+                                type="button"
+                                onClick={() => removeParameter(index)}
+                                className="text-red-500"
+                            >
+                                {t('global.remove')}
+                            </Button>
+
+                        </div>
+                    ))}
+
+                </div>
+
+                {/* Products */}
+                <div className="space-y-6">
+                    <div className="flex justify-between items-center">
+                        <h3 className="text-md font-semibold">{t('productBundleForm.fields.products')}</h3>
+                        <Button type="button" onClick={() => appendProduct({
+                            product_id: '',
+                        })}>
+                            + {t('global.add')}
+                        </Button>
+                    </div>
+
+                    {productFields.map((item, index) => {
+                        return (
+                            <div key={item.id} className="space-y-4 border p-4 rounded-lg">
+                                {/* Product Selector */}
+                                <div>
+                                    <Label>{t('productBundleForm.fields.product')}</Label>
+                                    <Controller
+                                        name={`products.${index}.product_id`}
+                                        control={control}
+                                        rules={{required: t('global.required')}}
+                                        render={({field}) => (
+                                            <SmartSelect
+                                                multiple={false}
+                                                options={products.map(p => ({
+                                                    value: p.id,
+                                                    label: p.name,
+                                                }))}
+                                                selected={field.value}
+                                                onChange={field.onChange}
+                                                placeholder={t('productBundleForm.placeholders.product')}
+                                            />
+                                        )}
+                                    />
+                                </div>
+
+                                <Label>{t('formulaBuilder.title')}</Label>
+                                <VisualFormulaBuilder
+                                    control={control}
+                                    name={`products.${index}.formula_blocks`}
+                                    parameters={watch('parameters') || []}
+                                    products={products}
+                                />
+                                <Button type="button" variant="ghost" onClick={() => removeProduct(index)}
+                                        className="text-red-500">
+                                    {t('global.remove')}
+                                </Button>
+
+                                {/* Helper: List of Available Parameters */}
+                                {availableParameterNames.length > 0 && (
+                                    <div className="bg-gray-100 p-2 rounded-md mt-4 text-xs">
+                                        <strong>{t('productBundleForm.fields.available_parameters')}:</strong> {availableParameterNames.join(', ')}
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {/* Submit Buttons */}
+                <div className="flex justify-end gap-2 mt-6">
                     <Button type="button" onClick={onClose} className="bg-gray-500 text-white px-4 py-2 rounded-md">
                         {t('global.cancel')}
                     </Button>
