@@ -1181,5 +1181,48 @@
             "successMessage": "Products imported successfully.",
             "noFile": "Please select a file first."
         }
+    },
+    "customerList": {
+        "title": "Customers",
+        "buttons": {
+            "add": "Add Customer"
+        },
+        "filters": {
+            "searchPlaceholder": "Search by name, email or phone..."
+        },
+        "columns": {
+            "name": "Name",
+            "email": "Email",
+            "phone": "Phone",
+            "address": "Address",
+            "type": "Customer Type",
+            "edit": "Edit"
+        }
+    },
+    "customerTypes": {
+        "domestic": "Domestic",
+        "international": "International"
+    },
+    "customerForm": {
+        "title": {
+            "add": "Add Customer",
+            "edit": "Edit Customer"
+        },
+        "fields": {
+            "name": "Name",
+            "email": "Email",
+            "phone": "Phone",
+            "address": "Address",
+            "type": "Customer Type"
+        },
+        "placeholders": {
+            "type": "Select Customer Type"
+        },
+        "validation": {
+            "name": "Customer name is required"
+        },
+        "toast": {
+            "successMessage": "Customer saved successfully."
+        }
     }
 }

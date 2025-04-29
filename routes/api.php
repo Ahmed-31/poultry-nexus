@@ -48,7 +48,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('orders/all', [OrderController::class, 'all']);
     Route::apiResource('orders', OrderController::class);
     Route::prefix('customers')->group(function () {
-        Route::get('/', [CustomerController::class, 'index']);
+        Route::get('all', [CustomerController::class, 'all']);
+        Route::apiResource('/', CustomerController::class);
     });
     Route::prefix('menus')->group(function () {
         Route::get('/', [MenuController::class, 'index']);

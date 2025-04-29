@@ -1187,5 +1187,48 @@
             "successMessage": "تم استيراد المنتجات بنجاح.",
             "noFile": "يرجى اختيار ملف أولاً."
         }
+    },
+    "customerList": {
+        "title": "العملاء",
+        "buttons": {
+            "add": "إضافة عميل"
+        },
+        "filters": {
+            "searchPlaceholder": "ابحث بالاسم أو البريد الإلكتروني أو رقم الهاتف..."
+        },
+        "columns": {
+            "name": "الاسم",
+            "email": "البريد الإلكتروني",
+            "phone": "رقم الهاتف",
+            "address": "العنوان",
+            "type": "نوع العميل",
+            "edit": "تعديل"
+        }
+    },
+    "customerTypes": {
+        "domestic": "محلي",
+        "international": "دولي"
+    },
+    "customerForm": {
+        "title": {
+            "add": "إضافة عميل",
+            "edit": "تعديل عميل"
+        },
+        "fields": {
+            "name": "الاسم",
+            "email": "البريد الإلكتروني",
+            "phone": "رقم الهاتف",
+            "address": "العنوان",
+            "type": "نوع العميل"
+        },
+        "placeholders": {
+            "type": "اختر نوع العميل"
+        },
+        "validation": {
+            "name": "اسم العميل مطلوب"
+        },
+        "toast": {
+            "successMessage": "تم حفظ العميل بنجاح."
+        }
     }
 }

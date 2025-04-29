@@ -20,7 +20,8 @@ import WarehousesPage from "@/src/pages/WarehousesPage.jsx";
 import ProductsPage from "@/src/pages/ProductsPage.jsx";
 import StockScanPage from "@/src/pages/StockScanPage.jsx";
 import ReservationList from "@/src/components/Order/ReservationList.jsx";
-import UomPage from "@/src/pages/UomPage.jsx"
+import UomPage from "@/src/pages/UomPage.jsx";
+import CustomersPage from "@/src/pages/CustomersPage.jsx"
 
 const AppRoutes = () => (
     <Provider store={store}>
@@ -75,6 +76,10 @@ const AppRoutes = () => (
                             <Route
                                 path="/uom"
                                 element={<UomPage />}
+                            />
+                            <Route
+                                path="/sales-distribution/customers"
+                                element={<CustomersPage />}
                             />
                         </Route>
                     </Route>

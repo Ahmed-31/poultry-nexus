@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Yajra\DataTables\DataTables;
 
 class CustomerController extends Controller
 {
@@ -15,6 +16,13 @@ class CustomerController extends Controller
     {
         $customers = Customer::all();
         return response()->json($customers, Response::HTTP_OK);
+    }
+
+    public function all()
+    {
+        $query = Customer::query();
+        return DataTables::of($query)
+            ->toJson();
     }
 
     /**
