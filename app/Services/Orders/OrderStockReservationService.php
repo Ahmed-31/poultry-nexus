@@ -3,9 +3,9 @@
 namespace App\Services\Orders;
 
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\Stock;
 use App\Models\StockReservation;
-use App\Models\ProductBundleItem;
 use App\Models\Uom;
 use App\Services\StockHelper;
 use Illuminate\Support\Facades\DB;
@@ -40,19 +40,18 @@ class OrderStockReservationService
     : void
     {
         foreach ($order->bundles as $bundle) {
-            $bundleItems = ProductBundleItem::where('product_bundle_id', $bundle->product_bundle_id)->get();
-            $totalUnits = $bundle->total_units;
+            $bundleItems = $bundle->items;
             $reservedCount = 0;
-            $totalCount = count($bundleItems);
-            foreach ($bundleItems as $component) {
-                $requiredQty = $component->quantity * $totalUnits;
+            $totalCount = $bundleItems->count();
+            foreach ($bundleItems as $item) {
+                $requiredQty = $item->calculated_quantity;
                 $success = $this->reserveProductStock(
-                    $component->product_id,
+                    $item->product_id,
                     $requiredQty,
                     $order->id,
                     $order->priority,
-                    $component->uom_id,
-                    $component->dimension_values,
+                    $item->uom_id,
+                    $item->dimension_values ?? [],
                     $bundle
                 );
                 if ($success) {
@@ -65,7 +64,7 @@ class OrderStockReservationService
                     $reservedCount === $totalCount => 'completed',
                     default                        => 'in_progress'
                 },
-                'progress' => round(($reservedCount / $totalCount) * 100, 2),
+                'progress' => $totalCount > 0 ? round(($reservedCount / $totalCount) * 100, 2) : 0,
             ]);
         }
     }
@@ -81,7 +80,7 @@ class OrderStockReservationService
     )
     : bool
     {
-        $uomId ??= Uom::where('product_id', $productId)->where('is_base', 1)->value('id');
+        $uomId ??= Product::find($productId)?->default_uom_id;
         $stockQuery = Stock::where('product_id', $productId)
             ->where('quantity_in_base', '>', 0)
             ->orderBy('created_at');

@@ -23,12 +23,12 @@ const OrderForm = ({onClose, initialData, showModal}) => {
     const {t} = useTranslation();
 
     const PRIORITY_LEVELS = [
-  { value: 1, label: t('priority.1.label'), description: t('priority.1.description') },
-  { value: 2, label: t('priority.2.label'), description: t('priority.2.description') },
-  { value: 3, label: t('priority.3.label'), description: t('priority.3.description') },
-  { value: 4, label: t('priority.4.label'), description: t('priority.4.description') },
-  { value: 5, label: t('priority.5.label'), description: t('priority.5.description') },
-];
+        {value: 1, label: t('priority.1.label'), description: t('priority.1.description')},
+        {value: 2, label: t('priority.2.label'), description: t('priority.2.description')},
+        {value: 3, label: t('priority.3.label'), description: t('priority.3.description')},
+        {value: 4, label: t('priority.4.label'), description: t('priority.4.description')},
+        {value: 5, label: t('priority.5.label'), description: t('priority.5.description')},
+    ];
 
     const {
         register,
@@ -94,13 +94,7 @@ const OrderForm = ({onClose, initialData, showModal}) => {
 
     const onSubmit = async (data) => {
         try {
-            const cleanData = {
-                ...data,
-                order_bundles: data.order_bundles.map(bundle => ({
-                    ...bundle,
-                    total_units: bundle.poultry_house_count * bundle.lines_number * bundle.units_per_line
-                }))
-            };
+            const cleanData = {...data};
 
             if (initialData) {
                 await dispatch(editOrder({id: initialData.id, order: cleanData})).unwrap();
@@ -182,7 +176,7 @@ const OrderForm = ({onClose, initialData, showModal}) => {
 
                 {/* Order Items */}
                 <div className="space-y-6">
-                    <h3 className="text-xl font-bold text-gray-800">Order Items</h3>
+                    <h3 className="text-xl font-bold text-gray-800">{t('orderForm.sections.orderItems')}</h3>
                     {orderItems.map((item, index) => {
                         const productId = watch(`order_items.${index}.product_id`);
                         const selectedProduct = products.find(p => p.id === parseInt(productId));
@@ -305,46 +299,61 @@ const OrderForm = ({onClose, initialData, showModal}) => {
                 {/* Order Bundles */}
                 <div className="space-y-6">
                     <h3 className="text-xl font-bold text-gray-800">{t('orderForm.sections.bundles')}</h3>
-                    {orderBundles.map((bundle, index) => (
-                        <div key={bundle.id} className="border rounded-xl p-5 bg-white space-y-5 shadow-sm">
-                            <div>
-                                <Controller
-                                    name={`order_bundles.${index}.product_bundle_id`}
-                                    control={control}
-                                    rules={{required: true}}
-                                    render={({field}) => (
-                                        <SmartSelect
-                                            label={t('orderForm.fields.bundle.label')}
-                                            placeholder={t('orderForm.fields.bundle.placeholder')}
-                                            options={productBundles.map((pb) => ({
-                                                label: pb.name,
-                                                value: pb.id.toString(),
-                                            }))}
-                                            selected={field.value?.toString() || ""}
-                                            onChange={field.onChange}
-                                            multiple={false}
-                                        />
-                                    )}
-                                />
+                    {orderBundles.map((bundle, index) => {
+                        const selectedBundleId = watch(`order_bundles.${index}.product_bundle_id`);
+                        const selectedBundle = productBundles.find(pb => pb.id === parseInt(selectedBundleId));
 
-                            </div>
+                        const parameters = selectedBundle?.parameters || [];
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {['height', 'belt_width', 'levels', 'units_per_line', 'lines_number', 'poultry_house_count'].map((field) => (
-                                    <div key={field}>
-                                        <Label>{t(`orderForm.fields.bundle.${field}`)}</Label>
-                                        <Input type="number"
-                                               min="1" {...register(`order_bundles.${index}.${field}`, {required: true})} />
+                        return (
+                            <div key={bundle.id} className="border rounded-xl p-5 bg-white space-y-5 shadow-sm">
+                                <div>
+                                    <Controller
+                                        name={`order_bundles.${index}.product_bundle_id`}
+                                        control={control}
+                                        rules={{required: true}}
+                                        render={({field}) => (
+                                            <SmartSelect
+                                                label={t('orderForm.fields.bundle.label')}
+                                                placeholder={t('orderForm.fields.bundle.placeholder')}
+                                                options={productBundles.map((pb) => ({
+                                                    label: pb.name,
+                                                    value: pb.id.toString(),
+                                                }))}
+                                                selected={field.value?.toString() || ""}
+                                                onChange={(value) => {
+                                                    field.onChange(value);
+                                                    setValue(`order_bundles.${index}.parameters`, {});
+                                                }}
+                                                multiple={false}
+                                            />
+                                        )}
+                                    />
+                                </div>
+
+                                {/* Parameters Dynamic Fields */}
+                                {parameters.length > 0 && (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        {parameters.map((param) => (
+                                            <div key={param.id}>
+                                                <Label>{param.translations?.ar || param.name}</Label>
+                                                <Input
+                                                    type={param.type === 'number' ? 'number' : 'text'}
+                                                    {...register(`order_bundles.${index}.parameters.${param.name}`, {required: param.type === 'number'})}
+                                                />
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
-                            </div>
+                                )}
 
-                            <div className="flex justify-end">
-                                <Button type="button" variant="destructive"
-                                        onClick={() => removeBundle(index)}>{t('orderForm.buttons.removeBundle')}</Button>
+                                <div className="flex justify-end">
+                                    <Button type="button" variant="destructive" onClick={() => removeBundle(index)}>
+                                        {t('orderForm.buttons.removeBundle')}
+                                    </Button>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
 
                     <Button
                         type="button"
@@ -352,12 +361,7 @@ const OrderForm = ({onClose, initialData, showModal}) => {
                         onClick={() =>
                             appendBundle({
                                 product_bundle_id: '',
-                                height: 1,
-                                belt_width: 1,
-                                lines_number: 1,
-                                units_per_line: 1,
-                                poultry_house_count: 1,
-                                levels: 1
+                                parameters: {}
                             })}
                     >
                         + {t('orderForm.buttons.addBundle')}

@@ -18,7 +18,7 @@ class ProductBundleController extends Controller
      */
     public function index()
     {
-        $productBundles = ProductBundle::with('products')->get();
+        $productBundles = ProductBundle::with(['products', 'parameters', 'formulas'])->get();
         return response()->json($productBundles);
     }
 

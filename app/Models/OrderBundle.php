@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderBundle extends Model
 {
-    protected $fillable = ['order_id', 'product_bundle_id', 'height', 'belt_width', 'lines_number', 'units_per_line', 'levels', 'total_units', 'status', 'progress', 'poultry_house_count'];
+    protected $fillable = ['order_id', 'product_bundle_id', 'status', 'progress', 'parameters'];
+    protected $casts = [
+        'parameters' => 'array'
+    ];
 
     public function order()
     {
@@ -18,12 +21,24 @@ class OrderBundle extends Model
         return $this->belongsTo(ProductBundle::class, 'product_bundle_id');
     }
 
+    public function items()
+    {
+        return $this->hasMany(OrderBundleItem::class, 'order_bundle_id');
+    }
+
     public static function boot()
     {
         parent::boot();
         static::creating(function ($orderBundle) {
-            if (!isset($orderBundle->total_units)) {
-                $orderBundle->total_units = $orderBundle->lines_number * $orderBundle->units_per_line;
+            $parameters = is_array($orderBundle->parameters)
+                ? $orderBundle->parameters
+                : (json_decode($orderBundle->parameters, true) ?? []);
+            if (isset($parameters['عدد الخطوط'], $parameters['عدد الوحدات في الخط'])) {
+                $linesNumber = (int)$parameters['عدد الخطوط'];
+                $unitsPerLine = (int)$parameters['عدد الوحدات في الخط'];
+                $totalUnits = $linesNumber * $unitsPerLine;
+                $parameters['اجمالي عدد الوحدات'] = $totalUnits;
+                $orderBundle->parameters = $parameters;
             }
         });
     }

@@ -251,7 +251,8 @@
             }
         },
         "sections": {
-            "bundles": "Order Bundles"
+            "bundles": "Order Bundles",
+            "orderItems": "Order Items"
         },
         "buttons": {
             "removeItem": "Remove Item",

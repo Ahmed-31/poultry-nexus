@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
+use App\Models\Product;
+use App\Models\ProductBundle;
+use App\Services\Orders\BundleOrderCalculator;
 use App\Services\Orders\OrderStockReservationService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -170,16 +173,25 @@ class OrderController extends Controller
     private function createOrderBundles(Order $order, array $bundles)
     : void
     {
-        foreach ($bundles as $bundle) {
-            $order->bundles()->create([
-                'product_bundle_id'   => $bundle['product_bundle_id'],
-                'poultry_house_count' => $bundle['poultry_house_count'],
-                'height'              => $bundle['height'],
-                'belt_width'          => $bundle['belt_width'],
-                'lines_number'        => $bundle['lines_number'],
-                'units_per_line'      => $bundle['units_per_line'],
-                'levels'              => $bundle['levels'],
+        foreach ($bundles as $bundleData) {
+            $orderBundle = $order->bundles()->create([
+                'product_bundle_id' => $bundleData['product_bundle_id'],
+                'parameters'        => $bundleData['parameters'] ?? [],
+                'status'            => 'not_started',
+                'progress'          => 0,
             ]);
+            $bundle = ProductBundle::with('formulas.product')->findOrFail($bundleData['product_bundle_id']);
+            $parameters = $bundleData['parameters'] ?? [];
+            $calculatedProducts = BundleOrderCalculator::calculate($bundle, $parameters);
+            foreach ($calculatedProducts as $productData) {
+                $product = Product::findOrFail($productData['product_id']);
+                $orderBundle->items()->create([
+                    'product_id'          => $product->id,
+                    'uom_id'              => $product->default_uom_id,
+                    'dimension_values'    => [],
+                    'calculated_quantity' => $productData['calculated_quantity'],
+                ]);
+            }
         }
     }
 }
