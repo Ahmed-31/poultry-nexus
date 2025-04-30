@@ -157,13 +157,19 @@
             "tracking": "Tracking #",
             "shippedAt": "Shipped At",
             "deliveredAt": "Delivered At",
-            "notes": "Notes"
+            "notes": "Notes",
+            "parameters": "Parameters"
         },
         "meta": {
             "orderNumber": "Order Number",
             "priority": "Priority",
             "orderedAt": "Ordered At",
             "notes": "Notes"
+        },
+        "status": {
+            "not_started": "Not Started",
+            "in_progress": "In Progress",
+            "completed": "Completed"
         }
     },
     "orderDetailsPage": {

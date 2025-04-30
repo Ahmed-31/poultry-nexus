@@ -157,7 +157,8 @@
             "tracking": "رقم التتبع",
             "shippedAt": "تاريخ الشحن",
             "deliveredAt": "تاريخ التسليم",
-            "notes": "ملاحظات"
+            "notes": "ملاحظات",
+            "parameters": "العوامل المتغيرة"
         },
         "meta": {
             "orderNumber": "رقم الطلب",
@@ -165,6 +166,11 @@
             "priority": "الأولوية",
             "orderedAt": "تاريخ الطلب",
             "notes": "ملاحظات"
+        },
+        "status": {
+            "not_started": "لم يتم البدء",
+            "in_progress": "قيد التنفيذ",
+            "completed": "تم التنفيذ"
         }
     },
     "orderDetailsPage": {

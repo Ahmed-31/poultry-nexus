@@ -44,19 +44,23 @@ const ExpandedOrderDetails = ({data}) => {
             selector: row => `${parseFloat(row.total_price || 0).toFixed(2)} EGP`,
             sortable: true
         }
-    ], []);
+    ], [t]);
 
     const bundleColumns = useMemo(() => [
         {name: t('orderDetails.columns.bundle'), selector: row => row.bundle?.name || t('global.na'), sortable: true},
-        {name: t('orderDetails.columns.status'), selector: row => row.status || '—', sortable: true},
+        {name: t('orderDetails.columns.status'), selector: row => t(`orderDetails.status.${row.status}`) || '—', sortable: true},
         {name: t('orderDetails.columns.progress'), selector: row => `${row.progress}%`, sortable: true},
-        {name: t('orderDetails.columns.height'), selector: row => row.height, sortable: true},
-        {name: t('orderDetails.columns.levels'), selector: row => row.levels, sortable: true},
-        {name: t('orderDetails.columns.lines'), selector: row => row.lines_number, sortable: true},
-        {name: t('orderDetails.columns.unitsPerLine'), selector: row => row.units_per_line, sortable: true},
-        {name: t('orderDetails.columns.totalUnits'), selector: row => row.total_units, sortable: true},
-        {name: t('orderDetails.columns.houses'), selector: row => row.poultry_house_count, sortable: true},
-    ], []);
+        {
+            name: t('orderDetails.columns.parameters'),
+            cell: row => row.parameters && Object.keys(row.parameters).length > 0 ? (
+                <ul className="text-sm text-gray-700 list-disc pl-4">
+                    {Object.entries(row.parameters).map(([key, value]) => (
+                        <li key={key}><strong>{key}</strong>: {value}</li>
+                    ))}
+                </ul>
+            ) : '—'
+        },
+    ], [t]);
 
     const paymentColumns = useMemo(() => [
         {name: t('orderDetails.columns.method'), selector: row => row.payment_method, sortable: true},
@@ -66,8 +70,8 @@ const ExpandedOrderDetails = ({data}) => {
             sortable: true
         },
         {name: t('orderDetails.columns.status'), selector: row => row.status, sortable: true},
-        {name: 	t('orderDetails.columns.reference'), selector: row => row.transaction_reference || '—', sortable: false}
-    ], []);
+        {name: t('orderDetails.columns.reference'), selector: row => row.transaction_reference || '—', sortable: false}
+    ], [t]);
 
     const shipmentColumns = useMemo(() => [
         {name: t('orderDetails.columns.carrier'), selector: row => row.carrier || '—', sortable: true},
@@ -76,7 +80,7 @@ const ExpandedOrderDetails = ({data}) => {
         {name: t('orderDetails.columns.shippedAt'), selector: row => row.shipped_at || '—', sortable: false},
         {name: t('orderDetails.columns.deliveredAt'), selector: row => row.delivered_at || '—', sortable: false},
         {name: t('orderDetails.columns.notes'), selector: row => row.notes || '—', sortable: false}
-    ], []);
+    ], [t]);
 
     return (
         <div className="p-4 bg-gray-50 border rounded-xl space-y-5">
@@ -90,7 +94,8 @@ const ExpandedOrderDetails = ({data}) => {
                     <strong>{t('orderDetails.meta.priority')}:</strong> {data?.priority} &nbsp;|&nbsp;
                     <strong>{t('orderDetails.meta.orderedAt')}:</strong> {data?.ordered_at}
                 </p>
-                <p className="text-sm text-gray-600"><strong>{t('orderDetails.meta.notes')}:</strong> {data?.notes || '—'}</p>
+                <p className="text-sm text-gray-600">
+                    <strong>{t('orderDetails.meta.notes')}:</strong> {data?.notes || '—'}</p>
             </div>
 
             <Section title={t('orderDetails.sections.items')}>
