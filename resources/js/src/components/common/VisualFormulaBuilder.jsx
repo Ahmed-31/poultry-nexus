@@ -13,22 +13,8 @@ const VisualFormulaBuilder = ({control, name, parameters = [], products = []}) =
     });
 
     const addBlock = (blockType) => {
-        switch (blockType) {
-            case 'parameter':
-                append({type: 'parameter', value: ''});
-                break;
-            case 'product':
-                append({type: 'product', value: ''});
-                break;
-            case 'constant':
-                append({type: 'constant', value: ''});
-                break;
-            case 'operator':
-                append({type: 'operator', value: '+'});
-                break;
-            default:
-                break;
-        }
+        const base = {type: blockType, value: blockType === 'operator' ? '+' : ''};
+        append(base);
     };
 
     const operatorOptions = [
@@ -37,6 +23,78 @@ const VisualFormulaBuilder = ({control, name, parameters = [], products = []}) =
         {value: '*', label: '×'},
         {value: '/', label: '÷'},
     ];
+
+    const renderBlock = (field, index) => {
+        const path = `${name}.${index}.value`;
+        switch (field.type) {
+            case 'parameter':
+                return (
+                    <Controller
+                        name={path}
+                        control={control}
+                        render={({field}) => (
+                            <SmartSelect
+                                multiple={false}
+                                options={parameters.map(p => ({
+                                    value: p.name,
+                                    label: p.translations?.ar || p.name,
+                                }))}
+                                selected={field.value}
+                                onChange={field.onChange}
+                                placeholder={t('formulaBuilder.selectParameter')}
+                            />
+                        )}
+                    />
+                );
+            case 'product':
+                return (
+                    <Controller
+                        name={path}
+                        control={control}
+                        render={({field}) => (
+                            <SmartSelect
+                                multiple={false}
+                                options={products.map(p => ({
+                                    value: `quantity_product_${p.id}`,
+                                    label: p.name,
+                                }))}
+                                selected={field.value}
+                                onChange={field.onChange}
+                                placeholder={t('formulaBuilder.selectProduct')}
+                            />
+                        )}
+                    />
+                );
+            case 'constant':
+                return (
+                    <Controller
+                        name={path}
+                        control={control}
+                        render={({field}) => (
+                            <Input type="number" step="any" {...field} placeholder={t('formulaBuilder.enterConstant')} className="w-20 text-center"/>
+                        )}
+                    />
+                );
+            case 'operator':
+                return (
+                    <Controller
+                        name={path}
+                        control={control}
+                        render={({field}) => (
+                            <SmartSelect
+                                multiple={false}
+                                options={operatorOptions}
+                                selected={field.value}
+                                onChange={field.onChange}
+                                placeholder={t('formulaBuilder.selectOperator')}
+                            />
+                        )}
+                    />
+                );
+            default:
+                return null;
+        }
+    };
 
     return (
         <div className="space-y-4">
@@ -55,89 +113,20 @@ const VisualFormulaBuilder = ({control, name, parameters = [], products = []}) =
                 </Button>
             </div>
 
-            {fields.length === 0 && (
-                <div className="text-gray-400">{t('formulaBuilder.noBlocks')}</div>
-            )}
-
-            <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-2 border p-2 rounded bg-gray-50 min-h-[48px]">
+                {fields.length === 0 && (
+                    <div className="text-gray-400">{t('formulaBuilder.noBlocks')}</div>
+                )}
                 {fields.map((field, index) => (
-                    <div key={field.id} className="flex items-center gap-2">
-                        {field.type === 'parameter' && (
-                            <Controller
-                                name={`${name}.${index}.value`}
-                                control={control}
-                                rules={{required: true}}
-                                render={({field}) => (
-                                    <SmartSelect
-                                        multiple={false}
-                                        options={parameters.map(p => ({
-                                            value: p.name,
-                                            label: p.translations?.ar || p.name,
-                                        }))}
-                                        selected={field.value}
-                                        onChange={field.onChange}
-                                        placeholder={t('formulaBuilder.selectParameter')}
-                                    />
-                                )}
-                            />
-                        )}
-
-                        {field.type === 'product' && (
-                            <Controller
-                                name={`${name}.${index}.value`}
-                                control={control}
-                                rules={{required: true}}
-                                render={({field}) => (
-                                    <SmartSelect
-                                        multiple={false}
-                                        options={products.map(p => ({
-                                            value: `quantity_product_${p.id}`,
-                                            label: p.name,
-                                        }))}
-                                        selected={field.value}
-                                        onChange={field.onChange}
-                                        placeholder={t('formulaBuilder.selectProduct')}
-                                    />
-                                )}
-                            />
-                        )}
-
-                        {field.type === 'constant' && (
-                            <Controller
-                                name={`${name}.${index}.value`}
-                                control={control}
-                                rules={{required: true}}
-                                render={({field}) => (
-                                    <Input
-                                        type="number"
-                                        step="any"
-                                        {...field}
-                                        placeholder={t('formulaBuilder.enterConstant')}
-                                    />
-                                )}
-                            />
-                        )}
-
-                        {field.type === 'operator' && (
-                            <Controller
-                                name={`${name}.${index}.value`}
-                                control={control}
-                                rules={{required: true}}
-                                render={({field}) => (
-                                    <SmartSelect
-                                        multiple={false}
-                                        options={operatorOptions}
-                                        selected={field.value}
-                                        onChange={field.onChange}
-                                        placeholder={t('formulaBuilder.selectOperator')}
-                                    />
-                                )}
-                            />
-                        )}
-
-                        <Button type="button" variant="ghost" onClick={() => remove(index)} className="text-red-500">
-                            {t('global.remove')}
-                        </Button>
+                    <div key={field.id} className="flex items-center gap-1 bg-white px-2 py-1 border rounded shadow-sm">
+                        {renderBlock(field, index)}
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="xs"
+                            onClick={() => remove(index)}
+                            className="text-red-500 px-1"
+                        >×</Button>
                     </div>
                 ))}
             </div>
