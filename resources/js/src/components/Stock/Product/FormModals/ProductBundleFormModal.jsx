@@ -44,16 +44,57 @@ const ProductBundleFormModal = ({showModal, onClose, initialData = null}) => {
         name: 'products'
     });
 
+    const parseFormulaToBlocks = (formulaString, parameters, products) => {
+        const blocks = [];
+        const tokens = formulaString.split(/([+\-*\/()])/).map(t => t.trim()).filter(Boolean);
+
+        tokens.forEach(token => {
+            if (['+', '-', '*', '/', '(', ')'].includes(token)) {
+                blocks.push({type: 'operator', value: token});
+            } else if (!isNaN(token)) {
+                blocks.push({type: 'constant', value: token});
+            } else if (parameters.some(p => p.name === token)) {
+                blocks.push({type: 'parameter', value: token});
+            } else {
+                const product = products.find(p => `quantity_product_${p.id}` === token);
+                if (product) {
+                    blocks.push({type: 'product', value: `quantity_product_${product.id}`});
+                } else {
+                    blocks.push({type: 'text', value: token});
+                }
+            }
+        });
+
+        return blocks;
+    };
+
+
     useEffect(() => {
         dispatch(fetchProducts());
         dispatch(fetchUoms());
     }, [dispatch]);
 
     useEffect(() => {
-        if (initialData) {
-            reset(initialData);
+        if (initialData && products.length) {
+            const reconstructedProducts = (initialData.formulas || []).map(formula => {
+                return {
+                    product_id: formula.product_id,
+                    formula_blocks: parseFormulaToBlocks(
+                        formula.formula_translations?.ar || formula.formula,
+                        initialData.parameters || [],
+                        products
+                    )
+                };
+            });
+
+            reset({
+                name: initialData.name || '',
+                description: initialData.description || '',
+                parameters: initialData.parameters || [],
+                products: reconstructedProducts
+            });
         }
-    }, [initialData, reset]);
+    }, [initialData, products, reset]);
 
     const availableParameterNames = watch('parameters')?.map(p => p.name) || [];
 
